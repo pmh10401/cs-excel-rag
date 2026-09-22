@@ -198,9 +198,32 @@ def _map_cslist_headers(headers, required_columns, id_column, header_aliases=Non
             source_columns[canonical] = key
         else:
             mapped.append(key)
-    if len(set(mapped)) != len(mapped):
-        raise ValueError(f'첫 행에는 중복·빈 이름 없이 {id_column}와 내용 열을 입력하세요. _로 시작하는 열은 예약되어 있습니다.')
     return mapped, source_columns or None
+
+
+def _blank(value):
+    return value is None or (isinstance(value, str) and not value.strip())
+
+
+def _validate_headers(headers, location):
+    problems, positions = [], {}
+    for column, name in enumerate(headers, 1):
+        address = f'{get_column_letter(column)}1'
+        if not isinstance(name, str) or not name:
+            problems.append(f'{address}: 열 이름이 비어 있거나 문자가 아닙니다. 이 열의 제목을 입력하세요.')
+        elif name.startswith('_'):
+            problems.append(f'{address}: {name!r}의 _ 접두사는 예약되어 있습니다. 열 이름을 변경하세요.')
+        else:
+            positions.setdefault(name, []).append(address)
+    problems.extend(f'{", ".join(cells)}: 중복 열 이름 {name!r}. 각 열의 제목을 구분하세요.'
+                    for name, cells in positions.items() if len(cells) > 1)
+    if not headers:
+        problems.append('A1: 첫 행에 열 이름이 없습니다. 실제 제목을 1행에 입력하세요.')
+    if problems:
+        detail = '\n'.join(problems[:10])
+        if len(problems) > 10:
+            detail += f'\n그 외 {len(problems)-10}개 오류가 더 있습니다.'
+        raise ValueError(f'{location} · 첫 행의 열 이름 오류\n{detail}')
 
 
 def rows_from_cells(path, sheet_name, cells, required_columns, allow_typed, id_column, header_aliases=None):
@@ -216,32 +239,42 @@ def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed,
     header_cells = next(cells, ())
     headers = [cell.value.strip() if isinstance(cell.value, str) else cell.value
                for cell in header_cells]
-    # id 외의 열 이름은 자유롭게 사용할 수 있습니다. LLM은 원래 열 이름을 유지하며 셀별 문장만 다듬습니다.
-    if (not headers or any(not isinstance(key, str) or not key or key.startswith('_') for key in headers)
-            or len(set(headers)) != len(headers)):
-        raise ValueError(f'첫 행에는 중복·빈 이름 없이 {id_column}와 내용 열을 입력하세요. _로 시작하는 열은 예약되어 있습니다.')
+    # 뒤쪽의 서식뿐인 빈 열은 제외합니다. 아래 행에 실제 값이 있으면 끝까지 검사해 거절합니다.
+    while headers and _blank(headers[-1]):
+        headers.pop()
+    location = f'{Path(path).name} / {sheet_name}'
+    _validate_headers(headers, location)
     if required_columns is None and headers.count(id_column) != 1:
-        raise ValueError(f'첫 행에는 중복·빈 이름 없이 {id_column}와 내용 열을 입력하세요. _로 시작하는 열은 예약되어 있습니다.')
+        raise ValueError(f'{location} · 첫 행에 식별 열 {id_column!r}이 없습니다. 열 이름을 확인하세요.')
     observed = list(headers)
     aliases = None
     if header_aliases is not None:
         aliases = validate_header_aliases(header_aliases, required_columns, id_column)
     headers, source_columns = _map_cslist_headers(headers, required_columns, id_column, aliases)
+    _validate_headers(headers, location)
     if required_columns is not None and set(headers) != set(required_columns):
         missing = sorted(set(required_columns) - set(headers))
         extra = sorted(set(headers) - set(required_columns))
+        extra_locations = [f'{get_column_letter(index+1)}1: {name!r}'
+                           for index, name in enumerate(headers) if name in extra]
         raise HeaderMappingError(
-            f'첫 행의 열이 양식과 다릅니다. 누락: {missing}, 추가: {extra}',
+            f'{location} · 첫 행의 열이 양식과 다릅니다.\n누락: {missing}\n추가: {extra_locations}\n'
+            '표시된 셀의 열 이름을 양식과 비교하세요.',
             missing=missing, unknown=extra, observed=observed, id_column=id_column)
     if headers.count(id_column) != 1:
-        raise ValueError(f'첫 행에는 중복·빈 이름 없이 {id_column}와 내용 열을 입력하세요. _로 시작하는 열은 예약되어 있습니다.')
+        raise ValueError(f'{location} · 첫 행에 식별 열 {id_column!r}이 없습니다. 열 이름을 확인하세요.')
     seen = set()
     source_key = hashlib.sha256((str(path.resolve()) + '!' + sheet_name).encode()).hexdigest()
     for row_number, cell_row in enumerate(cells, start=2):
         # 읽기 전용 Excel의 빈 셀에도 원래 좌표를 붙입니다. 마지막 빈 열도 보존합니다.
         cell_row = list(cell_row)
         if len(cell_row) > len(headers):
-            raise ValueError(f'{sheet_name} {row_number}행: 첫 행에 이름이 없는 열이 있습니다.')
+            for column, cell in enumerate(cell_row[len(headers):], len(headers)+1):
+                if not _blank(cell.value) or cell.data_type in ('f', 'e'):
+                    letter = get_column_letter(column)
+                    raise ValueError(f'{location}!{letter}{row_number}: 값이 있지만 {letter}1에 열 이름이 없습니다. '
+                                     '제목을 입력하고 양식과 맞는지 확인하세요. 이 열의 값은 임의로 제외하지 않습니다.')
+            cell_row = cell_row[:len(headers)]
         for index in range(len(headers)):
             if index >= len(cell_row):
                 cell_row.append(SimpleNamespace(value=None, data_type='n', number_format='General'))
@@ -251,11 +284,14 @@ def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed,
                     number_format=cell.number_format, coordinate=f'{get_column_letter(index+1)}{row_number}')
         values = [cell.value for cell in cell_row]
         # 완전히 빈 행은 건너뛰되, 다른 값이 있는데 ID만 빠진 행은 오류로 처리합니다.
-        if all(value is None or (isinstance(value, str) and not value.strip()) for value in values):
-            continue
         for cell in cell_row:
-            if cell.data_type in ('f', 'e'):
-                raise ValueError(f'{sheet_name}!{cell.coordinate}: 수식·오류 대신 확정된 문자 값을 입력하세요.')
+            if cell.data_type == 'f':
+                raise ValueError(f'{location}!{cell.coordinate}: 수식 셀입니다. 계산값을 읽으려면 Windows Excel에서 '
+                                 '파일을 열고 계산을 마친 뒤 “Windows Excel에서 열린 파일”을 선택하세요.')
+            if cell.data_type == 'e':
+                raise ValueError(f'{location}!{cell.coordinate}: Excel 오류 값 {cell.value!r}입니다. 이 셀의 오류를 수정하세요.')
+        if all(_blank(value) for value in values):
+            continue
 
         if not allow_typed and any(v is not None and not isinstance(v, str) for v in values):
             raise ValueError('이 로컬 데모에서는 문자 값을 입력하세요.')
@@ -270,10 +306,14 @@ def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed,
                               'number_format': cell.number_format}
                               for key, cell in zip(headers, cell_row) if cell.value is not None and not isinstance(cell.value, str)}
         row['_source_key'] = source_key
-        text_for(row)
-        identity = record_id(row)
+        try:
+            text_for(row)
+            identity = record_id(row)
+        except ValueError as error:
+            raise ValueError(f'{location} {row_number}행: {error}') from error
         if identity in seen:
-            raise ValueError(f'{sheet_name} {row_number}행: 중복 ID ({id_column}) {identity}')
+            raise ValueError(f'{location}!{cell_row[headers.index(id_column)].coordinate}: 중복 ID ({id_column}) {identity}. '
+                             '같은 접수번호의 행을 확인하세요.')
         seen.add(identity)
         # 사용자 작성 '출처'는 그대로 두고, 실제 파일·시트·행 위치를 별도로 기록합니다.
         row['_excel_location'] = f'{path.name} / {sheet_name}!{cell_row[0].coordinate}:{cell_row[-1].coordinate}'

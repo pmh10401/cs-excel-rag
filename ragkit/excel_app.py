@@ -1,6 +1,7 @@
 """Windows Excel에서 이미 열린 통합문서를 xlwings로 읽습니다. 파일은 저장하거나 닫지 않습니다."""
 import os
 import sys
+from pathlib import Path
 from types import SimpleNamespace
 from openpyxl.styles.numbers import is_date_format, is_timedelta_format
 from openpyxl.utils.cell import get_column_letter
@@ -46,12 +47,17 @@ def read_open_book(path, sheet_name, required_columns, allow_typed, id_column, h
             raise ValueError('Excel에 읽을 데이터 행이 없습니다.')
         area = sheet.range((1, 1), (last_row.Row, last_column.Column))
         total_rows = max(0, last_row.Row - 1)
-        report('Excel 병합 셀·수식 확인 중', total_rows=total_rows)
+        report('Excel 병합 셀·계산 상태 확인 중', total_rows=total_rows)
         # COM의 혼합 범위는 None(Null)이 될 수 있습니다. 명확한 False만 통과시킵니다.
         if area.api.MergeCells is not False:
             raise ValueError('입력 시트의 병합 셀을 해제하고 각 행에 값을 입력하세요.')
-        if area.api.HasFormula is not False:
-            raise ValueError('입력 시트에 수식이 있습니다. 확정된 값으로 준비하세요.')
+        has_formula = area.api.HasFormula is not False
+        def check_calculation():
+            # Excel의 계산값만 읽습니다. 계산 실행·외부 링크 갱신·원본 저장은 하지 않습니다.
+            if has_formula and book.app.api.CalculationState != 0:  # xlDone = 0
+                raise ValueError(f'{Path(path).name} / {sheet_name}: Excel 수식 계산이 끝나지 않았습니다. '
+                                 'Excel에서 F9로 계산을 마친 뒤 다시 실행하세요.')
+        check_calculation()
         # 기본 옵션은 Excel 오류를 None으로 바꾸므로 오류 문자열을 반드시 남깁니다.
         report('Excel 값 읽는 중', total_rows=total_rows)
         values = area.options(ndim=2, err_to_str=True, chunksize=500).value
@@ -67,7 +73,8 @@ def read_open_book(path, sheet_name, required_columns, allow_typed, id_column, h
                     if isinstance(value, str) and value.startswith('#'):
                         # 실제 오류와 '#N/A'라는 일반 문자를 구분합니다.
                         if not isinstance(sheet.range((r, c)).api.Value2, str):
-                            raise ValueError(f'{sheet_name}!{coordinate}: Excel 오류 셀입니다.')
+                            raise ValueError(f'{Path(path).name} / {sheet_name}!{coordinate}: Excel 오류 값 {value!r}입니다. '
+                                             'Excel에서 이 셀의 수식·참조를 수정한 뒤 다시 실행하세요.')
                     elif value is not None and not isinstance(value, str):
                         # ponytail: 숫자·날짜의 형식만 개별 조회; 대량 입력에서 느리면 열별 형식을 일괄 조회합니다.
                         cell = sheet.range((r, c))
@@ -83,7 +90,9 @@ def read_open_book(path, sheet_name, required_columns, allow_typed, id_column, h
                                                coordinate=coordinate, data_type='s'))
                 yield row
                 report('Excel 행·자료형 확인 중', max(0, r - 1), total_rows)
-        return rows_from_cells(path, sheet_name, cells(), required_columns, allow_typed, id_column, header_aliases)
+        rows = rows_from_cells(path, sheet_name, cells(), required_columns, allow_typed, id_column, header_aliases)
+        check_calculation()
+        return rows
     except ValueError:
         raise
     except Exception as error:

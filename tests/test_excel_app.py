@@ -36,7 +36,8 @@ def main(root):
         return block
     sheet = NS(name=source.active.title, range=Mock(side_effect=excel_range),
                api=NS(Cells=NS(Find=Mock(side_effect=lambda **kw: NS(Row=len(cells), Column=len(cells[0]))))))
-    book = NS(fullname=str(path.resolve()), sheets=[sheet], api=NS(Date1904=False), save=Mock(), close=Mock())
+    book = NS(fullname=str(path.resolve()), sheets=[sheet], api=NS(Date1904=False),
+              app=NS(api=NS(CalculationState=0)), save=Mock(), close=Mock())
     app = NS(books=[book], quit=Mock())
     xw = NS(apps=[app], Book=Mock(side_effect=AssertionError('파일 자동 열기 금지')),
             App=Mock(side_effect=AssertionError('Excel 자동 실행 금지')))
@@ -122,10 +123,24 @@ def main(root):
                 assert message in str(error), str(error)
             else:
                 raise AssertionError('잘못된 Excel 연결/입력을 허용했습니다: '+message)
-        for attribute, message in [('merged','병합'), ('formula','수식')]:
-            setattr(flags, attribute, None)  # 혼합 범위의 COM Null도 정상으로 통과시키지 않습니다.
-            rejected(message)
-            setattr(flags, attribute, False)
+        flags.merged = None  # 혼합 병합 범위는 거절하지만 수식 혼합 범위는 계산값을 읽습니다.
+        rejected('병합')
+        flags.merged = False
+        for formula in (True, None):
+            flags.formula = formula
+            calculated = records.read_excel(path, None, id_column='CS 접수번호', reader='xlwings')
+            assert calculated[0]['무상자재금액']=='123.123456'
+            assert calculated[0]['시작시간(1)']=='09:30:00'
+            assert calculated[0]['제목']==cells[1][1].value
+            for state in (1, 2):
+                book.app.api.CalculationState = state
+                rejected('계산')
+            book.app.api.CalculationState = 0
+        with tempfile.TemporaryDirectory() as tmp:
+            cache = Path(tmp) / 'formula.rag.jsonl.gz'
+            convert_excel(path, cache, id_column='CS 접수번호', reader='xlwings')
+            assert records.read_excel(cache, 'CSList', id_column='CS 접수번호')==calculated
+        flags.formula = False
         old = cells[1][0].value
         cells[1][0].value = cells[2][0].value
         rejected('중복')
@@ -153,4 +168,4 @@ def main(root):
     book.save.assert_not_called(); book.close.assert_not_called(); app.quit.assert_not_called()
     xw.Book.assert_not_called(); xw.App.assert_not_called()
     source.close()
-    print('PASS: xlwings 연결·자료형·CS 검색·중복 연결/ID·병합/수식/오류·원문 저장/종료 방지 (COM 모의 검사)')
+    print('PASS: xlwings 계산값·계산 대기·자료형·변환·CS 검색·중복/병합/오류·원문 저장/종료 방지 (COM 모의 검사)')

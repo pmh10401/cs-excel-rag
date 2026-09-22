@@ -165,6 +165,14 @@ def main(root):
                 assert web.App(root, config, folder / 'output', schema_path).normalization_workers == 2
                 # 기존 입력 검사·저장도 동시 처리 수를 지우지 않습니다.
                 selection = {'path': str(excel), 'reader': 'openpyxl'}
+                invalid_headers = folder / 'duplicate-headers.xlsx'
+                book = load_workbook(excel)
+                book['CSList']['B1'] = book['CSList']['A1'].value
+                book.save(invalid_headers)
+                book.close()
+                detail = request('/api/inspect', selection | {'path': str(invalid_headers)}, status=400)
+                assert all(part in detail['error'] for part in ('duplicate-headers.xlsx', 'CSList', 'A1, B1', '중복'))
+                assert not app.db_path.exists(), '입력 오류 검사에서 DB를 생성했습니다.'
                 alternate = folder / 'custom-headers.xlsx'
                 book = load_workbook(excel)
                 book['CSList'].cell(1, schema['columns'].index('현상') + 1, '현장 증상 기록')

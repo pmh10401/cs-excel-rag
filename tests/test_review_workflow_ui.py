@@ -75,6 +75,21 @@ const context = vm.createContext({document, assert, Event: class { constructor(t
   fetch: () => { throw Error('Network is forbidden'); }});
 vm.runInContext(SOURCE, context);
 vm.runInContext(String.raw`(async () => {
+  ui.view = 'source'; $('source-import').open = false;
+  showAlert('source-error', '자료.xlsx / 시트 · B1: 빈 이름 <img>');
+  assert.equal($('source-import').open, true);
+  assert.equal(document.activeElement, $('source-error'));
+  assert.equal($('source-error').scrolled, true);
+  assert.match($('source-error').textContent, /B1.*<img>/);
+  assert.equal($('source-error').querySelectorAll('img').length, 0);
+  showAlert('source-error', '');
+  assert.equal($('source-error').hidden, true);
+  const initialApi = api;
+  api = async () => { throw new Error('새 파일.xlsx / 시트!B1: 열 이름 오류'); };
+  $('source-meta').hidden = false;
+  await inspectSource();
+  assert.equal($('source-meta').hidden, true); // 이전 파일 검사 결과를 새 오류 아래에 표시하지 않습니다.
+  api = initialApi;
   // 다른 브라우저의 질문은 내 질문 접수를 막지 않고 공유 자료 변경만 잠급니다.
   renderJob({status:'idle', kind:null, server_busy:true, maintenance_running:false});
   assert.equal($('ask-btn').disabled, false);

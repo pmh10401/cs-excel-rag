@@ -38,6 +38,8 @@ button[disabled]{opacity:.5;cursor:not-allowed}
 #import-queue-list li{padding:8px 0;border-bottom:1px solid var(--line)}
 #import-queue-list small{display:block}
 .error{color:var(--danger);white-space:pre-wrap}
+#source-error{padding:16px 18px;border:1px solid #f2b8b3;border-radius:12px;background:#fff5f4;line-height:1.8}
+#source-error:focus-visible{outline:3px solid #d45b50;outline-offset:3px}
 .meta{background:var(--surface);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:16px 20px;display:grid;grid-template-columns:140px 1fr;gap:8px 16px;margin:12px 0}
 .meta dt{color:var(--muted);font-size:13px}
 .meta dd{margin:0;overflow-wrap:anywhere}

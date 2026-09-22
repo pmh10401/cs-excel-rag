@@ -610,6 +610,8 @@ class App:
                         'path': str(path),
                     }
                 }) from error
+            except ValueError as error:
+                raise ApiError(400, self.redact(error)) from error
             self.excel = path
             self.excel_text = str(path)
             self.reader = reader

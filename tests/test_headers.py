@@ -2,8 +2,47 @@
 import json
 import tempfile
 from pathlib import Path
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
 from ragkit import records
+from ragkit.input_formats import HISTORY_COLUMNS, HISTORY_SHEET
+from ragkit.source_cache import convert_excel
+
+
+def check_blank_columns():
+    with tempfile.TemporaryDirectory() as tmp:
+        path, cache = Path(tmp)/'headers.xlsx', Path(tmp)/'headers.rag.jsonl.gz'
+        book=Workbook(); sheet=book.active; sheet.title=HISTORY_SHEET
+        sheet.append(HISTORY_COLUMNS)
+        sheet.append(['CS-001','펌프 점검'])
+        sheet['AD4'].number_format='0.00'  # 원문·제목 없는 서식뿐인 뒤쪽 열
+        book.save(path)
+        options={'id_column':'CS NO', 'required_columns':HISTORY_COLUMNS}
+        before=path.read_bytes()
+        rows=records.read_excel(path,HISTORY_SHEET,**options)
+        assert len(rows)==1 and len(records.public_cells(rows[0]))==28
+        assert rows[0]['_cell_locations']['설비 타입'].endswith('!AB2')
+        convert_excel(path,cache,HISTORY_SHEET,**options)
+        assert records.read_excel(cache,HISTORY_SHEET,**options)==rows
+        assert path.read_bytes()==before
+        cached=cache.read_bytes()
+        def reject(expected):
+            book.save(path)
+            for operation in (lambda:records.read_excel(path,HISTORY_SHEET,**options),
+                              lambda:convert_excel(path,cache,HISTORY_SHEET,**options)):
+                try: operation()
+                except ValueError as error:
+                    assert all(part in str(error) for part in expected),str(error)
+                else: raise AssertionError('제목 없는 자료나 중복 열을 버리고 읽었습니다.')
+            assert cache.read_bytes()==cached
+        for value in ('뒤쪽 자료',0,False,'=1+1'):
+            sheet['AD3']=value
+            reject(['AD1','AD3'])
+        sheet['AD3']=None
+        for name,expected in [(None,['B1','이름']),('CS NO',['A1','B1','중복']),
+                              ('_내부',['B1','예약']), (3,['B1','문자'])]:
+            sheet['B1']=name
+            reject(expected)
+        book.close()
 
 ALIASES = {
     'Part Desc(1)': 'Part Decs(1)', 'Part Desc(2)': 'Part Decs(2)',
@@ -18,6 +57,7 @@ ALIASES = {
 
 
 def main(root):
+    check_blank_columns()
     schema = json.loads((root / 'cslist_schema.json').read_text(encoding='utf-8'))
     expected = records.read_excel(root / 'cslist_sample.xlsx', 'CSList',
                                   required_columns=schema['columns'], id_column=schema['id_column'])

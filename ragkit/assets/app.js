@@ -49,6 +49,13 @@ function showAlert(id, msg) {
   const el = $(id);
   el.hidden = !msg;
   setText(el, msg || '');
+  if (id === 'source-error' && msg) {
+    $('source-import').open = true;
+    if (ui.view === 'source') {
+      el.focus({preventScroll:true});
+      el.scrollIntoView({block:'nearest'});
+    }
+  }
 }
 function sourceBody() {
   const reader = document.querySelector('input[name="reader"]:checked');
@@ -570,6 +577,7 @@ async function saveHeaderMappings() {
 async function inspectSource() {
   if (ui.busy) return;
   showAlert('source-error', '');
+  $('source-meta').hidden = true;
   setText($('source-status'), '입력 검사 중');
   setBusy(true);
   try {
