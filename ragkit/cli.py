@@ -6,7 +6,7 @@ import sqlite3
 import time
 from pathlib import Path
 from openai import OpenAI, APIError, APITimeoutError
-from .records import read_excel, load_header_aliases
+from .records import read_excel, load_header_aliases, record_id
 from .llm import load_rules, answer
 from .storage import ingest, apply_reviews, prepared_record
 from .search import retrieval_check, retrieve, count_records, compare_search
@@ -43,7 +43,7 @@ def main(root, argv=None):
     parser.add_argument('--excel', type=Path, help='입력 .xlsx 또는 변환된 .rag.jsonl.gz 파일')
     parser.add_argument('--convert-input', type=Path, help='Excel을 .rag.jsonl.gz로 변환하고 종료. 모델 호출 없음')
     parser.add_argument('--reader', choices=['openpyxl', 'xlwings'], default='openpyxl', help='일반 파일 직접 읽기 / Windows Excel에서 열린 파일 읽기')
-    parser.add_argument('--sheet', help='CS 기본값은 CSList, 일반 데모 기본값은 점검기록')
+    parser.add_argument('--sheet', help='CSList 또는 19~26년 누적_2600831. 일반 데모는 점검기록')
     parser.add_argument('--apply-reviews', type=Path, help='검토 JSON을 적용하고 비교 화면 갱신. API 호출 없음')
     questions_group = parser.add_mutually_exclusive_group()
     questions_group.add_argument('--cases', type=Path, help='시험 질문과 사람이 검토할 기준을 담은 JSON 파일')
@@ -171,7 +171,7 @@ def main(root, argv=None):
         if (args.saved and not args.normalize_only) or args.compare_search:
             stored = {identity: (json.loads(raw), json.loads(proposal)) for identity, raw, proposal in db.execute(
                 'SELECT id, original_json, normalized_json FROM normalized_records')}
-            prepared = [prepared_record(db, row, stored[row[schema['id_column']]][1], rules) for row in rows]
+            prepared = [prepared_record(db, row, stored[record_id(row)][1], rules) for row in rows]
             # 이전 버전 DB도 원문과 검토 선택을 유지하며 새 문서 색인을 만듭니다.
             from .cslist import ensure_search_index
             ensure_search_index(db, rules, schema)

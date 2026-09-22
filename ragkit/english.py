@@ -75,10 +75,13 @@ def document_cells(evidence):
 
 def translation_cells(evidence, schema):
     cells, accepted = document_cells(evidence)
+    from .input_formats import HISTORY_SCHEMA, HISTORY_COLUMNS
+    if set(cells) == set(HISTORY_COLUMNS):
+        schema = HISTORY_SCHEMA
     effective = cells | accepted
     # 식별 열·빈칸·숫자만 있는 셀은 번역하지 않습니다. 미채택 제안도 사용하지 않습니다.
     return {key: effective[key] for key in dict.fromkeys(['제목', *schema['rewrite_columns']])
-            if key in effective and re.search(r'[가-힣A-Za-z]', effective[key])}
+            if key in effective and re.search(r'[가-힣A-Za-z\u3400-\u9fff]', effective[key])}
 
 
 def validate_translation(values, cells):
@@ -452,7 +455,8 @@ def bilingual_retrieve(db, question, client, config, *, details=None, limit=3, s
             'translation_status': 'skipped'}
     if details is not None:
         details['search'] = info
-    exact = any(exact_terms(question))
+    from .search import receipt_number
+    exact = any(exact_terms(question)) or bool(receipt_number(db, question))
     if exact and not korean:
         # 없는 코드·날짜의 검색 조건을 번역으로 우회하지 않습니다. 답변도 생성하지 않습니다.
         return korean

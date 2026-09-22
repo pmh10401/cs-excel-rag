@@ -6,6 +6,7 @@ from openpyxl.styles.numbers import is_date_format, is_timedelta_format
 from openpyxl.utils.cell import get_column_letter
 from openpyxl.utils.datetime import from_excel, CALENDAR_MAC_1904, CALENDAR_WINDOWS_1900
 from .records import rows_from_cells
+from .input_formats import select_sheet
 
 
 def read_open_book(path, sheet_name, required_columns, allow_typed, id_column, header_aliases=None, *, progress=None):
@@ -32,12 +33,7 @@ def read_open_book(path, sheet_name, required_columns, allow_typed, id_column, h
             raise ValueError('같은 파일이 여러 Excel에 열려 있습니다. 사용할 통합문서 하나만 남겨 주세요.')
         book = matches[0]
         names = [sheet.name for sheet in book.sheets]
-        if sheet_name is None:
-            if len(names) != 1:
-                raise ValueError(f'시트가 여러 개입니다. 시트 이름을 지정하세요: {names}')
-            sheet_name = names[0]
-        if sheet_name not in names:
-            raise ValueError(f'시트를 찾을 수 없습니다: {sheet_name}')
+        sheet_name = select_sheet(names, sheet_name)
         sheet = next(sheet for sheet in book.sheets if sheet.name == sheet_name)
         # expand()는 중간 빈 행에서 끊길 수 있습니다. 서식만 있는 먼 셀도 제외하도록
         # 실제 값/수식이 있는 마지막 행·열을 각각 찾습니다. 검색 조건은 매번 명시합니다.

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from .records import public_cells
 from .llm import editable
+from .input_formats import row_rules
 
 ASSETS = Path(__file__).resolve().parent / 'assets'
 
@@ -22,19 +23,19 @@ def highlight(original, proposed):
 def render(report, destination):
     # 입력과 답변의 HTML 기호를 변환해 코드가 아닌 글자로 표시합니다.
     esc = lambda value: html.escape(str(value))
-    columns = tuple(key for key in report['rows'][0] if not key.startswith('_'))
+    columns = tuple(dict.fromkeys(key for row in report['rows'] for key in public_cells(row)))
     is_cs = report.get('workflow') == 'cslist'
     input_label = 'xlwings · Excel의 현재 셀 값' if report.get('reader') == 'xlwings' else 'openpyxl · 파일 직접 읽기'
     apply_help = (f'다운로드한 JSON을 {report.get("menu_command", "start.bat")}의 3번 검토 저장 메뉴에서 적용하세요. 이후 4번 메뉴로 질문하세요.'
                   if is_cs else '프로그램 폴더에서 python demo.py --apply-reviews "검토 JSON 경로"로 적용하세요. .venv의 Python을 사용하고, 이후 같은 입력으로 답변을 다시 생성하세요.')
     table = '<tr>' + ''.join(f'<th>{esc(key)}</th>' for key in columns) + '</tr>'
-    table += ''.join('<tr>' + ''.join(f'<td>{esc(row[key])}</td>' for key in columns) + '</tr>' for row in report['rows'])
+    table += ''.join('<tr>' + ''.join(f'<td>{esc(row.get(key, "해당 양식에 없는 열"))}</td>' for key in columns) + '</tr>' for row in report['rows'])
     comparisons = ''
     for record in report['normalized_records']:
         cells, preserved, previous_group = '', '', None
         row = record['original_cells']
         for key, original in public_cells(row).items():
-            if is_cs and report['column_rules'].get(key) != 'rewrite':
+            if is_cs and row_rules(row, report['column_rules']).get(key) != 'rewrite':
                 preserved += f'<tr><th>{esc(key)}</th><td>{esc(original)}</td><td>{esc(row.get("_cell_locations", {}).get(key, ""))}</td></tr>'
                 continue
             if is_cs:

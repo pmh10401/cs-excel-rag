@@ -102,8 +102,9 @@ def main(root):
                 current_rules['원인(1)'] = 'preserve'
             elif kind == 'schema':
                 current_schema['name'] = 'updated schema'
-            prompt = storage.NORMAL_PROMPT + ('\nchanged' if kind == 'prompt' else '')
-            with closing(sqlite3.connect(case_path)) as db, db, patch.object(storage, 'NORMAL_PROMPT', prompt):
+            from ragkit import llm
+            prompt = llm.NORMAL_PROMPT + ('\nchanged' if kind == 'prompt' else '')
+            with closing(sqlite3.connect(case_path)) as db, db, patch.object(llm, 'NORMAL_PROMPT', prompt):
                 calls, _, progress = resume(db, current, settings, current_rules, current_schema)
             assert len(calls) == 2 and progress[-1]['reused'] == 0, kind
 

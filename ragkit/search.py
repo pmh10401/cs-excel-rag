@@ -3,14 +3,15 @@ from functools import lru_cache
 import json
 import re
 import unicodedata
+from .input_formats import CASE_NUMBER_SQL
 
 # ponytail: 명시한 세 증상과 두 설비만 동의어로 연결합니다. 더 넓은 의미 검색은 별도 평가 후 확장합니다.
 CONCEPTS = {
-    'symptomnoise': r'소음|이상음|(?<![a-z])noise(?![a-z])',
-    'symptomleak': r'누수|누설|(?<![a-z])leak(?:age)?(?![a-z])',
-    'symptomvibration': r'진동|(?<![a-z])vibration(?![a-z])',
-    'equipmentpump': r'펌프|(?<![a-z])pump(?![a-z])',
-    'equipmentfan': r'팬|(?<![a-z])fan(?![a-z])',
+    'symptomnoise': r'소음|이상음|噪[音声聲]|异响|異響|(?<![a-z])noise(?![a-z])',
+    'symptomleak': r'누수|누설|漏水|泄漏|洩漏|(?<![a-z])leak(?:age)?(?![a-z])',
+    'symptomvibration': r'진동|振动|振動|(?<![a-z])vibration(?![a-z])',
+    'equipmentpump': r'펌프|泵|(?<![a-z])pump(?![a-z])',
+    'equipmentfan': r'팬|风扇|風扇|(?<![a-z])fan(?![a-z])',
 }
 
 
@@ -117,7 +118,7 @@ def distinct_hits(hits):
         key = tuple(tuple(sorted({column: unicodedata.normalize('NFC', value).strip()
                                   for section in hit.get('evidence', [])
                                   for column, value in section.get(field, {}).items()
-                                  if column != 'CS 접수번호' and value.strip()}.items()))
+                                  if column not in ('CS 접수번호', 'CS NO') and value.strip()}.items()))
                     for field in ('cells', 'accepted'))
         if not key[0]:
             key = hit['id']  # 원문 근거가 없는 구형 자료는 임의로 합치지 않습니다.
@@ -138,6 +139,18 @@ def tokens(text):
 
 def terms(text):
     return set(tokens(text))
+
+
+def receipt_number(db, question):
+    """명시적 CS 번호 또는 번호만 입력한 조회를 검색 방식 사이에서도 유지합니다."""
+    explicit = re.search(r'(?:CS NO|CS 접수번호|접수번호)\s*[=:]?\s*"?([A-Za-z0-9_-]+)', question, re.I)
+    if explicit:
+        return explicit[1].casefold()
+    candidate = question.strip(' "').casefold()
+    if re.fullmatch(r'(?=[A-Za-z0-9_-]*\d)[A-Za-z0-9_-]+', candidate) and db.execute(
+            f'SELECT 1 FROM normalized_records WHERE lower({CASE_NUMBER_SQL})=? LIMIT 1', (candidate,)).fetchone():
+        return candidate
+    return ''
 
 
 def retrieve(db, question, *, original_only=False, english_question=None, limit=3, expand_query=False):
@@ -188,12 +201,17 @@ def retrieve(db, question, *, original_only=False, english_question=None, limit=
         # 같은 접두사의 복수 코드는 OR, 서로 다른 코드 종류와 날짜는 AND입니다.
         constraints = ['(' + ' OR '.join('"' + token + '"' for token in group) + ')'
                        for group in [*code_groups.values(), dates] if group]
-        families = ({re.split('[-_]', identity.casefold())[0] for (identity,) in db.execute('SELECT id FROM normalized_records')}
+        families = ({re.split('[-_]', identity.casefold())[0] for (identity,) in db.execute(f'SELECT lower({CASE_NUMBER_SQL}) FROM normalized_records')}
                     if code_groups else set())
         receipt_codes = [bytes.fromhex(token.removeprefix('exactcode')).decode()
                          for family, group in code_groups.items() if family in families for token in group]
         # 식별번호는 본문에 언급됐다는 이유로 일치시키지 않고 실제 부모 ID도 확인합니다.
-        id_filter = ' AND lower(record_id) IN (' + ','.join('?' for _ in receipt_codes) + ')' if receipt_codes else ''
+        # 숫자만 있는 CS NO도 명시적 번호 조회로 지원합니다. 본문의 측정값과 혼동하지 않습니다.
+        candidate = receipt_number(db, question) if not receipt_codes else ''
+        if candidate:
+            receipt_codes = [candidate]
+        id_filter = (' AND record_id IN (SELECT id FROM normalized_records WHERE lower(' + CASE_NUMBER_SQL + ') IN ('
+                     + ','.join('?' for _ in receipt_codes) + '))') if receipt_codes else ''
         focused = 'symptom' in columns
         rank_function = 'bm25()'
         if focused:
@@ -285,24 +303,27 @@ def count_records(db, question):
     if not re.search(r'(몇\s*건|건수|총\s*건|총\s*개수)', question):
         return None
     # ponytail: 집계는 명시한 열="값"의 동등 조건만 지원; 자연어 기간·상태 조건은 별도 구현 전까지 거절합니다.
-    columns = ('CS 접수번호', '설비코드', '접수일자', '고객사명', '제품군', '유/무상')
+    columns = ('CS 접수번호', 'CS NO', '설비코드', '접수일자', '고객사명', '제품군', '유/무상')
     pattern = r'(' + '|'.join(map(re.escape, columns)) + r')\s*=\s*"([^"\n]*)"'
     filters = re.findall(pattern, question)
     remainder = re.sub(pattern, '', question)
     remainder = re.sub(r'전체|현재|저장된|저장|등록된|등록|데이터|기록|접수|총|몇|건수|건|개수|인가요|입니까|있나요|있습니까|알려주세요|알려줘|는|은|이|가|의|과|와|및|그리고|[\s?？.,]', '', remainder)
-    repeated_columns = len({key for key, _ in filters}) != len(filters)
+    repeated_columns = len({'CS 접수번호' if key == 'CS NO' else key for key, _ in filters}) != len(filters)
     if remainder or repeated_columns:
         return {'count': None, 'filters': filters, 'answer': '집계 조건을 확정할 수 없습니다. 전체 접수는 총 몇 건인가요? 또는 설비코드="DEMO-ETCH-01" 접수는 몇 건인가요?처럼 입력하세요. 기간·재발·완료 조건은 아직 지원하지 않습니다.'}
     clauses, params = [], []
     for key, value in filters:
-        expression = 'json_extract(original_json, ?)'
-        params.append('$."' + key + '"')
+        if key in ('CS 접수번호', 'CS NO'):
+            expression = CASE_NUMBER_SQL
+        else:
+            expression = 'json_extract(original_json, ?)'
+            params.append('$."' + key + '"')
         if key == '접수일자':
             expression = f'substr({expression}, 1, 10)'
         clauses.append(expression + ' = ?')
         params.append(value)
     where = ' WHERE ' + ' AND '.join(clauses) if clauses else ''
-    count = db.execute('SELECT COUNT(*) FROM normalized_records' + where, params).fetchone()[0]
+    count = db.execute(f'SELECT COUNT(DISTINCT lower({CASE_NUMBER_SQL})) FROM normalized_records' + where, params).fetchone()[0]
     scope = ', '.join(f'{k}="{v}"' for k, v in filters) or '전체'
     return {'count': count, 'filters': filters,
-            'answer': f'현재 DB에 등록된 전체 자료에서 {scope} 접수는 {count}건입니다. 검색 상위 결과가 아닌 전체 원본 행을 집계했습니다.'}
+            'answer': f'현재 DB에 등록된 전체 자료에서 {scope} 접수는 {count}건입니다. 전체 원본의 CS 번호를 집계했으며, 다른 양식의 같은 번호는 한 건으로 셌습니다.'}

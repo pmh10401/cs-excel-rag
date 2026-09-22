@@ -624,7 +624,7 @@ async function loadRecords() {
       btn.type = 'button';
       btn.disabled = ui.pending;
       btn.classList.toggle('is-selected', item.id === ui.selected);
-      btn.textContent = item.id;
+      btn.textContent = (item.case_number || item.id) + (item.source_sheet && item.source_sheet !== 'CSList' ? ' · 누적 자료' : '');
       const small = document.createElement('small');
       small.textContent = [item.title, item.customer, item.date].filter(Boolean).join(' · ');
       btn.append(small);

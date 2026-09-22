@@ -16,14 +16,14 @@ def main():
               'requirements.txt', 'README.txt', 'MANUAL.html', 'setup.bat', 'check.bat', 'start.bat',
               'cslist_schema.json', 'cslist_sample.xlsx', 'cslist_cases.json', 'evaluate_search.py', 'workflow_cases.json']
     modules = ['__init__.py', 'records.py', 'llm.py', 'storage.py', 'search.py', 'report.py', 'cli.py',
-               'evaluation.py', 'cslist.py', 'menu.py', 'excel_app.py', 'web.py', 'english.py', 'source_cache.py', 'semantic.py', 'embedding_runtime.py',
+               'evaluation.py', 'cslist.py', 'input_formats.py', 'menu.py', 'excel_app.py', 'web.py', 'english.py', 'source_cache.py', 'semantic.py', 'embedding_runtime.py',
                'retrieval_evaluation.py', 'llm_trace.py', 'overnight.py', 'assets/review.js', 'assets/theme.css', 'assets/app.html', 'assets/app.css', 'assets/app.js', 'assets/tokenizer/fb374d419588a4632f3f557e76b4b70aebbca790']
     files = [(ROOT / 'windows-demo' / name, name) for name in assets]
     files += [(ROOT / 'ragkit' / name, 'ragkit/' + name) for name in modules]
     files += [(ROOT / 'tests' / name, 'tests/' + name) for name in ('__init__.py', 'test_windows.py', 'test_cslist.py', 'test_excel_app.py', 'test_rag.py', 'test_headers.py', 'test_ui.py', 'test_resume.py', 'test_quality.py', 'test_parallel.py', 'test_search_focus.py', 'test_korean_search.py', 'test_bulk_reviews.py', 'test_english.py', 'test_semantic.py')]
     files.append((ROOT / 'tests/test_source_cache.py', 'tests/test_source_cache.py'))
     files.append((ROOT / 'tests/test_embedding_startup.py', 'tests/test_embedding_startup.py'))
-    for name in ('test_workflow_auto.py', 'test_retrieval_evaluation.py', 'test_overnight.py', 'test_multiuser.py', 'test_action_outcomes.py', 'test_incremental.py'):
+    for name in ('test_workflow_auto.py', 'test_retrieval_evaluation.py', 'test_overnight.py', 'test_multiuser.py', 'test_action_outcomes.py', 'test_incremental.py', 'test_history_input.py'):
         files.append((ROOT / 'tests' / name, 'tests/' + name))
     # 한국 시간 기준 생성 시각을 초 단위로 붙입니다. 파일 내용은 ZIP이며 풀기 전에 .zip으로 바꿉니다.
     timestamp = datetime.now(timezone(timedelta(hours=9))).strftime('%Y%m%d-%H%M%S')

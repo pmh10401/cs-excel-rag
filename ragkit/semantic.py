@@ -11,7 +11,7 @@ import faiss
 from openai import OpenAI, APIError
 
 from .english import document_cells, fingerprint
-from .search import retrieve, exact_terms, focused_query, distinct_hits, word_tokens, QUERY_FILLER
+from .search import retrieve, exact_terms, focused_query, distinct_hits, word_tokens, QUERY_FILLER, receipt_number
 
 FIELDS = ('제목', '문제현상', '현상', '제품군', 'UNIT명', '알람코드')
 _index_cache = {}  # ponytail: 한 프로세스에 최근 색인 하나만 유지합니다. 다중 사용자라면 용량 제한 캐시로 확장합니다.
@@ -63,7 +63,9 @@ def client_for(config, *, progress=None):
 def document_text(encoded):
     cells, accepted = document_cells(encoded)
     lines = []
-    for key in FIELDS:
+    # 기존 문서의 벡터 본문은 유지합니다. 새 양식에만 있는 설비·현상 열을 보탭니다.
+    fields = (*FIELDS, 'Defect 유형', 'Defect 상세', '설비', '설비군 간소화', '기인 모듈', '기인 Unit(부품)') if 'CS NO' in cells else FIELDS
+    for key in fields:
         # 미채택 제안은 포함하지 않습니다. 원문 표현과 채택한 표현은 둘 다 검색합니다.
         for value in dict.fromkeys([cells.get(key, ''), accepted.get(key, '')]):
             if value.strip():
@@ -319,7 +321,7 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
         info['warning'] = f"벡터 검색 범위는 전체 {total}건 중 {info['vector_records']}건입니다. 남은 벡터를 생성하세요."
     info['candidate_ids'] = {'keyword': [h['id'] for h in keyword], 'vector': []}
     details['vector_search'] = info
-    if any(exact_terms(question)):
+    if any(exact_terms(question)) or receipt_number(db, question):
         info.update(mode='exact', warning='접수번호·코드·날짜 조건은 기존 정확 검색을 사용했습니다.')
         return keyword[:limit]
     if mode == 'keyword':

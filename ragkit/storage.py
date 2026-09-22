@@ -4,7 +4,8 @@ import hashlib
 import json
 import time
 from .records import public_cells, row_revision, text_for, record_id
-from .llm import editable, validate_normalized, normalize, NORMAL_PROMPT
+from .llm import editable, validate_normalized, normalize, normalization_prompt
+from .input_formats import row_rules, row_schema
 
 class NormalizationBatchError(ValueError):
     """모든 행을 시도한 뒤 실패 목록을 호출자에게 전달합니다."""
@@ -118,7 +119,8 @@ def ingest(db, rows, rules, client=None, config=None, schema=None, progress=None
                     continue
         source_key = row.get('_source_key', '')
         original = text_for(row)
-        fingerprint = hashlib.sha256((row_revision(row) + NORMAL_PROMPT + json.dumps([settings, rules, schema] if schema else [settings, rules], sort_keys=True)).encode()).hexdigest()
+        active_rules, active_schema = row_rules(row, rules), row_schema(row, schema)
+        fingerprint = hashlib.sha256((row_revision(row) + normalization_prompt(row) + json.dumps([settings, active_rules, active_schema] if active_schema else [settings, active_rules], sort_keys=True)).encode()).hexdigest()
         try:
             report(identity, '원문 행을 준비하는 중입니다' if client is None else '행을 정리하는 중입니다')
             if client is None:

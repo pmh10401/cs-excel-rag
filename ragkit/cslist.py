@@ -4,9 +4,10 @@ import hashlib
 import re
 from .records import public_cells, record_id
 from .search import word_tokens, word_grams, search_concepts
+from .input_formats import row_schema, CASE_NUMBER_SQL
 
 # 검색 본문·채택문 검증 규칙이 바뀌면 올립니다. 기존 DB는 첫 사용 때 한 번 갱신합니다.
-SEARCH_VERSION = 2
+SEARCH_VERSION = 3
 
 
 def search_signature(schema, rules=None):
@@ -82,6 +83,7 @@ def column_group(key):
 def normalization_groups(row, rules, schema):
     # 모델에는 수정 대상과 필요한 문맥만 보냅니다. 작업 1 요청에 작업 2를 넣지 않습니다.
     from .llm import editable
+    schema = row_schema(row, schema)
     original = public_cells(row)
     groups = {}
     for key in original:
@@ -94,6 +96,8 @@ def normalization_groups(row, rules, schema):
         context['_id_column'] = schema['id_column']
         context['_typed_cells'] = {key: value for key, value in row.get('_typed_cells', {}).items() if key in context}
         context['_work_group'] = group
+        if '_source_sheet' in row:
+            context['_source_sheet'] = row['_source_sheet']
         yield context, {key: 'rewrite' if key in targets else 'preserve' for key in public_cells(context)}
 
 
@@ -111,7 +115,7 @@ def action_outcomes(cells):
         ('증상 지속', r'(?:(?:동일|같은)\s*증상(?:이|은)?\s*(?:발생|지속)|재발)' + endings),
     )
     for column, value in cells.items():
-        if not re.fullmatch(r'조치내용\(\d+\)', column) or not value.strip():
+        if not re.fullmatch(r'조치내용\(\d+\)|조치', column) or not value.strip():
             continue
         steps = []
         # ponytail: 명확한 문장 경계와 후 연결만 지원합니다. 복합 문장은 원문 대조로 보류합니다.
@@ -136,6 +140,7 @@ def action_outcomes(cells):
 def record_sections(record, schema):
     """문서 안의 작업 경계를 유지합니다. 근거 검사용 셀에는 빈칸도 남깁니다."""
     row = record['original_cells']
+    schema = row_schema(row, schema)
     original = public_cells(row)
     base = {key for key in schema['context_columns'] if column_group(key) == '접수'
             and key not in schema['rewrite_columns']}
@@ -163,13 +168,14 @@ def search_fields(cells, accepted):
         words = [word for value in values for word in (*word_tokens(value), *sorted(search_concepts(value)))]
         fields[0].extend(words)
         base = re.sub(r'\(.*?\)$', '', key)
-        if key in ('제목', '문제현상', '현상'):
+        if key in ('제목', '문제현상', '현상', 'Defect 유형', 'Defect 상세'):
             fields[1].extend(words)
         elif key == '알람코드':
             fields[2].extend(words)
-        elif base in ('설비코드', '제품군', '고객사호기', 'UNIT명', '설비군', 'Part명', 'Part Decs', '유닛/부품'):
+        elif base in ('설비코드', '제품군', '고객사호기', 'UNIT명', '설비군', 'Part명', 'Part Decs', '유닛/부품',
+                      '설비', '설비군 간소화', '기인 모듈', '기인 Unit', '설비 타입'):
             fields[3].extend(words)
-        elif base == '조치내용' or key == '재발방지대책':
+        elif base in ('조치내용', '조치') or key == '재발방지대책':
             fields[4].extend(words)
     grams = [gram for word in fields[0] for gram in word_grams(word)]
     return [' '.join(words) for words in [*fields, grams]]
@@ -180,6 +186,7 @@ def rebuild_search(db, prepared, schema, *, rules=None, incremental=False):
     # SAVEPOINT는 독립 호출과 기존 검토 저장 트랜잭션 안의 호출 모두에서 원자성을 지킵니다.
     db.execute('SAVEPOINT rebuild_search')
     try:
+        db.execute(f'CREATE INDEX IF NOT EXISTS records_case_number ON normalized_records (lower({CASE_NUMBER_SQL}))')
         db.execute('DROP TABLE IF EXISTS rag_chunks')
         for table, prefix in (
             ('rag_documents', 'document_id, record_id, content, evidence'),

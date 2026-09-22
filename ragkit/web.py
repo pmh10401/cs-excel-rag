@@ -19,6 +19,7 @@ from urllib.parse import parse_qs, urlparse
 from openai import APIError, APITimeoutError, OpenAI
 
 from .cslist import column_group, load_schema, ensure_search_index
+from .input_formats import row_schema, row_rules, is_history, HISTORY_SHEET, HISTORY_SCHEMA
 from .llm import answer, editable, select_answer_cases
 from .records import (public_cells, read_excel, record_id, row_revision,
                       HeaderMappingError, load_header_aliases, save_header_aliases,
@@ -133,6 +134,7 @@ class App:
         self.reader = reader if reader in ('openpyxl', 'xlwings') else 'openpyxl'
         self.excel = None
         self.excel_text = ''
+        self.input_sheet = SHEET
         self.job = self._idle_job()
         self.overnight_stop = threading.Event()
         self.embedding_status = {'status': 'idle', 'message': ''}
@@ -325,6 +327,8 @@ class App:
             self.normalization_workers = validate_workers(saved['normalization_workers'])
         excel = saved.get('excel')
         reader = saved.get('reader')
+        if saved.get('sheet') in (SHEET, HISTORY_SHEET):
+            self.input_sheet = saved['sheet']
         if reader in ('openpyxl', 'xlwings'):
             self.reader = reader
         if isinstance(excel, str) and excel.strip():
@@ -337,7 +341,7 @@ class App:
 
     def save_settings(self, workers=None, auto_english=None, reference_limit=None):
         payload = {'excel': self.excel_text or (str(self.excel) if self.excel else ''),
-                   'sheet': SHEET, 'reader': self.reader,
+                   'sheet': self.input_sheet, 'reader': self.reader,
                    'normalization_workers': self.normalization_workers if workers is None else workers,
                    'auto_english': self.auto_english if auto_english is None else auto_english,
                    'reference_limit': self.reference_limit if reference_limit is None else reference_limit}
@@ -411,9 +415,12 @@ class App:
 
     def read_rows(self, path, reader):
         def load():
-            return read_excel(path, SHEET, required_columns=self.schema['columns'],
+            rows = read_excel(path, SHEET, required_columns=self.schema['columns'],
                               id_column=self.schema['id_column'], reader=reader,
                               header_aliases=self.header_aliases)
+            if rows:
+                self.input_sheet = rows[0]['_source_sheet']
+            return rows
         if reader != 'xlwings':
             return load()
         entered = False
@@ -562,15 +569,16 @@ class App:
 
     def state(self, owner=None):
         summary = self.db_summary()
+        schema = HISTORY_SCHEMA if self.input_sheet == HISTORY_SHEET else self.schema
         return {
             'excel': self.excel_text,
             'reader': self.reader,
-            'sheet': SHEET,
+            'sheet': self.input_sheet,
             'output_dir': str(self.output.resolve()),
-            'schema_name': self.schema.get('name', 'CSList'),
-            'id_column': self.schema['id_column'],
-            'columns': len(self.schema['columns']),
-            'schema_columns': list(self.schema['columns']),
+            'schema_name': schema.get('name', 'CSList'),
+            'id_column': schema['id_column'],
+            'columns': len(schema['columns']),
+            'schema_columns': list(schema['columns']),
             'header_aliases': dict(self.header_aliases),
             'normalization_workers': self.normalization_workers,
             'settings': {'auto_english': self.auto_english, 'reference_limit': self.sessions[owner]['reference_limit'] if owner else self.reference_limit},
@@ -588,6 +596,8 @@ class App:
             try:
                 rows = self.read_rows(path, reader)
             except HeaderMappingError as error:
+                if error.id_column == 'CS NO':
+                    raise ApiError(400, self.redact(error)) from error
                 raise ApiError(400, self.redact(error), 'header_mapping_required', extra={
                     'mapping': {
                         'missing': error.missing,
@@ -611,8 +621,9 @@ class App:
                 'path': str(path),
                 'sheet': rows[0]['_source_sheet'],
                 'rows': len(rows),
-                'columns': len(self.schema['columns']),
-                'id_column': self.schema['id_column'],
+                'columns': len(public_cells(rows[0])),
+                'id_column': rows[0]['_id_column'],
+                'schema_name': row_schema(rows[0], self.schema)['name'],
                 'reader': reader,
                 'matches_stored': matches,
                 'db': summary,
@@ -648,6 +659,7 @@ class App:
                 self.excel = output.resolve()
                 self.excel_text = str(self.excel)
                 self.reader = 'openpyxl'
+                self.input_sheet = result['sheet']
             self.save_settings()
             return result
 
@@ -941,9 +953,13 @@ class App:
         items = []
         for identity, raw, _proposal in rows:
             original = json.loads(raw)
-            item = {'id': identity, 'pipeline': pipelines[identity]}
+            item = {'id': identity, 'pipeline': pipelines[identity],
+                    'case_number': original.get(original.get('_id_column', 'id'), identity),
+                    'source_sheet': original.get('_source_sheet', '')}
             for field in LIST_FIELDS:
                 item[LIST_KEYS[field]] = original.get(field, '')
+            if is_history(original):
+                item.update(customer=original.get('Site', ''), equipment=original.get('설비', ''), date=original.get('불량발생일', ''))
             items.append(item)
         return {'page': page, 'page_size': size, 'total': total, 'query': q, 'items': items}
 
@@ -962,10 +978,11 @@ class App:
             prepared = prepared_record(db, original, proposal, self.rules)
             pipeline = self.pipeline_status(db, original, proposal, prepared)
         cells = public_cells(original)
+        schema, rules = row_schema(original, self.schema), row_rules(original, self.rules)
         grouped = {}
-        for key in self.schema['columns']:
+        for key in schema['columns']:
             grouped.setdefault(column_group(key), []).append(key)
-        header = {field: cells.get(field, '') for field in (self.schema['id_column'],) + LIST_FIELDS if field in cells}
+        header = {field: cells.get(field, '') for field in (schema['id_column'],) + LIST_FIELDS if field in cells}
         groups = []
         for name, keys in grouped.items():
             block = []
@@ -982,7 +999,7 @@ class App:
                     'stale': bool(review.get('stale')),
                     'fallback': prepared['fallbacks'].get(key),
                     'location': original.get('_cell_locations', {}).get(key, ''),
-                    'preserve': self.rules.get(key, 'preserve') != 'rewrite',
+                    'preserve': rules.get(key, 'preserve') != 'rewrite',
                 }
                 if review.get('stale') and 'previous' in review:
                     item['previous'] = review['previous']

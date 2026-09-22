@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from openpyxl.utils.cell import get_column_letter
 from openpyxl import load_workbook
+from .input_formats import select_sheet, input_layout, is_history
 
 def cell_string(value):
     # 검색과 API용 문자열입니다. Excel의 자료형과 원래 값은 _typed_cells에 별도로 보존합니다.
@@ -26,7 +27,8 @@ def record_id(row, id_column=None):
     value = row.get(key)
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f'비어 있지 않은 문자열 {key}가 필요합니다.')
-    return value
+    # 같은 CS 번호의 다른 양식을 덮어쓰지 않습니다. 셀의 CS NO 자체는 그대로 둡니다.
+    return '누적28:' + value if is_history(row) else value
 
 
 def row_revision(row):
@@ -57,12 +59,7 @@ def read_excel(path, sheet_name='점검기록', *, required_columns=None, allow_
     # 오해하지 않도록 수식 셀을 발견하면 아래에서 중단합니다. 파일을 수정하지 않습니다.
     book = load_workbook(path, data_only=False)
     try:
-        if sheet_name is None:
-            if len(book.sheetnames) != 1:
-                raise ValueError(f'시트가 여러 개입니다. 시트 이름을 지정하세요: {book.sheetnames}')
-            sheet_name = book.sheetnames[0]
-        if sheet_name not in book.sheetnames:
-            raise ValueError(f'시트를 찾을 수 없습니다: {sheet_name}')
+        sheet_name = select_sheet(book.sheetnames, sheet_name)
         sheet = book[sheet_name]
         if sheet.merged_cells.ranges:
             raise ValueError('입력 시트의 병합 셀을 해제하고 각 행에 값을 입력하세요.')
@@ -73,11 +70,12 @@ def read_excel(path, sheet_name='점검기록', *, required_columns=None, allow_
 
 
 class HeaderMappingError(ValueError):
-    def __init__(self, message, *, missing, unknown, observed):
+    def __init__(self, message, *, missing, unknown, observed, id_column=None):
         super().__init__(message)
         self.missing = list(missing)
         self.unknown = list(unknown)
         self.observed = list(observed)
+        self.id_column = id_column
 
 
 # CSList 내보내기에서 확인된 표기만 내부 열 이름으로 맞춥니다. 다른 표기는 바꾸지 않습니다.
@@ -211,6 +209,9 @@ def rows_from_cells(path, sheet_name, cells, required_columns, allow_typed, id_c
 
 def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed, id_column, header_aliases=None):
     # 파일 직접 읽기와 Excel 연결 읽기에 같은 검사를 적용합니다. 열·ID·빈칸 규칙이 달라지지 않습니다.
+    required_columns, id_column = input_layout(sheet_name, required_columns, id_column)
+    if id_column == 'CS NO':
+        header_aliases = None  # CSList용 대응표를 다른 양식에 적용하지 않습니다.
     cells = iter(cells)
     header_cells = next(cells, ())
     headers = [cell.value.strip() if isinstance(cell.value, str) else cell.value
@@ -231,7 +232,7 @@ def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed,
         extra = sorted(set(headers) - set(required_columns))
         raise HeaderMappingError(
             f'첫 행의 열이 양식과 다릅니다. 누락: {missing}, 추가: {extra}',
-            missing=missing, unknown=extra, observed=observed)
+            missing=missing, unknown=extra, observed=observed, id_column=id_column)
     if headers.count(id_column) != 1:
         raise ValueError(f'첫 행에는 중복·빈 이름 없이 {id_column}와 내용 열을 입력하세요. _로 시작하는 열은 예약되어 있습니다.')
     seen = set()

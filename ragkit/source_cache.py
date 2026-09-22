@@ -14,6 +14,7 @@ from zipfile import ZipFile
 from openpyxl import load_workbook
 from openpyxl.utils.cell import get_column_letter
 from .records import iter_rows_from_cells, read_excel, public_cells, record_id, text_for
+from .input_formats import select_sheet, input_layout
 
 SUFFIX = '.rag.jsonl.gz'
 FORMAT = 'rag-source-v1'
@@ -51,10 +52,7 @@ def _excel_rows(path, sheet_name, progress, **options):
         raise ValueError('읽기 방식은 openpyxl 또는 xlwings여야 합니다.')
     book = load_workbook(path, read_only=True, data_only=False)
     try:
-        if sheet_name is None and len(book.sheetnames) == 1:
-            sheet_name = book.sheetnames[0]
-        if sheet_name not in book.sheetnames:
-            raise ValueError(f'시트를 찾을 수 없습니다: {sheet_name}')
+        sheet_name = select_sheet(book.sheetnames, sheet_name)
         progress({'phase': 'checking', 'stage': '시트 구조·전체 행 수 확인 중'})
         total = _check_merges(path, sheet_name, progress)
         sheet = book[sheet_name]
@@ -105,6 +103,7 @@ def convert_excel(path, output, sheet_name='CSList', *, progress=None, **options
             for row in rows:
                 columns = list(public_cells(row))
                 if count == 0:
+                    sheet_name = row['_source_sheet']
                     write({'format': FORMAT, 'created_at': datetime.now(timezone.utc).isoformat(),
                            'source_file': path.name, 'source_key': row['_source_key'],
                            'sheet': row['_source_sheet'], 'id_column': row['_id_column'],
@@ -121,7 +120,7 @@ def convert_excel(path, output, sheet_name='CSList', *, progress=None, **options
         temporary.unlink(missing_ok=True)
     report({'phase': 'done', 'stage': '변환 완료'})
     return {'path': str(output.resolve()), 'source': str(path.resolve()), 'rows': count,
-            'bytes': output.stat().st_size, 'format': FORMAT}
+            'bytes': output.stat().st_size, 'format': FORMAT, 'sheet': sheet_name}
 
 
 def iter_cache(path, sheet_name='CSList', *, required_columns=None, allow_typed=True, id_column='id'):
@@ -134,6 +133,9 @@ def iter_cache(path, sheet_name='CSList', *, required_columns=None, allow_typed=
             meta = json.loads(next(stream, '{}'))
             require(isinstance(meta, dict) and meta.get('format') == FORMAT)
             columns, sheet = meta.get('columns'), meta.get('sheet')
+            require(isinstance(sheet, str) and bool(sheet))
+            sheet_name = select_sheet([sheet], sheet_name)
+            required_columns, id_column = input_layout(sheet, required_columns, id_column)
             require(isinstance(columns, list) and bool(columns) and all(isinstance(c, str) and c and not c.startswith('_') for c in columns))
             require(len(set(columns)) == len(columns) and id_column in columns and meta.get('id_column') == id_column)
             require(required_columns is None or set(columns) == set(required_columns))
