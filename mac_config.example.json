@@ -1,0 +1,19 @@
+{
+  "base_url": "http://127.0.0.1:1234/v1",
+  "api_key": "EMPTY",
+  "model": "openai/gpt-oss-20b",
+  "reasoning_effort": "high",
+  "timeout_seconds": 240,
+  "menu_command": ".venv/bin/python cs_rag.py",
+  "max_context_chars": 24000,
+  "answer_max_tokens": 8192,
+  "answer_temperature": 1,
+  "embedding": {
+    "base_url": "http://127.0.0.1:1234/v1",
+    "api_key": "EMPTY",
+    "model": "cs-embedding",
+    "query_prefix": "Instruct: Given a maintenance symptom, retrieve past equipment failure cases with similar symptoms.\nQuery: ",
+    "batch_size": 16,
+    "min_score": 0.3
+  }
+}

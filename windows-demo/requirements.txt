@@ -1,0 +1,9 @@
+openai==3.10.0
+openpyxl==3.1.5
+kiwipiepy==0.23.2
+kiwipiepy-model==0.23.0
+xlwings==0.37.0; sys_platform == "win32"
+
+numpy==2.5.3
+faiss-cpu==1.15.0
+tiktoken==0.14.0

@@ -1,0 +1,406 @@
+{
+  "provenance": "SYNTHETIC DRAFT: 실제 사용자나 현장 질문이 아닙니다. 기존 합성 corpus의 상황과 질문을 재사용한 30개 유지보수 질문 초안이며, 독립 평가 정확도나 운영 개선 효과를 뜻하지 않습니다.",
+  "synthetic": true,
+  "status": "DRAFT",
+  "source_catalog": "outputs/retrieval-coverage-20260912/catalog.json",
+  "source_cases": "outputs/retrieval-coverage-20260912/cases.json",
+  "label_note": "접수번호 패턴으로 유형을 추측하지 않습니다. 반환된 원문 제목을 template_titles와 정확히 대조합니다. 사용자가 제공하는 실제 평가에는 expected_ids를 사용할 수 있습니다.",
+  "template_titles": {
+    "OLD-001": "진공 도달 지연",
+    "AGY-001": "메인 슬로우 벤트 밸브 개폐 지연",
+    "AGY-002": "칠러 하부 라인 냉각수 공급 유량 저하",
+    "AGY-003": "진공 로봇 R축 이송 진동 및 파티클 감지",
+    "AGY-004": "공정 Ar 가스 MFC 유량 헌팅",
+    "AGY-005": "케미컬 배스 히터 승온 속도 지연",
+    "AGY-006": "로드포트 1번 FOUP 도어 래치 센서 오인식",
+    "AGY-007": "스핀 코터 척 서보 회전수 편차 이상",
+    "AGY-008": "감압 건조 챔버 진공 도달 불량",
+    "AGY-009": "광학 검사기 오토포커스(AF) 축 구동 에러",
+    "AGY-010": "가스 스크러버 차압 상승 및 드레인 정체",
+    "AGY-011": "플라즈마 RF 제너레이터 반사파 알람",
+    "AGY-012": "챔버 압력 게이지(Capacitance Manometer) 영점 틀어짐",
+    "AGY-013": "EFEM 로봇 핑거 진공 감도 불량",
+    "AGY-014": "가스 박스 밸브 매니폴드 미세 압력 상승",
+    "AGY-015": "DIW 고압 린스 펌프 토출 압력 저하",
+    "AGY-016": "코터-디벨로퍼 유닛 간 통신 타임아웃",
+    "AGY-017": "베이크 플레이트 존 3 온도 편차 발생",
+    "AGY-018": "비전 라인스캔 카메라 트리거 신호 누락",
+    "AGY-019": "EFEM 상부 FFU 모터 회전수 저하",
+    "AGY-020": "하부 전극 척 쿨링 라인 고온 경보",
+    "AGY-031": "칠러 순환 필터 차압 상승 및 유량 저하",
+    "AGY-032": "진공 벤트 배기 밸브 솔레노이드 코일 단선",
+    "AGY-033": "DC 24V SMPS 제어 전원 전압 강하",
+    "AGY-034": "터보 분자 펌프(TMP) 정격 회전수 도달 실패",
+    "AGY-035": "진공 이송 로봇 Z축 파워 오프 시 미세 낙하",
+    "AGY-036": "메가소닉 약액 세정 노즐 발진 출력 이상",
+    "AGY-037": "스핀 컵 하부 배기 차압 센서 튜브 꺾임",
+    "AGY-038": "핫 N2 퍼지 라인 인라인 가스 히터 단선",
+    "AGY-039": "검사용 백라이트 조명 컨트롤러 통신 불량",
+    "AGY-040": "후면 비상정지(EMO) 스위치 접점 접촉 불량"
+  },
+  "cases": [
+    {
+      "id": "synthetic-workflow-01",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-01",
+      "question": "챔버에 공기를 다시 넣을 때 밸브에 신호는 가지만 대기압으로 돌아오기까지 너무 오래 걸립니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-001"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-02",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-02",
+      "question": "장비를 식히는 물의 공급량이 줄고 칠러 출구의 압력은 올라갑니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-002",
+        "AGY-031"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-03",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-03",
+      "question": "진공 이송 로봇의 팔이 앞으로 뻗을 때 덜컥거리면서 먼지도 갑자기 많아집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-003"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-04",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-04",
+      "question": "플라즈마에 넣는 아르곤의 양을 일정하게 설정했는데 실제 공급량은 주기적으로 출렁입니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-004"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-05",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-05",
+      "question": "세정 약액을 데우는데 출력을 끝까지 올려도 예전보다 두 배나 오래 걸립니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-005"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-06",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-06",
+      "question": "캐리어를 로드포트에 올렸는데 문 잠금이 풀렸다는 신호가 들어오지 않아 열기를 시작하지 못합니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-006"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-07",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-07",
+      "question": "코팅할 때 웨이퍼를 돌리는 척이 지정한 속도까지 올라가지 못하고 회전이 떨어집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-007"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-08",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-08",
+      "question": "건조실 안의 공기를 계속 빼도 압력이 중간에서 더 내려가지 않습니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-008",
+        "OLD-001"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-09",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-09",
+      "question": "검사기의 자동 초점 장치가 위아래로 움직이다 목표 위치에 도착하지 못하고 멈춥니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-009"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-10",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-10",
+      "question": "가스 처리용 스크러버의 압력 차가 커지고 아래쪽 물 빠지는 곳에는 하얀 가루가 쌓입니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-010"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-11",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-11",
+      "question": "플라즈마를 켜자마자 되돌아오는 전력이 커져서 점화가 되지 않고 발생기가 꺼집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-011"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-12",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-12",
+      "question": "식각 챔버의 압력 표시가 기준 측정기보다 계속 낮게 나옵니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-012"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-13",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-13",
+      "question": "이송 로봇 손끝으로 웨이퍼를 집으면 붙었다는 진공 신호가 늦게 들어와 실패합니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-013"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-14",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-14",
+      "question": "질소 밸브를 닫아 놨는데 뒤쪽 배관의 압력이 몇 시간 동안 조금씩 올라갑니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-014"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-15",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-15",
+      "question": "순수로 헹구는 펌프를 켜도 출구 압력이 낮아 노즐에서 물이 고르게 뿜어지지 않습니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-015"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-16",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-16",
+      "question": "코팅 장치에서 현상 장치로 웨이퍼를 넘길 때 서로 준비 신호를 주고받지 못해 멈춥니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-016"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-17",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-17",
+      "question": "열판의 세 번째 구역만 목표보다 과열되어 온도 편차 경보가 뜹니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-017"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-18",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-18",
+      "question": "웨이퍼를 빠르게 훑어 검사할 때 카메라가 일부 영상을 받지 못해 합친 이미지가 깨집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-018"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-19",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-19",
+      "question": "웨이퍼 반송 장치 앞쪽의 필터 송풍기가 느려지고 내부 양압을 유지하지 못합니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-019"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-20",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-20",
+      "question": "식각할 때 척을 식히고 돌아오는 물이 너무 뜨거워져 척 과열로 멈춥니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-020"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-21",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-31",
+      "question": "칠러 필터 앞뒤의 압력 차이가 커지면서 순환하는 물의 양이 줄었습니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-031"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-22",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-32",
+      "question": "제어기에서 열림 출력은 나오는데 벤트용 공압 밸브가 전혀 열리지 않습니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-032",
+        "AGY-001"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-23",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-33",
+      "question": "장비 가동 중 여러 센서가 한꺼번에 꺼졌다 켜지고 제어 전원 전압이 순간적으로 낮아집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-033"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-24",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-34",
+      "question": "터보 분자 펌프를 켜도 회전이 중간 속도에 머물러 정상 속도 신호가 들어오지 않습니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-034"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-25",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-35",
+      "question": "비상 정지하거나 전원을 끄면 진공 로봇의 팔이 아래로 조금씩 처집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-035"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-26",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-36",
+      "question": "메가소닉 세정 중 초음파 노즐을 구동하는 발생기 출력이 설정 전력보다 크게 낮아집니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-036"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-27",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-37",
+      "question": "코팅 컵 문을 여닫을 때만 배기가 부족하다는 경보가 켜지는데 실제 배기 흐름은 정상입니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-037"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-28",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-38",
+      "question": "건조용 질소를 뜨겁게 보내야 하는데 가스를 데워도 출구가 미지근한 상태에 머뭅니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-038"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-29",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-39",
+      "question": "검사 조건을 바꿔도 조명 밝기가 이전 값에 고정되고 조명 제어기가 응답하지 않습니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-039"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    },
+    {
+      "id": "synthetic-workflow-30",
+      "synthetic": true,
+      "status": "DRAFT",
+      "category": "SYNTHETIC 유지보수 조치·관찰 질문",
+      "source_case_id": "paraphrase-40",
+      "question": "뒤쪽 비상 정지 버튼을 아무도 누르지 않았는데 진동이 생기면 전원이 차단됩니다. 비슷한 기록에서 실제로 한 조치와 관찰 결과를 알려 주세요. 예정인 내용은 구분해 주세요.",
+      "expected_templates": [
+        "AGY-040"
+      ],
+      "review": "같은 합성 상황에서 만든 초안입니다. 실패·재발·관찰 범위와 계획을 보존했는지 원문으로 검토해야 합니다."
+    }
+  ]
+}

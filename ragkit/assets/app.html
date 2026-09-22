@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="__SESSION_TOKEN__">
+  <title>CS RAG</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <div class="app">
+    <nav aria-label="주요 메뉴">
+      <p class="brand">CS RAG</p>
+      <ul class="nav-list">
+        <li><button type="button" class="nav-btn" data-nav="source" aria-current="page">자료</button></li>
+        <li><button type="button" class="nav-btn" data-nav="review">문장 검토</button></li>
+        <li><button type="button" class="nav-btn" data-nav="ask">질문</button></li>
+      </ul>
+      <button type="button" class="linkish" id="open-settings">설정</button>
+      <button type="button" class="linkish" id="open-llm-messages">LLM 요청·응답</button>
+      <p class="output-label">출력 폴더</p>
+      <p id="output-path" class="output-path"></p>
+    </nav>
+    <div class="workspace">
+      <div id="job-banner" class="job-banner" hidden role="status" aria-live="polite"></div>
+      <main id="main" tabindex="-1">
+        <section data-view="source">
+          <h1>자료</h1>
+          <p class="lead">Excel 또는 변환 파일의 전체 경로를 입력해 DB에 등록합니다. 등록 후에는 파일 없이 DB로 작업합니다. 시트는 CSList입니다.</p>
+          <form id="source-form">
+            <p>
+              <label for="excel-path">입력 파일 전체 경로 (.xlsx / .rag.jsonl.gz)</label>
+              <input id="excel-path" name="path" type="text" autocomplete="off" spellcheck="false" required>
+            </p>
+            <fieldset>
+              <legend>읽기 방식</legend>
+              <label class="choice"><input type="radio" name="reader" value="openpyxl" checked> 일반 파일</label>
+              <label class="choice"><input type="radio" name="reader" value="xlwings"> Windows Excel에서 열린 파일</label>
+            </fieldset>
+            <p class="muted">DRM 파일은 Excel에서 인증 후 열어 두세요. 셀을 편집 중이면 Enter로 확정하거나 Esc로 취소하고, 열린 대화상자를 처리한 뒤 실행하세요.</p>
+            <div class="actions">
+              <button type="submit" id="inspect-btn">입력 검사</button>
+              <button type="button" id="import-btn">DB에 추가·갱신</button>
+              <button type="button" id="convert-btn">실험용 파일로 변환</button>
+              <button type="button" id="normalize-btn">DB 문장 다듬기 / 이어서 실행</button>
+            </div>
+            <p class="muted">먼저 DB에 추가·갱신을 실행하세요. 등록 완료 후 Excel을 삭제해도 원문 조회·다듬기·번역·벡터·질문은 DB만으로 동작합니다. 새 접수번호는 추가하고, 동일 자료는 재사용하며, 파일에서 빠진 기존 접수는 보존합니다. 같은 파일의 수정 건은 갱신하고 검토를 다시 표시합니다. 다른 파일에서 같은 접수번호의 내용이 다르면 등록을 중단합니다.</p>
+            <p class="muted">다듬기는 등록된 DB 전체를 대상으로 하며 동일 원문·설정의 성공 결과는 재사용합니다. 실패가 있어도 나머지 행을 처리하고, 성공한 제안은 중간 저장합니다. 이번 다듬기가 모두 성공하면 제안을 반영하며 이미 등록된 원문은 계속 보존합니다.</p>
+          </form>
+          <p class="muted">변환은 모델을 호출하지 않으며, 완료되면 변환 파일을 입력으로 선택합니다. 원문·자료형·셀 주소는 보존됩니다. 이후에는 Excel을 닫아도 됩니다. 원본 Excel이나 열 대응을 바꿨다면 원본을 선택해 다시 변환하세요.</p>
+          <p id="source-status" class="status" role="status"></p>
+          <div id="convert-progress-panel" class="cell" hidden>
+            <label for="convert-progress">파일 변환 · 현재 단계 진행률</label>
+            <progress id="convert-progress" max="100" aria-describedby="convert-progress-detail"></progress>
+            <p id="convert-progress-detail" class="status" role="status"></p>
+            <p id="convert-excel-hint" class="muted" hidden>Excel 응답 대기가 길면 셀 편집 상태와 열린 대화상자를 확인하세요. Enter는 편집 확정, Esc는 편집 취소입니다.</p>
+          </div>
+          <p id="source-error" class="error" role="alert" hidden></p>
+          <dl id="source-meta" class="meta" hidden></dl>
+          <div class="cell" aria-labelledby="overnight-title">
+            <h2 id="overnight-title">야간 자동 실행</h2>
+            <p class="muted">다듬기 → 검사 통과 제안 자동 채택 → 벡터 → 영어 번역까지 준비합니다. 기존 검토 선택은 보존합니다. 성공 결과는 재사용하며, 실패분은 60~300초 간격으로 중지할 때까지 재시도합니다.</p>
+            <div class="actions"><button type="button" id="overnight-btn">자동 채택하고 검색까지 준비</button><button type="button" id="overnight-stop-btn" class="quiet" disabled>야간 실행 중지</button></div>
+            <p class="muted">등록된 DB 전체를 처리하므로 Excel이 필요하지 않습니다. 브라우저를 닫아도 실행됩니다. 프로그램·LM Studio는 켜 두고 PC 절전은 해제하세요. 중지는 진행 중인 행·묶음의 저장 후 적용됩니다. 인증·설정 오류는 확인이 필요합니다.</p>
+            <p id="overnight-status" class="status" role="status"></p>
+            <p id="overnight-error" class="error" role="alert" hidden></p>
+          </div>
+          <div class="cell" aria-labelledby="vectors-title">
+            <h2 id="vectors-title">벡터 검색 자료</h2>
+            <p class="muted">표현이 달라도 의미가 비슷한 현상을 찾습니다. 별도 임베딩 모델이 필요하며, 현재 설정 파일에서 지정합니다.</p>
+            <p id="vectors-count" class="muted"></p>
+            <p id="embedding-auto-status" class="status" role="status"></p>
+            <p class="muted">임베딩 설정이 있으면 시작 시 서버·모델을 준비하고, DB 등록·변환·검토 저장 후 필요한 벡터를 자동 생성합니다. 아래 버튼은 일부만 시험하거나 실패분을 다시 처리할 때 사용합니다.</p>
+            <label for="vectors-limit">이번 처리 범위</label>
+            <select id="vectors-limit"><option value="20">남은 고유 문서 중 20개</option><option value="0">남은 문서 전체</option></select>
+            <div class="actions"><button type="button" id="vectors-btn">벡터 생성 / 이어서 실행</button></div>
+            <p class="muted">등록된 DB를 사용하며 Excel이 필요하지 않습니다. 기존 수정 제안·검토는 유지합니다. 임베딩은 현상·제목·설비 정보와 채택문을 사용하며, 동일 내용은 재사용합니다. 일부만 생성하면 벡터 검색도 그 범위로 제한됩니다.</p>
+            <p id="vectors-status" class="status" role="status"></p>
+            <p id="vectors-error" class="error" role="alert" hidden></p>
+          </div>
+          <div class="cell" aria-labelledby="english-title">
+            <h2 id="english-title">영어 검색 자료</h2>
+            <p class="muted">한국어 원문과 검토 결과를 유지하며 현상·원인·조치·제목의 영어 번역을 추가합니다. 먼저 일부 자료로 검색을 비교한 뒤 전체를 처리하세요.</p>
+            <p id="english-count" class="muted"></p>
+            <label for="english-limit">이번 처리 범위</label>
+            <select id="english-limit"><option value="20">남은 자료 중 20건</option><option value="1000">남은 자료 중 1,000건</option><option value="0">남은 자료 전체</option></select>
+            <div class="actions"><button type="button" id="english-btn" disabled>영어 변환 / 이어서 실행</button><button type="button" id="english-retry-btn" class="quiet" disabled>영어 실패 건 재시도</button></div>
+            <p class="muted">성공 건은 자동 저장하고 실패 건을 건너뛰어 계속 진행합니다. 설정에서 자동 갱신을 켜면 검토 저장 후 영어 자료를 갱신합니다. 꺼져 있으면 직접 변환하세요. 실패 건 재시도는 처리 범위 선택과 관계없이 실패한 자료 전체를 처리합니다. 번역은 검색 보조 자료이며 답변 근거는 한국어 원문입니다.</p>
+            <p id="english-status" class="status" role="status"></p>
+            <p id="english-error" class="error" role="alert" hidden></p>
+          </div>
+          <div id="header-mapping" class="mapping-panel" hidden>
+            <h2>열 이름 대응</h2>
+            <p class="muted">내보내기마다 다른 열 이름을 이 양식 열에 맞춥니다. 저장한 뒤에 입력 검사를 다시 통과해야 문장 다듬기를 실행할 수 있습니다. 자동으로 맞추거나 열을 빼지 않습니다.</p>
+            <p id="header-mapping-file" class="muted"></p>
+            <p id="header-mapping-missing" class="muted"></p>
+            <div id="header-mapping-unknown"></div>
+            <h3 id="header-mapping-saved-title">저장한 대응</h3>
+            <div id="header-mapping-saved"></div>
+            <div class="actions">
+              <button type="button" id="header-mapping-save">열 대응 저장</button>
+            </div>
+          </div>
+        </section>
+        <section data-view="review" hidden>
+          <h1>문장 검토</h1>
+          <p class="lead">접수를 고른 뒤 원문과 수정문을 비교합니다. 여러 셀을 선택해 일괄 채택하거나 원문을 유지할 수 있습니다. 검토 저장을 누르면 변경한 셀 모두가 DB에 반영됩니다.</p>
+          <div class="cell" aria-labelledby="batch-review-title">
+            <h2 id="batch-review-title">현재 자료 전체 처리</h2>
+            <p id="batch-review-scope" class="muted"></p>
+            <p class="muted">검색 조건·페이지와 관계없이 미검토 수정 제안을 모두 채택하고 저장합니다. 기존 채택·원문 유지·직접 편집은 보존합니다. 빈 셀·제안 없는 접수·검사에 실패한 제안은 제외합니다.</p>
+            <div class="actions"><button type="button" id="accept-pending-btn" disabled>미검토 제안 전체 채택·저장</button></div>
+            <p class="muted">화면에서 변경한 검토가 있다면 먼저 검토 저장을 누르세요.</p>
+            <p id="batch-review-status" class="status" role="status"></p>
+            <p id="batch-review-error" class="error" role="alert" hidden></p>
+          </div>
+          <div class="review-layout">
+            <div class="list-pane">
+              <form id="search-form">
+                <label for="search-q">접수 검색</label>
+                <div class="row">
+                  <input id="search-q" type="search" autocomplete="off">
+                  <button type="submit">검색</button>
+                </div>
+              </form>
+              <p id="list-status" class="muted"></p>
+              <ul id="record-list" class="record-list" aria-label="접수 목록"></ul>
+              <div class="pager">
+                <button type="button" id="prev-page">이전 페이지</button>
+                <span id="page-info"></span>
+                <button type="button" id="next-page">다음 페이지</button>
+              </div>
+            </div>
+            <div class="detail-pane">
+              <p id="unsaved" class="unsaved" hidden role="status">저장하지 않은 검토 변경이 있습니다.</p>
+              <p id="review-error" class="error" role="alert" hidden></p>
+              <p id="review-status" class="status" role="status"></p>
+              <div id="record-detail"><p class="muted">왼쪽 목록에서 접수를 선택하세요.</p></div>
+            </div>
+          </div>
+        </section>
+        <section data-view="ask" hidden>
+          <h1>질문</h1>
+          <p class="lead">문제 현상을 입력하면 유사한 과거 사례의 조치와 관찰 결과·미확인 사항을 찾아봅니다. 설비명·알람 코드·발생 조건을 함께 쓰면 범위를 좁힐 수 있습니다.</p>
+          <p class="muted">질문은 접수 순서대로 처리합니다. 내 브라우저에서는 한 번에 한 건을 제출하며 새로고침해도 상태를 확인할 수 있습니다. 서버를 종료하면 대기·결과는 초기화됩니다.</p>
+          <form id="ask-form">
+            <label for="question">문제 현상 또는 질문</label>
+            <textarea id="question" name="question" rows="4" required maxlength="2000" placeholder="예: 진공 알람이 반복되고 목표 압력에 늦게 도달합니다. 과거 유사 사례에서 어떤 조치를 했고 결과는 어땠나요?"></textarea>
+            <label for="search-mode">검색 방식</label>
+            <select id="search-mode"><option value="keyword">키워드 검색</option><option value="hybrid">키워드 + 벡터 검색</option><option value="vector">벡터 검색</option></select>
+            <p class="muted">접수번호·코드·날짜는 정확 검색을 사용합니다. 결합 검색은 벡터를 사용할 수 없으면 키워드 검색으로 진행하고 이유를 표시합니다.</p>
+            <label for="reference-mode">답변에 전달할 참고 사례 수</label>
+            <select id="reference-mode"><option value="manual">직접 지정</option><option value="auto">문맥 길이에 맞춰 자동</option></select>
+            <div id="reference-manual-fields">
+              <label for="reference-limit">최대 사례 수 (1~100건)</label>
+              <input id="reference-limit" type="number" min="1" max="100" step="1" value="3" required>
+            </div>
+            <p class="muted">질문하거나 검색을 비교하면 설정이 저장됩니다. 자동은 상위 100건 안에서 질문·원문·답변 및 추론 분량을 고려합니다. 서버 문맥을 확인하지 못하면 설정값 또는 문자 제한을 사용하며 결과에 표시합니다. 원문 셀은 자르지 않습니다.</p>
+            <label class="choice"><input type="checkbox" id="bilingual" checked> 영어 번역 질문 함께 사용</label>
+            <p class="muted">한국어 질문을 한 번 번역해 원문과 함께 답변 모델에 전달합니다. 영어 검색 자료가 있으면 키워드·결합 검색에도 활용합니다. 벡터 질의는 원문을 사용하며, 번역 실패 시 원문만으로 계속합니다.</p>
+            <div class="actions"><button type="submit" id="ask-btn">질문하기</button><button type="button" id="compare-btn">검색만 비교</button></div>
+            <p class="muted">검색만 비교는 한국어 키워드·벡터·결합 후보를 보여 줍니다. 임베딩 서버만 호출합니다.</p>
+          </form>
+          <p id="ask-progress" class="status" role="status"></p>
+          <p id="ask-error" class="error" role="alert" hidden></p>
+          <article id="ask-result" hidden>
+            <h2 id="ask-result-title">답변</h2>
+            <p id="ask-status" class="answer-status" role="status"></p>
+            <details id="ask-translation" hidden>
+              <summary>영어 번역 질문 확인</summary>
+              <p class="muted">질문 이해를 위한 보조 표현입니다. 답변과 인용 근거는 한국어 원문을 기준으로 합니다.</p>
+              <p id="ask-translated-question" class="quote"></p>
+            </details>
+            <div id="ask-answer" class="answer"></div>
+            <h3 id="ask-evidence-title">인용 근거</h3>
+            <div id="ask-evidence"></div>
+            <details id="ask-supplements-panel" hidden>
+              <summary>추가 참고 원문</summary>
+              <p class="muted">답변에 직접 인용하지 않은 같은 접수의 원문입니다. 앞뒤 작업과 관찰 결과를 확인할 때 펼쳐 보세요.</p>
+              <div id="ask-supplements"></div>
+            </details>
+            <details id="ask-details">
+              <summary>처리 정보·검사 안내</summary>
+              <p id="ask-note" class="muted"></p>
+              <p id="ask-references" class="muted"></p>
+              <details id="ask-search" hidden><summary>검색 방식과 후보 비교</summary><pre id="ask-search-detail" class="quote"></pre></details>
+            </details>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+  <dialog id="settings" aria-labelledby="settings-title">
+    <form method="dialog">
+      <h2 id="settings-title">설정</h2>
+      <p class="muted">동시 처리 수와 영어 자동 갱신을 여기서 저장합니다. 모델·서버·추론 옵션은 설정 파일에서 변경하세요.</p>
+      <p><label for="normalization-workers">문장 다듬기·영어 번역 동시 처리 수 (1~1000건)</label>
+        <input id="normalization-workers" type="number" min="1" max="1000" step="1" value="200" required>
+      </p>
+      <p class="muted">기본값은 200건입니다. 서버 성능에 따라 늘려도 빨라지지 않을 수 있습니다. 실행 중에는 변경할 수 없습니다.</p>
+      <label class="choice"><input type="checkbox" id="auto-english" checked> 검토 저장 후 영어 자동 갱신</label>
+      <button type="button" id="save-settings">설정 저장</button>
+      <p id="settings-status" role="status"></p>
+      <p id="settings-error" class="error" role="alert" hidden></p>
+      <dl id="settings-meta" class="meta"></dl>
+      <button type="submit" value="close">닫기</button>
+    </form>
+  </dialog>
+  <dialog id="llm-messages" aria-labelledby="llm-messages-title">
+    <h2 id="llm-messages-title">LLM 요청·응답</h2>
+    <p class="muted">최근 30개 요청입니다. 항목을 펼치면 실제 프롬프트와 응답을 볼 수 있습니다. 서버가 제공한 경우 추론 내용도 포함됩니다.</p>
+    <button type="button" id="refresh-llm-messages">새로고침</button>
+    <p id="llm-messages-status" role="status"></p>
+    <div id="llm-messages-list"></div>
+    <form method="dialog"><button type="submit">닫기</button></form>
+  </dialog>
+  <script src="/app.js"></script>
+</body>
+</html>
