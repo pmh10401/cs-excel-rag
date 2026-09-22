@@ -23,7 +23,7 @@ def main():
     files += [(ROOT / 'tests' / name, 'tests/' + name) for name in ('__init__.py', 'test_windows.py', 'test_cslist.py', 'test_excel_app.py', 'test_rag.py', 'test_headers.py', 'test_ui.py', 'test_resume.py', 'test_quality.py', 'test_parallel.py', 'test_search_focus.py', 'test_korean_search.py', 'test_bulk_reviews.py', 'test_english.py', 'test_semantic.py')]
     files.append((ROOT / 'tests/test_source_cache.py', 'tests/test_source_cache.py'))
     files.append((ROOT / 'tests/test_embedding_startup.py', 'tests/test_embedding_startup.py'))
-    for name in ('test_workflow_auto.py', 'test_retrieval_evaluation.py', 'test_overnight.py', 'test_multiuser.py', 'test_action_outcomes.py', 'test_incremental.py', 'test_history_input.py'):
+    for name in ('test_workflow_auto.py', 'test_retrieval_evaluation.py', 'test_overnight.py', 'test_multiuser.py', 'test_action_outcomes.py', 'test_incremental.py', 'test_history_input.py', 'test_import_queue.py'):
         files.append((ROOT / 'tests' / name, 'tests/' + name))
     # 한국 시간 기준 생성 시각을 초 단위로 붙입니다. 파일 내용은 ZIP이며 풀기 전에 .zip으로 바꿉니다.
     timestamp = datetime.now(timezone(timedelta(hours=9))).strftime('%Y%m%d-%H%M%S')

@@ -33,7 +33,10 @@ button{border:0;border-radius:22px;background:var(--accent);color:#fff;padding:1
 button[disabled]{opacity:.5;cursor:not-allowed}
 .row{display:flex;gap:8px}.row input{flex:1}
 .status{min-height:1.4em;color:var(--muted)}
-#convert-progress{display:block;width:100%;height:12px;margin-top:12px;accent-color:var(--accent)}
+#convert-progress,#import-queue-progress{display:block;width:100%;height:12px;margin-top:12px;accent-color:var(--accent)}
+#import-queue-list{max-height:320px;overflow:auto;padding-left:24px;overflow-wrap:anywhere}
+#import-queue-list li{padding:8px 0;border-bottom:1px solid var(--line)}
+#import-queue-list small{display:block}
 .error{color:var(--danger);white-space:pre-wrap}
 .meta{background:var(--surface);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:16px 20px;display:grid;grid-template-columns:140px 1fr;gap:8px 16px;margin:12px 0}
 .meta dt{color:var(--muted);font-size:13px}

@@ -58,6 +58,17 @@
           </div>
           <p id="source-error" class="error" role="alert" hidden></p>
           <dl id="source-meta" class="meta" hidden></dl>
+          <div class="cell" aria-labelledby="import-queue-title">
+            <h2 id="import-queue-title">여러 파일 등록 대기열</h2>
+            <label for="import-paths">전체 경로를 한 줄에 하나씩 입력하세요 (최대 100파일)</label>
+            <textarea id="import-paths" rows="4" spellcheck="false" aria-describedby="import-queue-help" placeholder="C:\CS자료\기존자료.xlsx&#10;C:\CS자료\누적자료.xlsx&#10;C:\CS자료\변환자료.rag.jsonl.gz"></textarea>
+            <p id="import-queue-help" class="muted">프로그램이 실행되는 PC의 경로를 사용합니다. 위에서 선택한 읽기 방식으로 순서대로 등록하며, 변환 파일은 일반 파일로 읽습니다. DRM 파일은 모두 Excel에서 열고 셀 편집을 끝내세요. 실패한 파일이 있어도 다음 파일을 계속 처리합니다.</p>
+            <div class="actions"><button type="button" id="import-many-btn">대기열 등록 시작</button><button type="button" id="import-retry-btn" class="quiet" disabled>실패 파일만 재시도</button></div>
+            <p class="muted">같은 경로는 한 번만 처리하고, 번호·원문이 같은 자료는 재사용합니다. 내용 충돌은 해당 파일 전체를 제외합니다. 브라우저를 닫아도 처리는 계속되지만 프로그램 재시작 시 대기 목록은 초기화됩니다. 등록 후 DB 문장 다듬기 또는 야간 자동 실행을 누르세요.</p>
+            <p id="import-queue-status" class="status" role="status" aria-live="polite"></p>
+            <progress id="import-queue-progress" max="100" value="0" aria-label="파일 등록 진행률" hidden></progress>
+            <ol id="import-queue-list" aria-label="파일별 등록 상태"></ol>
+          </div>
           <div class="cell" aria-labelledby="overnight-title">
             <h2 id="overnight-title">야간 자동 실행</h2>
             <p class="muted">다듬기 → 검사 통과 제안 자동 채택 → 벡터 → 영어 번역까지 준비합니다. 기존 검토 선택은 보존합니다. 성공 결과는 재사용하며, 실패분은 60~300초 간격으로 중지할 때까지 재시도합니다.</p>

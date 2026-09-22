@@ -91,6 +91,9 @@ function setPending(running) {
 function updateLocks() {
   const jobLock = ui.busy || ui.serverBusy;
   const reqLock = ui.pending;
+  $('import-paths').disabled = jobLock || reqLock;
+  $('import-many-btn').disabled = jobLock || reqLock || ui.mappingDirty || !$('import-paths').value.trim();
+  $('import-retry-btn').disabled = jobLock || reqLock || ui.mappingDirty || !(ui.importQueue && ui.importQueue.failed);
   $('reference-mode').disabled = ui.busy || reqLock;
   $('reference-manual-fields').hidden = $('reference-mode').value === 'auto';
   $('reference-limit').disabled = ui.busy || reqLock || $('reference-mode').value === 'auto';
@@ -210,6 +213,7 @@ function renderJob(job) {
   ui.maintenance = job.maintenance_running ?? (running && job.kind !== 'ask');
   ui.overnightRunning = running && job.kind === 'overnight';
   setBusy(running || ui.maintenance);
+  if (job.kind === 'import_many') renderImportQueue(job.result || job.progress);
   $('convert-progress-panel').hidden = job.kind !== 'convert' || job.status === 'idle';
   if (job.status === 'idle' || !job.kind) {
     if (!running) banner.hidden = true;
@@ -217,8 +221,9 @@ function renderJob(job) {
     return;
   }
   banner.hidden = false;
-  banner.className = 'job-banner' + (job.status === 'error' ? ' is-error' : job.status === 'done' ? ' is-done' : '');
-  const kind = job.kind === 'import' ? 'DB 등록' : job.kind === 'normalize' ? '문장 다듬기' : job.kind === 'ask' ? '질문' : job.kind === 'bulk_review' ? '전체 제안 채택' : job.kind === 'english' ? '영어 변환' : job.kind === 'convert' ? '입력 파일 변환' : job.kind === 'vectors' ? '벡터 생성' : job.kind === 'auto_vectors' ? '임베딩 자동 준비·갱신' : job.kind === 'auto_search' ? '영어·벡터 자동 갱신' : job.kind;
+  const partialImport = job.kind === 'import_many' && job.result && job.result.failed;
+  banner.className = 'job-banner' + (job.status === 'error' || partialImport ? ' is-error' : job.status === 'done' ? ' is-done' : '');
+  const kind = job.kind === 'import_many' ? '여러 파일 DB 등록' : job.kind === 'import' ? 'DB 등록' : job.kind === 'normalize' ? '문장 다듬기' : job.kind === 'ask' ? '질문' : job.kind === 'bulk_review' ? '전체 제안 채택' : job.kind === 'english' ? '영어 변환' : job.kind === 'convert' ? '입력 파일 변환' : job.kind === 'vectors' ? '벡터 생성' : job.kind === 'auto_vectors' ? '임베딩 자동 준비·갱신' : job.kind === 'auto_search' ? '영어·벡터 자동 갱신' : job.kind;
   let msg = kind + ' · ' + (job.stage || job.status) + ' · ' + (job.elapsed_seconds || 0) + '초';
   if (job.status === 'queued') msg = '질문 대기 중 · 대기 순서 ' + job.queue_position + '번째';
   else if (job.status === 'running') msg = '진행 중 · ' + msg;
@@ -246,7 +251,9 @@ function renderJob(job) {
   if (progress) {
     if (typeof progress.workers === 'number') msg += ' · 동시 처리 설정 ' + progress.workers + '건';
     if (job.status === 'running' && typeof progress.active === 'number') msg += ' · 처리 중 ' + progress.active + '건';
-    if (typeof progress.completed === 'number' && typeof progress.total === 'number') {
+    if (job.kind === 'import_many') {
+      msg += ' · 파일 ' + progress.completed + '/' + progress.total + ' · 성공 ' + progress.succeeded + ' · 실패 ' + progress.failed + ' · 경로 중복 제외 ' + progress.skipped;
+    } else if (typeof progress.completed === 'number' && typeof progress.total === 'number') {
       msg += ' · 처리 ' + (progress.attempted ?? progress.completed) + '/' + progress.total + '건 · 성공 ' + progress.completed + '건';
       if (typeof progress.failed === 'number') msg += ' · 실패 ' + progress.failed + '건';
     }
@@ -292,6 +299,12 @@ async function refreshJob() {
     if (!job.kind || job.status === 'idle' || ui.handled === key) return;
     ui.handled = key;
     if (job.kind === 'overnight') applyState(await api('/api/state'));
+    if (job.kind === 'import_many') {
+      applyState(await api('/api/state'));
+      showAlert('source-error', job.error || '');
+      setText($('source-status'), job.status === 'error' ? '대기열 작업 오류입니다. 파일별 상태를 확인하세요.' :
+        '대기열 처리가 끝났습니다. 파일별 등록 결과를 확인하세요. 등록한 자료는 Excel 없이 사용할 수 있습니다.');
+    }
     if (job.kind === 'convert') {
       if (job.status === 'done') {
         $('excel-path').value = job.result.path;
@@ -600,6 +613,56 @@ async function startDataJob(kind) {
   } catch (err) {
     setBusy(false);
     showAlert('source-error', err.message);
+  }
+}
+
+function renderImportQueue(result) {
+  if (!result || !result.files) return;
+  ui.importQueue = result;
+  const names = {waiting: '대기', running: '처리 중', done: '등록 완료', error: '실패', skipped: '경로 중복 제외'};
+  const list = $('import-queue-list');
+  list.replaceChildren();
+  result.files.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = names[item.status] + ' · ' + item.path;
+    const detail = document.createElement('small');
+    detail.className = item.status === 'error' ? 'error' : 'muted';
+    detail.textContent = item.error || item.reason || (item.import ?
+      item.sheet + ' · 추가 ' + item.import.added + '건 · 갱신 ' + item.import.updated + '건 · 동일 ' + item.import.unchanged + '건' : '');
+    li.append(detail);
+    list.append(li);
+  });
+  const bar = $('import-queue-progress');
+  bar.hidden = false;
+  bar.max = result.total;
+  bar.value = result.completed;
+  setText($('import-queue-status'), '파일 ' + result.completed + '/' + result.total + ' · 성공 ' + result.succeeded +
+    ' · 실패 ' + result.failed + ' · 경로 중복 제외 ' + result.skipped);
+  updateLocks();
+}
+
+async function startImportQueue(retry) {
+  if (ui.busy || ui.serverBusy || ui.pending || ui.mappingDirty || !confirmLeave()) return;
+  const paths = retry ? ui.importQueue.files.filter(item => item.status === 'error').map(item => item.path) :
+    $('import-paths').value.split(/\r?\n/).map(path => path.trim()).filter(Boolean);
+  if (!paths.length || paths.length > 100) {
+    showAlert('source-error', '파일 경로를 한 줄에 하나씩, 1~100개 입력하세요.');
+    return;
+  }
+  const reader = retry ? ui.importQueue.reader : sourceBody().reader;
+  discardReview();
+  showAlert('source-error', '');
+  setPending(true);
+  try {
+    await api('/api/import-many', {method: 'POST', body: {paths, reader}});
+    ui.handled = '';
+    setBusy(true);
+    startPoll();
+    await refreshJob();
+  } catch (err) {
+    showAlert('source-error', err.message);
+  } finally {
+    setPending(false);
   }
 }
 
@@ -1404,6 +1467,9 @@ $('save-settings').addEventListener('click', saveSettings);
 $('source-form').addEventListener('submit', function (ev) { ev.preventDefault(); inspectSource(); });
 $('normalize-btn').addEventListener('click', () => startDataJob('normalize'));
 $('import-btn').addEventListener('click', () => startDataJob('import'));
+$('import-many-btn').addEventListener('click', () => startImportQueue(false));
+$('import-retry-btn').addEventListener('click', () => startImportQueue(true));
+$('import-paths').addEventListener('input', updateLocks);
 $('overnight-btn').addEventListener('click', startOvernight);
 $('overnight-stop-btn').addEventListener('click', stopOvernight);
 $('convert-btn').addEventListener('click', startConvert);

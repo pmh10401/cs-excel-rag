@@ -40,7 +40,7 @@ STATIC = {
     '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
 }
 GET_API = {'/api/state', '/api/job', '/api/records', '/api/record', '/api/llm-messages'}
-POST_API = {'/api/inspect', '/api/import', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop'}
+POST_API = {'/api/inspect', '/api/import', '/api/import-many', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop'}
 PUBLIC_CONFIG = ('model', 'base_url', 'reasoning_effort', 'timeout_seconds',
                  'max_context_chars', 'max_tokens', 'context_window', 'temperature', 'top_p',
                  'answer_max_tokens', 'answer_temperature', 'answer_top_p')
@@ -533,11 +533,12 @@ class App:
                 result = func()
                 if kind == 'bulk_review':
                     result.update(self.update_search(result.pop('_review_ids', [])))
-                if self.auto_index_enabled() and kind in ('convert', 'import'):
+                if self.auto_index_enabled() and (kind in ('convert', 'import') or
+                                                  (kind == 'import_many' and result['succeeded'])):
                     try:
                         result['embedding'] = self.update_vectors(input_changed=kind == 'convert')
                     except Exception as error:
-                        # 변환 파일은 보관하고 임베딩 실패만 별도로 알립니다.
+                        # 등록·변환 결과는 보관하고 임베딩 실패만 별도로 알립니다.
                         result['embedding_warning'] = self.redact(error)
                 finished = time.monotonic()
                 with self.lock:
@@ -668,18 +669,80 @@ class App:
 
     def import_input(self, body):
         path, reader = self.require_excel(body)
-        def work():
-            self.set_stage('Excel 원문을 DB에 누적 등록 중')
+        self.start_job('import', lambda: self.import_file(path, reader))
+        return {'accepted': True, 'kind': 'import'}
+
+    def import_file(self, path, reader):
+        """한 파일의 검사·저장을 끝냅니다. 단일 등록과 대기열이 같은 보존 규칙을 씁니다."""
+        self.set_stage(f'{path.name} · 원문을 DB에 누적 등록 중')
+        previous_sheet = self.input_sheet
+        try:
             rows = self.read_rows(path, reader)
             incoming = {}
             with closing(self.connect()) as db:
                 ingest(db, rows, self.rules, schema=self.schema, append=True, import_result=incoming)
-            with self.lock:
-                self.excel, self.excel_text, self.reader = path, str(path), reader
-            self.save_settings()
-            return {'rows': len(rows), 'import': incoming, 'path': str(path)}
-        self.start_job('import', work)
-        return {'accepted': True, 'kind': 'import'}
+        except Exception:
+            self.input_sheet = previous_sheet  # 실패한 다른 양식을 선택된 파일의 시트로 표시하지 않습니다.
+            raise
+        with self.lock:
+            self.excel, self.excel_text, self.reader = path, str(path), reader
+        self.save_settings()
+        return {'rows': len(rows), 'import': incoming, 'path': str(path),
+                'reader': reader, 'sheet': rows[0]['_source_sheet']}
+
+    def import_many(self, body):
+        paths = body.get('paths')
+        reader = body.get('reader', self.reader)
+        if set(body) - {'paths', 'reader'} or not isinstance(paths, list) or not 1 <= len(paths) <= 100:
+            raise ApiError(400, '파일 경로를 1~100개 지정하세요. 읽기 방식도 함께 지정할 수 있습니다.')
+        if any(not isinstance(path, str) or not path.strip() or '\x00' in path or len(path) > MAX_PATH for path in paths):
+            raise ApiError(400, '각 파일의 전체 경로를 올바르게 입력하세요.')
+        if reader not in ('openpyxl', 'xlwings'):
+            raise ApiError(400, '읽기 방식은 일반 파일 또는 Windows Excel에서 열린 파일이어야 합니다.')
+
+        def work():
+            # ponytail: 최대 100파일의 메모리 대기열. 서버 재시작 복구가 필요하면 작업 목록을 영속화합니다.
+            files = [{'path': path, 'status': 'waiting'} for path in paths]
+            result = {'files': files, 'reader': reader, 'total': len(files), 'completed': 0,
+                      'succeeded': 0, 'failed': 0, 'skipped': 0, 'rows': 0,
+                      'import': {'added': 0, 'updated': 0, 'unchanged': 0}}
+
+            def publish():
+                with self.lock:
+                    # 조회 스레드가 처리 도중 바뀌는 목록을 읽지 않도록 스냅샷을 교체합니다.
+                    self.job['progress'] = result | {'files': [dict(item) for item in files],
+                                                     'import': dict(result['import'])}
+
+            seen = set()
+            publish()
+            for item in files:
+                item['status'] = 'running'
+                publish()
+                try:
+                    path = self.resolve_excel(item['path'])
+                    item['path'] = str(path)
+                    if path in seen:
+                        item.update(status='skipped', reason='대기열에 같은 파일 경로가 있어 한 번만 처리합니다.')
+                        result['skipped'] += 1
+                    else:
+                        seen.add(path)
+                        path, mode = self.require_excel({'path': str(path), 'reader': reader})
+                        item.update(self.import_file(path, mode), status='done')
+                        result['succeeded'] += 1
+                        result['rows'] += item['rows']
+                        for key in result['import']:
+                            result['import'][key] += item['import'][key]
+                except Exception as error:
+                    message, code = self.public_error(error)
+                    item.update(status='error', error=message, code=code)
+                    result['failed'] += 1
+                result['completed'] += 1
+                publish()
+            return result
+
+        # 기존 작업 잠금을 사용합니다. Excel/SQLite는 파일별로 순차 처리하고 벡터는 마지막에 갱신합니다.
+        self.start_job('import_many', work)
+        return {'accepted': True, 'kind': 'import_many'}
 
     def normalize(self, body):
         # 경로를 명시한 기존 API 요청도 지원합니다. 새 UI는 등록한 DB 전체를 처리합니다.
@@ -1164,6 +1227,8 @@ class App:
                     send_json(handler, 200, self.inspect(body))
                 elif path == '/api/import':
                     send_json(handler, 202, self.import_input(body))
+                elif path == '/api/import-many':
+                    send_json(handler, 202, self.import_many(body))
                 elif path == '/api/convert':
                     send_json(handler, 202, self.convert(body))
                 elif path == '/api/normalize':
