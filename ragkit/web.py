@@ -769,6 +769,8 @@ class App:
             if self.job['kind'] != 'overnight' or self.job['status'] != 'running':
                 raise ApiError(409,'실행 중인 야간 작업이 없습니다.')
             self.overnight_stop.set()
+            if self.job.get('overnight'):
+                self.job['overnight']['stop_requested'] = True
             self.job['stage'] = '중지 요청됨 · 진행 중인 행·묶음을 저장한 뒤 중지합니다.'
         return {'stopping':True}
 

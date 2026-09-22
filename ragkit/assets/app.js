@@ -41,7 +41,10 @@ async function api(path, opts) {
   return data;
 }
 
-function setText(el, value) { el.textContent = value == null ? '' : String(value); }
+function setText(el, value) {
+  const text = value == null ? '' : String(value);
+  if (el.textContent !== text) el.textContent = text;
+}
 function showAlert(id, msg) {
   const el = $(id);
   el.hidden = !msg;
@@ -144,7 +147,8 @@ function updateLocks() {
   $('bilingual').disabled = ui.busy || reqLock;
   $('vectors-btn').disabled = jobLock || reqLock || hasDirty() || !hasRecords;
   $('overnight-btn').disabled = jobLock || reqLock || hasDirty() || !hasRecords;
-  $('overnight-stop-btn').disabled = reqLock || !ui.overnightRunning;
+  $('overnight-stop-btn').disabled = reqLock || !ui.overnightRunning || ui.overnightStopping;
+  $('overnight-ask-btn').disabled = jobLock || reqLock;
   updateBulkReview();
 }
 function startPoll() {
@@ -172,6 +176,13 @@ function applyState(s) {
   });
   setText($('output-path'), s.output_dir || '');
   const db = s.db || {};
+  setText($('source-records'), (db.records || 0).toLocaleString() + '건');
+  setText($('source-vectors'), s.config.embedding_model ? (db.vector_records || 0).toLocaleString() + ' / ' + (db.records || 0).toLocaleString() + '건' : '모델 미설정');
+  setText($('source-english'), (db.english_records || 0).toLocaleString() + ' / ' + (db.records || 0).toLocaleString() + '건');
+  if (!ui.sourceInitialized) {
+    $('source-import').open = !db.records;
+    ui.sourceInitialized = true;
+  }
   setText($('vectors-count'), '검색 가능한 벡터: ' + (db.vector_records || 0) + '/' + (db.records || 0) + '건 · 모델: ' + (s.config.embedding_model || '미설정'));
   const embedding = s.embedding_status || {};
   setText($('embedding-auto-status'), embedding.message || (s.config.embedding_auto_index ? '임베딩 자동 준비·갱신 사용' : '벡터 자동 갱신 꺼짐'));
@@ -212,7 +223,9 @@ function renderJob(job) {
   ui.serverBusy = job.server_busy ?? running;
   ui.maintenance = job.maintenance_running ?? (running && job.kind !== 'ask');
   ui.overnightRunning = running && job.kind === 'overnight';
+  ui.overnightStopping = ui.overnightRunning && !!(job.overnight && job.overnight.stop_requested);
   setBusy(running || ui.maintenance);
+  renderOvernight(job);
   if (job.kind === 'import_many') renderImportQueue(job.result || job.progress);
   $('convert-progress-panel').hidden = job.kind !== 'convert' || job.status === 'idle';
   if (job.status === 'idle' || !job.kind) {
@@ -261,24 +274,59 @@ function renderJob(job) {
     if (progress.failed_id) msg += ' · 실패 접수 ' + progress.failed_id;
     if (job.status === 'running' && progress.current_id) msg += ' · ' + progress.current_id;
   }
+  if (job.kind === 'overnight') msg = '야간 자동 실행 · ' + $('overnight-status').textContent;
   setText(banner, msg);
-  if (job.kind === 'overnight') {
-    const night = job.overnight || job.result || {};
-    const names = {normalize:'문장 다듬기',embedding:'벡터',english:'영어 번역'};
-    const attempts = Object.entries(night.attempts || {}).map(([key,n]) => (names[key] || key) + ' ' + n + '회차').join(' · ');
-    let detail = (night.ready ? '검색 준비 완료' : night.stopped ? '중지됨 · 성공 결과 보관' : msg) + (attempts ? ' · ' + attempts : '');
-    const pending = Object.entries(night.pending || {}).map(([key,n]) => (names[key] || key) + ' 오류 ' + n + '건').join(' · ');
-    if (pending) detail += ' · ' + pending;
-    if (night.embedding && night.embedding.skipped) detail += ' · ' + night.embedding.reason;
-    if (night.retry_at) detail += ' · 다음 재시도 ' + new Date(night.retry_at * 1000).toLocaleTimeString();
-    setText($('overnight-status'), detail);
-    showAlert('overnight-error', [job.error, night.error, ...(night.failures || []).map(item =>
-      (item.id || item.phase || '') + ': ' + item.error)].filter(Boolean).join('\n'));
-  }
   if (job.kind === 'ask') setText($('ask-progress'), msg);
   if (job.kind === 'bulk_review' && running) setText($('batch-review-status'), msg);
   if (['vectors', 'auto_vectors', 'auto_search'].includes(job.kind) && running) setText($('vectors-status'), msg);
   if (['english', 'auto_search'].includes(job.kind) && running) setText($('english-status'), msg);
+}
+
+function renderOvernight(job) {
+  const night = job.kind === 'overnight' ? (job.overnight || job.result || {}) : {};
+  const names = {input:'자료 준비', normalize:'문장 다듬기', review:'자동 채택', embedding:'벡터 생성', english:'영어 번역', index:'검색 확인'};
+  const attempts = night.attempts || {};
+  const failed = job.kind === 'overnight' && job.status === 'error';
+  const state = failed ? 'error' : ui.overnightStopping ? 'stopping' : night.ready ? 'ready' : night.stopped ? 'stopped' : night.status === 'waiting' ? 'waiting' : ui.overnightRunning ? 'running' : 'idle';
+  const labels = {idle:'실행 준비', running:'처리 중', waiting:'재시도 대기', stopping:'중지 요청됨', stopped:'중지됨', ready:'검색 준비 완료', error:'실행 오류'};
+  setText($('overnight-badge'), labels[state]);
+  $('overnight-badge').setAttribute('data-state', state);
+  const steps = $('overnight-steps');
+  // 단계 요소를 재사용하여 매초 갱신해도 화면과 접근성 트리를 불필요하게 교체하지 않습니다.
+  if (!steps.children.length) Object.entries(names).forEach(([key, name]) => {
+    const li = document.createElement('li');
+    const title = document.createElement('strong'); title.textContent = name;
+    li.append(title, document.createElement('small')); steps.append(li);
+  });
+  let completed = 0;
+  Object.keys(names).forEach((key, i) => {
+    const li = steps.children[i];
+    const done = !!night[key];
+    const active = night.phase === key;
+    if (done) completed++;
+    const status = done ? (night[key].skipped ? '건너뜀 · 미설정' : '완료') : (night.pending || {})[key] ? '재시도 필요' : active && ui.overnightRunning ? '진행 중' : '대기';
+    li.setAttribute('data-state', done ? 'done' : active && ui.overnightRunning ? 'active' : 'pending');
+    setText(li.children[1], status);
+  });
+  $('overnight-progress').value = completed;
+  let detail = state === 'idle' ? ((ui.last && ui.last.db && ui.last.db.records) ? '등록된 DB 전체를 처리합니다. 성공한 작업은 다시 만들지 않습니다.' : '먼저 자료를 DB에 등록하세요.') : labels[state];
+  if (ui.overnightRunning && names[night.phase]) detail += ' · ' + names[night.phase] + ' ' + (attempts[night.phase] || 1) + '회차';
+  if (state === 'stopping' || state === 'stopped') detail += ' · 저장한 성공 결과는 다음 실행에서 재사용합니다.';
+  if (state === 'ready' && night.embedding && night.embedding.skipped) detail += ' · ' + night.embedding.reason;
+  const p = job.progress;
+  if (state === 'running' && p && typeof p.total === 'number') detail += ' · 성공 ' + (p.completed || 0).toLocaleString() + ' / ' + p.total.toLocaleString() + '건';
+  setText($('overnight-status'), detail);
+  $('overnight-retry').hidden = state !== 'waiting';
+  if (state === 'waiting') {
+    const seconds = night.retry_at ? Math.max(0, Math.ceil(night.retry_at - Date.now() / 1000)) : 0;
+    setText($('overnight-retry'), (seconds ? seconds + '초 후' : '잠시 후') + ' 자동 재시도합니다. 서버 연결·인증·설정 문제는 상세 오류를 확인해 주세요.');
+  }
+  setText($('overnight-stop-btn'), ui.overnightStopping ? '중지 요청됨' : '저장 후 중지');
+  $('overnight-ask-btn').hidden = state !== 'ready';
+  $('overnight-btn').className = state === 'ready' ? 'quiet' : '';
+  setText($('overnight-attempts'), Object.entries(attempts).map(([key,n]) => (names[key] || key) + ' ' + n + '회차').join(' · ') || '아직 실행하지 않았습니다.');
+  showAlert('overnight-error', [(failed ? job.error : ''), night.report_warning,
+    ...(night.failures || []).map(item => (names[item.phase] || item.phase || '') + (item.id ? ' · ' + item.id : '') + (item.status_code ? ' · HTTP ' + item.status_code : '') + ': ' + item.error)].filter(Boolean).join('\n'));
 }
 
 function englishSummary(result) {
@@ -471,6 +519,7 @@ function renderHeaderMapping() {
   if (!panel) return;
   const savedCount = Object.keys(ui.aliasDraft || {}).length;
   const showUnknown = ui.mappingBlocked && ui.mappingPath && ui.mappingPath === currentSourcePath();
+  if (showUnknown) $('source-import').open = true;
   panel.hidden = !(showUnknown || savedCount > 0 || ui.mappingDirty);
   const fileEl = $('header-mapping-file');
   if (fileEl) setText(fileEl, showUnknown ? ('대상 파일: ' + ui.mappingPath) : '');
@@ -1126,7 +1175,7 @@ async function startOvernight() {
     setBusy(true);
     startPoll();
     await refreshJob();
-  } catch (err) { showAlert('overnight-error', err.message); }
+  } catch (err) { showAlert('overnight-error', err.message); $('overnight-details').open = true; }
   finally { setPending(false); }
 }
 
@@ -1136,7 +1185,7 @@ async function stopOvernight() {
   try {
     await api('/api/overnight/stop', {method:'POST',body:{}});
     await refreshJob();
-  } catch (err) { showAlert('overnight-error',err.message); }
+  } catch (err) { showAlert('overnight-error',err.message); $('overnight-details').open = true; }
   finally { setPending(false); }
 }
 
@@ -1472,6 +1521,7 @@ $('import-retry-btn').addEventListener('click', () => startImportQueue(true));
 $('import-paths').addEventListener('input', updateLocks);
 $('overnight-btn').addEventListener('click', startOvernight);
 $('overnight-stop-btn').addEventListener('click', stopOvernight);
+$('overnight-ask-btn').addEventListener('click', () => setView('ask'));
 $('convert-btn').addEventListener('click', startConvert);
 $('accept-pending-btn').addEventListener('click', acceptPendingReviews);
 $('vectors-btn').addEventListener('click', startVectors);

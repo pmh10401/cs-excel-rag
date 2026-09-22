@@ -78,7 +78,7 @@ def main(root):
             app.start_overnight(selection);job=finished(app)
         assert job['result']['ready'] and not calls and not vector_calls,job
         # 재시도 대기 중 중지하면 다음 요청을 보내지 않고 검색 준비 완료와 구별합니다.
-        with patch.object(app,'normalize_rows',side_effect=web.NormalizationBatchError([{'id':'x','error':'LOCAL-SECRET'}],1)):
+        with patch.object(app,'normalize_rows',side_effect=web.NormalizationBatchError([{'id':'x','error':'LOCAL-SECRET','status_code':401}],1)):
             app.start_overnight(selection)
             deadline=time.monotonic()+5
             while not (app.job_snapshot().get('overnight') or {}).get('retry_at') and time.monotonic()<deadline:
@@ -86,13 +86,85 @@ def main(root):
             app.stop_overnight({})
             job=finished(app)
         assert job['status']=='done' and job['result']['stopped'] and not job['result']['ready'],job
-        # 인증 오류를 반복하거나 준비 완료로 표시하지 않습니다.
+        # 인증 오류도 제한 없이 재시도하고, 서버가 복구된 뒤에만 준비 완료로 표시합니다.
         auth=AuthenticationError('LOCAL-SECRET',response=SimpleNamespace(status_code=401,request=SimpleNamespace(),headers={}),body={})
-        with patch.object(app,'normalize_rows',side_effect=auth) as request:
+        original_normalize = app.normalize_rows
+        auth_attempts = []
+        def recover_auth(*args, **kwargs):
+            auth_attempts.append(1)
+            if len(auth_attempts) < 3:
+                raise auth
+            return original_normalize(*args, **kwargs)
+        with patch.object(app,'normalize_rows',side_effect=recover_auth), \
+                patch.object(web,'OpenAI',return_value=client), patch.object(semantic,'client_for',return_value=vector_client), \
+                patch.object(overnight,'RETRY_SECONDS',.01):
             app.start_overnight(selection);job=finished(app)
-        assert job['status']=='error' and request.call_count==1,job
-        assert not json.loads((app.output/'overnight_result.json').read_text())['ready']
-    print('PASS: 야간 실패분 재시도·자동 채택·벡터/영어 준비·재실행 재사용·중지·인증 오류 구분')
+        assert job['result']['ready'] and len(auth_attempts)==3,job
+        assert 'LOCAL-SECRET' not in (app.output/'overnight_result.json').read_text()
+
+        # 자료 읽기·채택·벡터·번역·최종 색인의 예외도 재시도합니다. 완료 단계는 다시 실행하지 않습니다.
+        def fail_once(operation, error):
+            attempts = []
+            def call(*args, **kwargs):
+                attempts.append(1)
+                if len(attempts) == 1:
+                    raise error
+                return operation(*args, **kwargs)
+            return call
+        with patch.object(app,'stored_rows',side_effect=fail_once(app.stored_rows,OSError('자료 읽기 오류'))), \
+                patch.object(overnight,'accept_pending_reviews',side_effect=fail_once(overnight.accept_pending_reviews,ValueError('채택 저장 오류'))), \
+                patch.object(semantic,'build_vectors',side_effect=fail_once(semantic.build_vectors,ValueError('벡터 응답 오류'))), \
+                patch.object(overnight,'build_english',side_effect=fail_once(overnight.build_english,RuntimeError('영어 처리 오류'))), \
+                patch.object(overnight,'ensure_search_index',side_effect=fail_once(overnight.ensure_search_index,OSError('검색 색인 오류'))), \
+                patch.object(web,'OpenAI',return_value=client), patch.object(semantic,'client_for',return_value=vector_client), \
+                patch.object(overnight,'RETRY_SECONDS',.01):
+            app.start_overnight({});job=finished(app)
+        assert job['result']['ready'] and job['result']['attempts']=={
+            'input':2,'normalize':1,'review':2,'embedding':2,'english':2,'index':2},job
+
+        # 자동 채택에서 거절한 제안은 기존 캐시를 맹신하지 않고 그 접수만 LLM으로 보완합니다.
+        original_review = overnight.accept_pending_reviews
+        review_calls = []
+        review_target = []
+        def corrupt_then_review(db, *args, **kwargs):
+            review_calls.append(1)
+            if len(review_calls) == 1:
+                identity = db.execute('SELECT id FROM normalized_records ORDER BY id LIMIT 1').fetchone()[0]
+                review_target.append(identity)
+                db.execute("UPDATE normalized_records SET normalized_json='{}' WHERE id=?",(identity,))
+                db.execute('DELETE FROM cell_reviews WHERE record_id=?',(identity,))
+                db.commit()
+            return original_review(db, *args, **kwargs)
+        calls.clear()
+        with patch.object(overnight,'accept_pending_reviews',side_effect=corrupt_then_review), \
+                patch.object(web,'OpenAI',return_value=client), patch.object(semantic,'client_for',return_value=vector_client), \
+                patch.object(overnight,'RETRY_SECONDS',.01):
+            app.start_overnight({});job=finished(app)
+        assert job['result']['ready'] and len(review_calls)==2 and job['result']['attempts']['normalize']==2,job
+        normal_calls = [c for c in calls if '원본 셀' in c]
+        assert normal_calls and all(c['원본 셀']['CS 접수번호']==review_target[0] for c in normal_calls), '성공 접수도 재요청했습니다.'
+
+        # 검토 전 발견한 손상 제안도 다시 생성합니다. 정상 캐시는 모델을 호출하지 않습니다.
+        with closing(app.connect()) as db, db:
+            db.execute("UPDATE normalized_records SET normalized_json='{' WHERE id=?", (review_target[0],))
+        calls.clear()
+        with patch.object(web,'OpenAI',return_value=client), patch.object(semantic,'client_for',return_value=vector_client):
+            app.start_overnight({});job=finished(app)
+        assert job['result']['ready'] and job['result']['attempts']['normalize']==1,job
+        normal_calls = [c for c in calls if '원본 셀' in c]
+        assert normal_calls and all(c['원본 셀']['CS 접수번호']==review_target[0] for c in normal_calls)
+
+        # 보고 파일을 쓸 수 없어도 DB 작업과 메모리 진행 상태를 유지합니다.
+        write_text = Path.write_text
+        def no_report(path, *args, **kwargs):
+            if path.name == 'overnight_result.tmp':
+                raise PermissionError('시험용 상태 파일 잠금')
+            return write_text(path,*args,**kwargs)
+        with patch.object(Path,'write_text',no_report), patch.object(web,'OpenAI',return_value=client), \
+                patch.object(semantic,'client_for',return_value=vector_client):
+            app.start_overnight({});job=finished(app)
+        assert job['result']['ready'] and '상태 파일 저장 실패' in job['result']['report_warning'],job
+    print('PASS: 야간 모든 단계 재시도·인증 복구·검토 실패 보완·성공 재사용·상태 파일 오류 격리·중지')
 
 
 def check_cancellation(root):

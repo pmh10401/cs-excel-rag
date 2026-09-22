@@ -48,6 +48,7 @@ def import_summary(db, rows):
 
 def ingest(db, rows, rules, client=None, config=None, schema=None, progress=None, *, previous_errors=None, cancelled=None,
            append=False, import_result=None):
+    previous_errors = dict(previous_errors or {})
     workers = validate_workers((config or {}).get('normalization_workers', 200))
     # 수정 제안은 normalized_json에, 검색에 사용할 원문·채택문은 search_text에 저장합니다.
     # 원본과 LLM 정리문을 별도로 보관합니다. 기존 키워드 데모 테이블은 수정하지 않습니다.
@@ -133,9 +134,16 @@ def ingest(db, rows, rules, client=None, config=None, schema=None, progress=None
             if not cached:
                 if old and old[1] == fingerprint and json.loads(old[2]).get('_source_key', '') == source_key:
                     cached = old
+            if (previous_errors or {}).get(identity):
+                cached = None
             if cached:
-                normalized = json.loads(cached[0])
-                validate_normalized(normalized, row, rules)
+                try:
+                    normalized = json.loads(cached[0])
+                    validate_normalized(normalized, row, rules)
+                except ValueError as error:
+                    previous_errors[identity] = str(error)
+                    cached = None  # 잘못된 이전 제안도 새로 생성하며 검사 규칙은 그대로 적용합니다.
+            if cached:
                 store(index, row, identity, original, fingerprint, normalized, True)
             else:
                 pending.append((index, row, identity, source_key, original, fingerprint))
@@ -296,7 +304,7 @@ def accept_pending_reviews(db, rules, schema=None, progress=None, changed_ids=No
     stored = db.execute('SELECT id, original_json, normalized_json FROM normalized_records ORDER BY id').fetchall()
     reviewed = set(db.execute("SELECT source_key,record_id,column_name FROM cell_reviews WHERE action != 'pending'"))
     result = {'rows': len(stored), 'applied_rows': 0, 'saved': 0,
-              'reviewed_cells': 0, 'missing_rows': 0, 'failures': []}
+              'reviewed_cells': 0, 'missing_rows': 0, 'missing_ids': [], 'failures': []}
     entries = []
     for index, (identity, raw, encoded) in enumerate(stored, 1):
         row = json.loads(raw)
@@ -309,6 +317,7 @@ def accept_pending_reviews(db, rules, schema=None, progress=None, changed_ids=No
                 proposal = json.loads(encoded)
                 if proposal is None:
                     result['missing_rows'] += 1
+                    result['missing_ids'].append(identity)
                 else:
                     # 저장 이후 규칙이 바뀌었거나 잘못된 제안이 있으면 그 접수만 제외합니다.
                     # 숫자·단위·빈칸 검사는 기존 검토 저장과 동일하게 유지합니다.
