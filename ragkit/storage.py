@@ -26,6 +26,15 @@ def validate_workers(value=200):
     return value
 
 
+def stored_rows(db, record_ids=None):
+    """원문·제안 JSON을 읽습니다. 파싱 실패의 처리 범위는 각 호출자가 결정합니다."""
+    identities = sorted(set(record_ids)) if record_ids is not None else []
+    batches = (identities[start:start + 500] for start in range(0, len(identities), 500)) if record_ids is not None else (None,)
+    for batch in batches:
+        where = ' WHERE id IN (' + ','.join('?' for _ in batch) + ')' if batch is not None else ''
+        yield from db.execute('SELECT id, original_json, normalized_json FROM normalized_records' + where + ' ORDER BY id', batch or ())
+
+
 def import_summary(db, rows):
     """접수번호로 비교합니다. 다른 파일의 다른 원문은 자동으로 덮어쓰지 않습니다."""
     exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone()
@@ -120,14 +129,14 @@ def ingest(db, rows, rules, client=None, config=None, schema=None, progress=None
                     continue
         source_key = row.get('_source_key', '')
         original = text_for(row)
-        active_rules, active_schema = row_rules(row, rules), row_schema(row, schema)
-        fingerprint = hashlib.sha256((row_revision(row) + normalization_prompt(row) + json.dumps([settings, active_rules, active_schema] if active_schema else [settings, active_rules], sort_keys=True)).encode()).hexdigest()
         try:
             report(identity, '원문 행을 준비하는 중입니다' if client is None else '행을 정리하는 중입니다')
             if client is None:
                 # --search-only는 서버 없이 원본 검색만 확인합니다. 정리문을 생성한 척하지 않습니다.
-                store(index, row, identity, original, fingerprint, None, False)
+                store(index, row, identity, original, 'raw-only', None, False)
                 continue
+            active_rules, active_schema = row_rules(row, rules), row_schema(row, schema)
+            fingerprint = hashlib.sha256((row_revision(row) + normalization_prompt(row) + json.dumps([settings, active_rules, active_schema] if active_schema else [settings, active_rules], sort_keys=True)).encode()).hexdigest()
             cached = db.execute(
                 'SELECT normalized_json FROM normalization_checkpoints WHERE source_key=? AND record_id=? AND fingerprint=?',
                 (source_key, identity, fingerprint)).fetchone()
@@ -257,7 +266,8 @@ def fallback_signature(row, normalized):
 
 
 def prepared_record(db, row, normalized, rules):
-    effective = public_cells(row)
+    original = public_cells(row)
+    effective = dict(original)
     revision = row_revision(row)
     fallbacks = {}
     if normalized is not None and db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='normalization_fallbacks'").fetchone():
@@ -275,7 +285,7 @@ def prepared_record(db, row, normalized, rules):
         if previous:
             old_rev, action, value = previous
             if old_rev == revision and editable(row, column, rules):
-                candidate = public_cells(row) | {column: value}
+                candidate = original | {column: value}
                 # 규칙 변경으로 허용되지 않는 편집이 되었으면 원문으로 돌아가고 재검토 표시합니다.
                 try:
                     validate_normalized(candidate, row, rules)
@@ -301,12 +311,12 @@ def search_content(record):
 
 def accept_pending_reviews(db, rules, schema=None, progress=None, changed_ids=None):
     """현재 DB 전체의 미검토 제안을 채택합니다. 기존 선택과 재검토 대상은 보존합니다."""
-    stored = db.execute('SELECT id, original_json, normalized_json FROM normalized_records ORDER BY id').fetchall()
+    total = db.execute('SELECT COUNT(*) FROM normalized_records').fetchone()[0]
     reviewed = set(db.execute("SELECT source_key,record_id,column_name FROM cell_reviews WHERE action != 'pending'"))
-    result = {'rows': len(stored), 'applied_rows': 0, 'saved': 0,
+    result = {'rows': total, 'applied_rows': 0, 'saved': 0,
               'reviewed_cells': 0, 'missing_rows': 0, 'missing_ids': [], 'failures': []}
     entries = []
-    for index, (identity, raw, encoded) in enumerate(stored, 1):
+    for index, (identity, raw, encoded) in enumerate(stored_rows(db), 1):
         row = json.loads(raw)
         source = row.get('_source_key', '')
         columns = [key for key in public_cells(row) if editable(row, key, rules)]
@@ -327,8 +337,8 @@ def accept_pending_reviews(db, rules, schema=None, progress=None, changed_ids=No
                     result['applied_rows'] += 1
             except ValueError as error:
                 result['failures'].append({'id': identity, 'error': str(error)})
-        if progress and (index % 25 == 0 or index == len(stored)):
-            progress(index, len(stored))
+        if progress and (index % 25 == 0 or index == total):
+            progress(index, total)
     if entries:
         # 브라우저에서 수천 번 저장하지 않고 기존 검토 저장을 한 번만 호출합니다.
         # 전체 검토와 검색 색인이 함께 확정되며 저장 오류는 예외로 전파해 롤백합니다.
@@ -340,33 +350,42 @@ def accept_pending_reviews(db, rules, schema=None, progress=None, changed_ids=No
 
 
 def apply_reviews(db, payload, rules, schema=None):
+    """검토한 접수만 갱신하고 반환합니다. 전체 보고서 조회는 호출자가 별도로 수행합니다."""
     # 다운로드한 JSON도 외부 입력입니다. 파일·행·버전·열을 검사한 뒤 한 번에 반영합니다.
     ensure_reviews(db)
     if not isinstance(payload, dict) or payload.get('format') != 'cell-reviews-v1' or not isinstance(payload.get('entries'), list):
         raise ValueError('올바른 검토 JSON 파일이 아닙니다.')
-    rows = {record_id: (json.loads(raw), json.loads(proposal)) for record_id, raw, proposal in db.execute(
-        'SELECT id, original_json, normalized_json FROM normalized_records')}
-    seen, changes = set(), []
+    required = {'source_key', 'id', 'revision', 'column', 'action', 'value'}
     for entry in payload['entries']:
-        required = {'source_key', 'id', 'revision', 'column', 'action', 'value'}
         if not isinstance(entry, dict) or set(entry) != required or any(not isinstance(entry[k], str) for k in required):
             raise ValueError('검토 항목 형식이 올바르지 않습니다.')
-        row, proposal = rows.get(entry['id'], (None, None))
-        if row is None or entry['source_key'] != row.get('_source_key', '') or entry['revision'] != row_revision(row):
-            raise ValueError(f"{entry['id']}: 입력 파일 또는 원문이 달라졌습니다. 새 비교 화면에서 다시 검토하세요.")
-        column, action = entry['column'], entry['action']
-        identity = (entry['source_key'], entry['id'], column)
-        if identity in seen or column not in public_cells(row) or not editable(row, column, rules):
-            raise ValueError(f"{entry['id']} / {column}: 중복되었거나 수정할 수 없는 열입니다.")
-        seen.add(identity)
-        if action not in ('pending', 'original', 'accept', 'edit'):
-            raise ValueError('알 수 없는 검토 선택입니다.')
-        value = row[column] if action in ('pending', 'original') else entry['value']
-        if action == 'accept' and (proposal is None or value != proposal[column]):
-            raise ValueError(f"{entry['id']} / {column}: 수정 제안이 달라졌습니다. 직접 편집 또는 새 제안을 선택하세요.")
-        validate_normalized(public_cells(row) | {column: value}, row, rules)
-        changes.append((*identity, entry['revision'], action, value, time.strftime('%Y-%m-%d %H:%M:%S')))
+    if not payload['entries']:
+        return []
     with db:
+        if not db.in_transaction:
+            db.execute('BEGIN IMMEDIATE')
+        rows = {identity: (json.loads(raw), json.loads(proposal)) for identity, raw, proposal in
+                stored_rows(db, (entry['id'] for entry in payload['entries']))}
+        seen, changes = set(), []
+        for entry in payload['entries']:
+            row, proposal = rows.get(entry['id'], (None, None))
+            if row is None or entry['source_key'] != row.get('_source_key', '') or entry['revision'] != row_revision(row):
+                raise ValueError(f"{entry['id']}: 입력 파일 또는 원문이 달라졌습니다. 새 비교 화면에서 다시 검토하세요.")
+            column, action = entry['column'], entry['action']
+            identity = (entry['source_key'], entry['id'], column)
+            if identity in seen or column not in public_cells(row) or not editable(row, column, rules):
+                raise ValueError(f"{entry['id']} / {column}: 중복되었거나 수정할 수 없는 열입니다.")
+            seen.add(identity)
+            if action not in ('pending', 'original', 'accept', 'edit'):
+                raise ValueError('알 수 없는 검토 선택입니다.')
+            value = row[column] if action in ('pending', 'original') else entry['value']
+            if action == 'accept' and (proposal is None or value != proposal[column]):
+                raise ValueError(f"{entry['id']} / {column}: 수정 제안이 달라졌습니다. 직접 편집 또는 새 제안을 선택하세요.")
+            validate_normalized(public_cells(row) | {column: value}, row, rules)
+            changes.append((*identity, entry['revision'], action, value, time.strftime('%Y-%m-%d %H:%M:%S')))
+        if schema:
+            from .cslist import ensure_search_index
+            ensure_search_index(db, rules, schema)
         for change in changes:
             if change[4] == 'pending':
                 db.execute('DELETE FROM cell_reviews WHERE source_key=? AND record_id=? AND column_name=?', change[:3])
@@ -377,5 +396,7 @@ def apply_reviews(db, payload, rules, schema=None):
             db.execute('UPDATE normalized_records SET search_text=? WHERE id=?', (search_content(record), record['id']))
         if schema:
             from .cslist import rebuild_search
-            rebuild_search(db, prepared, schema, rules=rules)
+            # 모든 접수를 검토하면 기존 전체 갱신이 더 빠릅니다. 일부 검토만 변경분을 갱신합니다.
+            total = db.execute('SELECT COUNT(*) FROM normalized_records').fetchone()[0]
+            rebuild_search(db, prepared, schema, rules=rules, incremental=len(prepared) < total)
     return prepared

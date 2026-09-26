@@ -48,11 +48,10 @@ def ensure_search_index(db, rules, schema):
                 finally:
                     db.execute('RELEASE prune_legacy_search')
             return 'rag_chunks' in tables
-    from .storage import prepared_record
-    prepared = (prepared_record(db, json.loads(raw), json.loads(proposal), rules)
-                for raw, proposal in db.execute('SELECT original_json,normalized_json FROM normalized_records'))
-    with db:
-        rebuild_search(db, prepared, schema, rules=rules)
+    from .storage import prepared_record, stored_rows
+    prepared = (prepared_record(db, json.loads(raw), json.loads(proposal), rules) for _, raw, proposal in stored_rows(db))
+    # rebuild_search의 SAVEPOINT가 단독 실행과 외부 트랜잭션의 원자성을 함께 보장합니다.
+    rebuild_search(db, prepared, schema, rules=rules)
     return True
 
 

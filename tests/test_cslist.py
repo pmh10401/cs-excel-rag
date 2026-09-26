@@ -143,6 +143,7 @@ def main(root):
         (output / 'reviews.json').write_text(json.dumps({'format':'cell-reviews-v1','entries':[entry]},ensure_ascii=False),encoding='utf-8')
         cli.main(output, ['--schema',str(root/'cslist_schema.json'),'--apply-reviews',str(output/'reviews.json')])
         saved = json.loads((output / 'cslist-output/demo_results.json').read_text(encoding='utf-8'))
+        assert len(saved['normalized_records']) == len(saved['rows']) == len(rows), '검토하지 않은 접수가 보고서에서 빠졌습니다.'
         assert not saved['cases'] and saved['normalized_records'][0]['effective']['조치내용(2)'] == entry['value']
         # 저장된 원문으로 질문/집계/비교할 때 정리 모델을 다시 호출하지 않습니다.
         with patch.object(cli, 'OpenAI', side_effect=AssertionError('집계·검색 비교가 모델을 호출했습니다.')):

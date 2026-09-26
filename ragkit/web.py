@@ -21,7 +21,7 @@ from openai import APIError, APITimeoutError, OpenAI
 from .cslist import column_group, load_schema, ensure_search_index
 from .input_formats import row_schema, row_rules, is_history, HISTORY_SHEET, HISTORY_SCHEMA
 from .llm import answer, editable, select_answer_cases
-from .records import (public_cells, read_excel, record_id, row_revision,
+from .records import (public_cells, read_excel,
                       HeaderMappingError, load_header_aliases, save_header_aliases,
                       validate_header_aliases)
 from .search import count_records, retrieve

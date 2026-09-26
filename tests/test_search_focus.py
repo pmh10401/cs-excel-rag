@@ -240,6 +240,13 @@ def main(root):
         # 버전 변경은 한 번만 이관하며 읽기 경로에서는 DB를 쓰지 않습니다.
         from unittest.mock import patch
         with patch.object(cslist, 'SEARCH_VERSION', cslist.SEARCH_VERSION + 1):
+            signature = db.execute('SELECT * FROM rag_search_meta').fetchall()
+            db.execute('BEGIN')
+            assert cslist.ensure_search_index(db, rules, schema)
+            assert db.in_transaction, '색인 이관이 외부 검토 트랜잭션을 먼저 확정했습니다.'
+            db.rollback()
+            assert db.execute('SELECT * FROM rag_search_meta').fetchall() == signature
+            assert db.execute('SELECT * FROM rag_documents').fetchall() == before
             assert cslist.ensure_search_index(db, rules, schema)
             changed = db.total_changes
             assert not cslist.ensure_search_index(db, rules, schema)

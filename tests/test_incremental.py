@@ -25,7 +25,7 @@ def main(root):
     client = SimpleNamespace(embeddings=SimpleNamespace(create=embed),
                              chat=SimpleNamespace(completions=SimpleNamespace(create=lambda **kw: None)), close=lambda: None)
 
-    def normalized(_client, _config, row, _rules, schema=None):
+    def normalized(_client, _config, row, _rules, schema=None, previous_error=''):
         return records.public_cells(row)
 
     def translated(_client, _config, cells, previous=''):
@@ -107,6 +107,17 @@ def main(root):
             with patch.object(english, 'translate_cells', side_effect=translated):
                 assert english.build_english(db, client, config, schema, limit=0)['processed'] == 1
             before = snapshot(db)
+            # 검토 후 파생 자료 동기화가 실패해도 원문·검토·양쪽 색인·벡터가 함께 복구됩니다.
+            entry = {'source_key': first[0]['_source_key'], 'id': records.record_id(first[0]),
+                     'revision': records.row_revision(first[0]), 'column': '현상', 'action': 'edit', 'value': '펌프 누수가 발생했습니다.'}
+            with patch.object(semantic, 'sync_sources', side_effect=RuntimeError('의도한 벡터 동기화 실패')):
+                try:
+                    storage.apply_reviews(db, {'format': 'cell-reviews-v1', 'entries': [entry]}, rules, schema=schema)
+                except RuntimeError:
+                    pass
+                else:
+                    raise AssertionError('검토 동기화 실패를 숨겼습니다.')
+            assert snapshot(db) == before, '검토 실패로 기존 검색 자료가 달라졌습니다.'
             conflict = copy.deepcopy(copied)
             conflict[0]['현상'] = '다른 원문'
             try:
@@ -170,6 +181,15 @@ def main(root):
         with patch.object(cli, 'read_excel', side_effect=AssertionError('CLI가 Excel을 읽었습니다.')):
             cli.main(root, ['--schema', str(root / 'cslist_schema.json'), '--config', str(cfg),
                            '--output', str(app.output), '--saved', '--question', '전체 접수 건수는?'])
+        # 재다듬기는 제안이 깨졌더라도 저장된 원문으로 복구할 수 있어야 합니다.
+        with closing(app.connect()) as db, db:
+            db.execute("UPDATE normalized_records SET normalized_json='{broken' WHERE id='CS-ADD-001'")
+        with patch.object(cli, 'read_excel', side_effect=AssertionError('CLI가 Excel을 읽었습니다.')), \
+                patch.object(cli, 'OpenAI', return_value=client), patch.object(storage, 'normalize', side_effect=normalized):
+            cli.main(root, ['--schema', str(root / 'cslist_schema.json'), '--config', str(cfg),
+                           '--output', str(app.output), '--saved', '--normalize-only'])
+        with closing(app.connect()) as db:
+            assert isinstance(json.loads(db.execute("SELECT normalized_json FROM normalized_records WHERE id='CS-ADD-001'").fetchone()[0]), dict)
     print('PASS: 누적 추가·중복 재사용·출처 충돌 차단·변경분 색인·트랜잭션 롤백·Excel 삭제 후 UI/CLI/야간 처리')
 
 

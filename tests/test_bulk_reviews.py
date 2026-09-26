@@ -16,7 +16,8 @@ def main(root):
     rows[-2][columns[1]] = '0'
     rows[-2]['_typed_cells'] = {columns[1]: {'type': 'number', 'value': 0}}
     with sqlite3.connect(':memory:') as db:
-        storage.ingest(db, rows, rules, schema=schema)
+        with patch.object(storage, 'normalization_prompt', side_effect=AssertionError('원문 등록에서 다듬기 지문 계산')):
+            storage.ingest(db, rows, rules, schema=schema)
         # 실제 LLM 품질을 평가하는 검사가 아닙니다. 검사 가능한 제안을 DB에 준비합니다.
         proposals = [records.public_cells(row) | {key: '점검 예정입니다.' for key in columns if row[key] == '점검 예정'} for row in rows]
         proposals[-1][columns[0]] += ' qzxjvkwp'
@@ -29,7 +30,18 @@ def main(root):
                      'revision': records.row_revision(rows[0]), 'column': columns[0], 'action': 'edit', 'value': '점검은 예정되어 있습니다.'},
                     {'source_key': 'bulk-source', 'id': records.record_id(rows[1]),
                      'revision': records.row_revision(rows[1]), 'column': columns[0], 'action': 'original', 'value': '점검 예정'}]
-        storage.apply_reviews(db, {'format': 'cell-reviews-v1', 'entries': existing}, rules, schema=schema)
+        untouched = db.execute('SELECT rowid,* FROM rag_documents WHERE record_id=?', ('CS-BULK-2000',)).fetchone()
+        with patch.object(cslist, 'rebuild_search', wraps=cslist.rebuild_search) as rebuild:
+            changed = storage.apply_reviews(db, {'format': 'cell-reviews-v1', 'entries': existing}, rules, schema=schema)
+            assert [record['id'] for record in changed] == ['CS-BULK-0001', 'CS-BULK-0002']
+            assert rebuild.call_count == 1 and rebuild.call_args.kwargs['incremental']
+            assert len(rebuild.call_args.args[1]) == 2, '두 접수 검토에 전체 DB를 재처리했습니다.'
+        assert db.execute('SELECT rowid,* FROM rag_documents WHERE record_id=?', ('CS-BULK-2000',)).fetchone() == untouched
+        before_empty = db.total_changes
+        assert storage.apply_reviews(db, {'format': 'cell-reviews-v1', 'entries': []}, rules, schema=schema) == []
+        assert db.total_changes == before_empty, '빈 검토에서 검색 자료를 갱신했습니다.'
+        with db:
+            db.execute('UPDATE normalized_records SET normalized_json=? WHERE id=?', ('{broken', 'CS-BULK-0005'))
         saved_reviews = db.execute('SELECT * FROM cell_reviews ORDER BY record_id').fetchall()
         raw = db.execute('SELECT id,original_json,normalized_json,fingerprint FROM normalized_records ORDER BY id').fetchall()
         assert not search.retrieve(db, 'qzxjvkwp')
@@ -44,10 +56,10 @@ def main(root):
         assert db.execute('SELECT * FROM cell_reviews ORDER BY record_id').fetchall() == saved_reviews
         assert not search.retrieve(db, 'qzxjvkwp')
         result = storage.accept_pending_reviews(db, rules, schema=schema)
-        assert result['rows'] == 2000 and result['applied_rows'] == 1998
-        assert result['saved'] == 1998 * len(columns) - 4 > 4000, result
+        assert result['rows'] == 2000 and result['applied_rows'] == 1997
+        assert result['saved'] == 1997 * len(columns) - 4 > 4000, result
         assert result['reviewed_cells'] == 2 and result['missing_rows'] == 1
-        assert len(result['failures']) == 1 and result['failures'][0]['id'] == 'CS-BULK-0004'
+        assert {item['id'] for item in result['failures']} == {'CS-BULK-0004', 'CS-BULK-0005'}
         assert db.execute('SELECT id,original_json,normalized_json,fingerprint FROM normalized_records ORDER BY id').fetchall() == raw
         assert db.execute('SELECT * FROM cell_reviews WHERE record_id IN (?,?) AND column_name=? ORDER BY record_id',
                           ('CS-BULK-0001', 'CS-BULK-0002', columns[0])).fetchall() == saved_reviews
@@ -58,6 +70,11 @@ def main(root):
         repeated = storage.accept_pending_reviews(db, rules, schema=schema)
         assert repeated['saved'] == repeated['applied_rows'] == 0
         assert db.execute('PRAGMA integrity_check').fetchone() == ('ok',)
+    with sqlite3.connect(':memory:') as db:
+        storage.ingest(db, rows[:2], rules, schema=schema)
+        with patch.object(cslist, 'rebuild_search', wraps=cslist.rebuild_search) as rebuild:
+            storage.apply_reviews(db, {'format': 'cell-reviews-v1', 'entries': existing}, rules, schema=schema)
+            assert rebuild.call_count == 1 and not rebuild.call_args.kwargs['incremental'], '전체 검토도 접수별로 색인을 지웠습니다.'
     print('PASS: 2,000건 일괄 채택·검색 반영, 4,000셀 초과, 기존 검토·원문 보존, 실패 제외·롤백·재실행')
 
 

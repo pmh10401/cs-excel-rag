@@ -6,9 +6,9 @@ import sqlite3
 import time
 from pathlib import Path
 from openai import OpenAI, APIError, APITimeoutError
-from .records import read_excel, load_header_aliases, record_id
+from .records import read_excel, load_header_aliases
 from .llm import load_rules, answer
-from .storage import ingest, apply_reviews, prepared_record
+from .storage import ingest, apply_reviews, prepared_record, stored_rows
 from .search import retrieval_check, retrieve, count_records, compare_search
 from .english import build_english, bilingual_retrieve
 from . import semantic
@@ -19,7 +19,8 @@ def apply_review_file(path, root, rules, schema=None):
     report_path = root / 'demo_results.json'
     report = json.loads(report_path.read_text(encoding='utf-8'))
     with closing(sqlite3.connect(root / 'demo.sqlite3')) as db:
-        prepared = apply_reviews(db, json.loads(path.read_text(encoding='utf-8-sig')), rules, schema=schema)
+        apply_reviews(db, json.loads(path.read_text(encoding='utf-8-sig')), rules, schema=schema)
+        prepared = [prepared_record(db, json.loads(raw), json.loads(proposal), rules) for _, raw, proposal in stored_rows(db)]
     report['normalized_records'] = prepared
     report['rows'] = [record['original_cells'] for record in prepared]
     # 이전 답변은 새 검색 근거에 대한 답변이 아니므로 화면에서 제거합니다.
@@ -126,7 +127,8 @@ def main(root, argv=None):
         if not (output / 'demo.sqlite3').exists():
             raise ValueError('등록된 DB가 없습니다. --import-only로 먼저 원문을 등록하세요.')
         with closing(sqlite3.connect(output / 'demo.sqlite3')) as saved_db:
-            rows = [json.loads(raw) for (raw,) in saved_db.execute('SELECT original_json FROM normalized_records ORDER BY id')]
+            saved_records = [(json.loads(raw), proposal) for _, raw, proposal in stored_rows(saved_db)]
+            rows = [row for row, _ in saved_records]
         if not rows:
             raise ValueError('등록된 DB에 원문이 없습니다.')
     else:
@@ -164,14 +166,10 @@ def main(root, argv=None):
     client = None
     if not args.search_only:
         output.mkdir(parents=True, exist_ok=True)
-    if (args.saved or args.compare_search) and not (output / 'demo.sqlite3').exists():
-        raise ValueError('저장된 자료가 없습니다. 먼저 2번 문장 다듬기를 실행하세요.')
     db = sqlite3.connect(':memory:' if args.search_only else output / 'demo.sqlite3')
     try:
         if (args.saved and not args.normalize_only) or args.compare_search:
-            stored = {identity: (json.loads(raw), json.loads(proposal)) for identity, raw, proposal in db.execute(
-                'SELECT id, original_json, normalized_json FROM normalized_records')}
-            prepared = [prepared_record(db, row, stored[record_id(row)][1], rules) for row in rows]
+            prepared = [prepared_record(db, row, json.loads(proposal), rules) for row, proposal in saved_records]
             # 이전 버전 DB도 원문과 검토 선택을 유지하며 새 문서 색인을 만듭니다.
             from .cslist import ensure_search_index
             ensure_search_index(db, rules, schema)
