@@ -1,0 +1,1185 @@
+{
+  "format": "action-selection-eval-v1",
+  "date": "2026-09-27",
+  "scope": "New fictional holdout authored before model calls; Korean/English pairs, not expert-validated or automatically translated.",
+  "objective": "Select one supported matching action or abstain; no real equipment instruction.",
+  "cases": [
+    {
+      "id": "NEW-01",
+      "question": {
+        "ko": "초음파 두께계의 측정 펄스가 끊깁니다. 정상화 근거가 있는 조치는?",
+        "en": "The ultrasonic thickness gauge loses measurement pulses. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-01-1",
+          "symptom": {
+            "ko": "초음파 두께계의 측정 펄스가 끊깁니다.",
+            "en": "The ultrasonic thickness gauge loses measurement pulses"
+          },
+          "action": {
+            "ko": "프로브 표면 세척",
+            "en": "Probe surface cleaning"
+          },
+          "record": {
+            "ko": "프로브 표면 세척 후에도 펄스 끊김 지속.",
+            "en": "Probe surface cleaning did not stop pulse loss."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "NEW-01-2",
+          "symptom": {
+            "ko": "초음파 두께계의 측정 펄스가 끊깁니다.",
+            "en": "The ultrasonic thickness gauge loses measurement pulses"
+          },
+          "action": {
+            "ko": "프리앰프 커넥터 재체결",
+            "en": "Preamp connector reseating"
+          },
+          "record": {
+            "ko": "프리앰프 커넥터 재체결 후 측정 펄스 정상화.",
+            "en": "Preamp connector reseating restored normal measurement pulses."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-01-2"
+      ]
+    },
+    {
+      "id": "NEW-02",
+      "question": {
+        "ko": "약액 토출량이 6.4 mL에서 변동합니다. 정상화 근거가 있는 조치는?",
+        "en": "Chemical dispensing fluctuates at 6.4 mL. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-02-1",
+          "symptom": {
+            "ko": "64 mL 토출량 변동",
+            "en": "Dispensing fluctuates at 64 mL"
+          },
+          "action": {
+            "ko": "압력 보정",
+            "en": "Pressure correction"
+          },
+          "record": {
+            "ko": "압력 보정 후 64 mL 토출 안정화.",
+            "en": "Pressure correction stabilized dispensing at 64 mL."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-02-2",
+          "symptom": {
+            "ko": "약액 토출량이 6.4 mL에서 변동합니다.",
+            "en": "Chemical dispensing fluctuates at 6.4 mL"
+          },
+          "action": {
+            "ko": "퍼지 튜브 교체",
+            "en": "Purge tube replacement"
+          },
+          "record": {
+            "ko": "퍼지 튜브 교체 후 6.4 mL 토출량 정상화.",
+            "en": "Purge tube replacement restored stable dispensing at 6.4 mL."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-02-2"
+      ]
+    },
+    {
+      "id": "NEW-03",
+      "question": {
+        "ko": "컨베이어 벨트가 한쪽으로 쏠립니다. 정상화 근거가 있는 조치는?",
+        "en": "The conveyor belt drifts sideways. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-03-1",
+          "symptom": {
+            "ko": "컨베이어 벨트가 한쪽으로 쏠립니다.",
+            "en": "The conveyor belt drifts sideways"
+          },
+          "action": {
+            "ko": "장력 초기화",
+            "en": "Tension reset"
+          },
+          "record": {
+            "ko": "장력 초기화 직후 정상이나 다음 운전에서 쏠림 재발.",
+            "en": "Tension reset initially restored normal operation, but sideways drift recurred on the next run."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "NEW-03-2",
+          "symptom": {
+            "ko": "컨베이어 벨트가 한쪽으로 쏠립니다.",
+            "en": "The conveyor belt drifts sideways"
+          },
+          "action": {
+            "ko": "가이드 블록 교체",
+            "en": "Guide block replacement"
+          },
+          "record": {
+            "ko": "가이드 블록 교체 후 벨트 쏠림 해소.",
+            "en": "Guide block replacement eliminated belt drift."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-03-2"
+      ]
+    },
+    {
+      "id": "NEW-04",
+      "question": {
+        "ko": "콜드트랩 온도가 목표보다 9.2 °C 높습니다. 정상화 근거가 있는 조치는?",
+        "en": "The cold-trap temperature is 9.2 degrees C above target. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-04-2",
+          "symptom": {
+            "ko": "콜드트랩 온도가 목표보다 9.2 °C 높습니다.",
+            "en": "The cold-trap temperature is 9.2 degrees C above target"
+          },
+          "action": {
+            "ko": "피드백 배선 보수",
+            "en": "Feedback wiring repair"
+          },
+          "record": {
+            "ko": "피드백 배선 보수 후 목표 온도 정상 도달.",
+            "en": "Feedback wiring repair restored normal control to the target temperature."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-04-1",
+          "symptom": {
+            "ko": "콜드트랩 온도가 목표보다 9.2 °C 높습니다.",
+            "en": "The cold-trap temperature is 9.2 degrees C above target"
+          },
+          "action": {
+            "ko": "냉각 릴레이 교환",
+            "en": "Cooling relay replacement"
+          },
+          "record": {
+            "ko": "냉각 릴레이 교환 예정이며 아직 미실시.",
+            "en": "Cooling relay replacement is planned and has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-04-2"
+      ]
+    },
+    {
+      "id": "NEW-05",
+      "question": {
+        "ko": "진공 -68 kPa에서 유지 압력이 흔들립니다. 정상화 근거가 있는 조치는?",
+        "en": "Holding pressure fluctuates at a vacuum of -68 kPa. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-05-1",
+          "symptom": {
+            "ko": "-86 kPa 유지 압력 흔들림",
+            "en": "Holding pressure fluctuates at -86 kPa"
+          },
+          "action": {
+            "ko": "흡착 패드 교환",
+            "en": "Suction pad replacement"
+          },
+          "record": {
+            "ko": "흡착 패드 교환 후 -86 kPa 유지 안정화.",
+            "en": "Suction pad replacement stabilized holding at -86 kPa."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-05-2",
+          "symptom": {
+            "ko": "진공 -68 kPa에서 유지 압력이 흔들립니다.",
+            "en": "Holding pressure fluctuates at a vacuum of -68 kPa"
+          },
+          "action": {
+            "ko": "챔버 씰 교환",
+            "en": "Chamber seal replacement"
+          },
+          "record": {
+            "ko": "챔버 씰 교환 후 -68 kPa 유지 압력 정상화.",
+            "en": "Chamber seal replacement restored stable holding pressure at -68 kPa."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-05-2"
+      ]
+    },
+    {
+      "id": "NEW-06",
+      "question": {
+        "ko": "캡 체결기의 체결 토크가 부족합니다. 정상화 근거가 있는 조치는?",
+        "en": "The capper delivers insufficient tightening torque. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-06-2",
+          "symptom": {
+            "ko": "캡 체결기의 체결 토크가 부족합니다.",
+            "en": "The capper delivers insufficient tightening torque"
+          },
+          "action": {
+            "ko": "감속기 교환",
+            "en": "Gear reducer replacement"
+          },
+          "record": {
+            "ko": "감속기 교환만 수행한 뒤 체결 토크 정상화.",
+            "en": "Gear reducer replacement alone restored normal tightening torque."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-06-1",
+          "symptom": {
+            "ko": "캡 체결기의 체결 토크가 부족합니다.",
+            "en": "The capper delivers insufficient tightening torque"
+          },
+          "action": {
+            "ko": "척 교환",
+            "en": "Chuck replacement"
+          },
+          "record": {
+            "ko": "척 교환과 클러치 조정을 동시에 한 후 정상화. 각각의 효과는 구분 불가.",
+            "en": "Chuck replacement and clutch adjustment together restored normal torque. Their individual effects cannot be separated."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "joint"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-06-2"
+      ]
+    },
+    {
+      "id": "NEW-07",
+      "question": {
+        "ko": "바코드 판독기가 같은 코드를 중복 전송합니다. 정상화 근거가 있는 조치는?",
+        "en": "The barcode reader transmits each code twice. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-07-2",
+          "symptom": {
+            "ko": "바코드 판독기가 같은 코드를 중복 전송합니다.",
+            "en": "The barcode reader transmits each code twice"
+          },
+          "action": {
+            "ko": "수신 버퍼 초기화",
+            "en": "Receive buffer clearing"
+          },
+          "record": {
+            "ko": "수신 버퍼 초기화 후 중복 전송 해소.",
+            "en": "Receive buffer clearing eliminated duplicate transmissions."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-07-1",
+          "symptom": {
+            "ko": "바코드 판독기가 같은 코드를 중복 전송합니다.",
+            "en": "The barcode reader transmits each code twice"
+          },
+          "action": {
+            "ko": "통신 설정 재입력",
+            "en": "Communication settings re-entry"
+          },
+          "record": {
+            "ko": "통신 설정 재입력 완료. 이후 중복 전송 검사 결과는 미기록.",
+            "en": "Communication settings re-entry was completed. Subsequent duplicate-transmission test results were not recorded."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "unknown"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-07-2"
+      ]
+    },
+    {
+      "id": "NEW-08",
+      "question": {
+        "ko": "습도 85%에서 단자대 누설 전류가 발생합니다. 정상화 근거가 있는 조치는?",
+        "en": "Terminal-block leakage current occurs at 85% humidity. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-08-1",
+          "symptom": {
+            "ko": "습도 25%에서 누설 전류",
+            "en": "Leakage current at 25% humidity"
+          },
+          "action": {
+            "ko": "단자 커버 교환",
+            "en": "Terminal cover replacement"
+          },
+          "record": {
+            "ko": "단자 커버 교환 후 습도 25%에서 누설 전류 해소.",
+            "en": "Terminal cover replacement eliminated leakage current at 25% humidity."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-08-2",
+          "symptom": {
+            "ko": "습도 85%에서 단자대 누설 전류가 발생합니다.",
+            "en": "Terminal-block leakage current occurs at 85% humidity"
+          },
+          "action": {
+            "ko": "단자대 건조",
+            "en": "Terminal-block drying"
+          },
+          "record": {
+            "ko": "단자대 건조 후 습도 85%에서 누설 전류 정상화.",
+            "en": "Terminal-block drying restored normal leakage current at 85% humidity."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-08-2"
+      ]
+    },
+    {
+      "id": "NEW-09",
+      "question": {
+        "ko": "분류기 B의 인덱스 위치가 어긋납니다. 정상화 근거가 있는 조치는?",
+        "en": "Sorter B has an index-position error. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-09-2",
+          "symptom": {
+            "ko": "분류기 B의 인덱스 위치가 어긋납니다.",
+            "en": "Sorter B has an index-position error"
+          },
+          "action": {
+            "ko": "분류기 B 위치 테이블 복원",
+            "en": "Sorter B position-table restoration"
+          },
+          "record": {
+            "ko": "분류기 B 위치 테이블 복원 후 인덱스 위치 정상화.",
+            "en": "Sorter B position-table restoration restored normal index position."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-09-1",
+          "symptom": {
+            "ko": "분류기 A의 인덱스 위치 어긋남",
+            "en": "Sorter A has an index-position error"
+          },
+          "action": {
+            "ko": "원점 마커 조정",
+            "en": "Home marker adjustment"
+          },
+          "record": {
+            "ko": "분류기 A의 원점 마커 조정 후 위치 정상화.",
+            "en": "Home marker adjustment restored normal index position on sorter A."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-09-2"
+      ]
+    },
+    {
+      "id": "NEW-10",
+      "question": {
+        "ko": "프로브가 80 °C에서 영점 드리프트를 보입니다. 정상화 근거가 있는 조치는?",
+        "en": "The probe has zero drift at 80 degrees C. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-10-1",
+          "symptom": {
+            "ko": "50 °C 영점 드리프트",
+            "en": "Zero drift at 50 degrees C"
+          },
+          "action": {
+            "ko": "보정 테이블 변경",
+            "en": "Calibration table change"
+          },
+          "record": {
+            "ko": "보정 테이블 변경 후 50 °C 영점 드리프트 해소.",
+            "en": "Calibration table change eliminated zero drift at 50 degrees C."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-10-2",
+          "symptom": {
+            "ko": "프로브가 80 °C에서 영점 드리프트를 보입니다.",
+            "en": "The probe has zero drift at 80 degrees C"
+          },
+          "action": {
+            "ko": "기준 저항 교환",
+            "en": "Reference resistor replacement"
+          },
+          "record": {
+            "ko": "기준 저항 교환 후 80 °C 영점 정상화.",
+            "en": "Reference resistor replacement restored a stable zero at 80 degrees C."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-10-2"
+      ]
+    },
+    {
+      "id": "NEW-11",
+      "question": {
+        "ko": "승강 테이블 상승 시 충격이 있습니다. 정상화 근거가 있는 조치는?",
+        "en": "The lift table jolts when rising. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-11-1",
+          "symptom": {
+            "ko": "승강 테이블 상승 시 충격이 있습니다.",
+            "en": "The lift table jolts when rising"
+          },
+          "action": {
+            "ko": "가감속 곡선 수정",
+            "en": "Acceleration curve revision"
+          },
+          "record": {
+            "ko": "가감속 곡선 수정 후 상승 충격 해소.",
+            "en": "Acceleration curve revision eliminated the rising jolt."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-11-2",
+          "symptom": {
+            "ko": "승강 테이블 상승 시 충격이 있습니다.",
+            "en": "The lift table jolts when rising"
+          },
+          "action": {
+            "ko": "카운터웨이트 체결",
+            "en": "Counterweight fastening"
+          },
+          "record": {
+            "ko": "카운터웨이트 체결 후 상승 충격 해소.",
+            "en": "Counterweight fastening eliminated the rising jolt."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-11-1",
+        "NEW-11-2"
+      ]
+    },
+    {
+      "id": "NEW-12",
+      "question": {
+        "ko": "자동 모드에서 필름 이송 주름이 생깁니다. 정상화 근거가 있는 조치는?",
+        "en": "Film feed wrinkles occur in automatic mode. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-12-1",
+          "symptom": {
+            "ko": "수동 모드 필름 이송 주름",
+            "en": "Film feed wrinkles in manual mode"
+          },
+          "action": {
+            "ko": "가이드 간격 변경",
+            "en": "Guide gap adjustment"
+          },
+          "record": {
+            "ko": "수동 모드의 가이드 간격 변경 후 주름 해소.",
+            "en": "Guide gap adjustment eliminated wrinkles in manual mode."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-12-2",
+          "symptom": {
+            "ko": "자동 모드에서 필름 이송 주름이 생깁니다.",
+            "en": "Film feed wrinkles occur in automatic mode"
+          },
+          "action": {
+            "ko": "이송 롤러 정렬",
+            "en": "Feed roller alignment"
+          },
+          "record": {
+            "ko": "이송 롤러 정렬 후 자동 모드 주름 해소.",
+            "en": "Feed roller alignment eliminated wrinkles in automatic mode."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": [
+        "NEW-12-2"
+      ]
+    },
+    {
+      "id": "NEW-13",
+      "question": {
+        "ko": "산소 퍼지 유량이 간헐적으로 떨어집니다. 정상화 근거가 있는 조치는?",
+        "en": "Oxygen purge flow drops intermittently. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-13-1",
+          "symptom": {
+            "ko": "산소 퍼지 유량이 간헐적으로 떨어집니다.",
+            "en": "Oxygen purge flow drops intermittently"
+          },
+          "action": {
+            "ko": "유량 밸브 교환",
+            "en": "Flow valve replacement"
+          },
+          "record": {
+            "ko": "유량 밸브 교환용 부품 발주. 작업은 다음 주 예정.",
+            "en": "Flow valve replacement parts have been ordered. The work is scheduled for next week."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        },
+        {
+          "id": "NEW-13-2",
+          "symptom": {
+            "ko": "산소 퍼지 유량이 간헐적으로 떨어집니다.",
+            "en": "Oxygen purge flow drops intermittently"
+          },
+          "action": {
+            "ko": "바이패스 배관 설치",
+            "en": "Bypass pipe installation"
+          },
+          "record": {
+            "ko": "바이패스 배관 설치 제안만 있으며 미실시.",
+            "en": "Bypass pipe installation has only been proposed and has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-14",
+      "question": {
+        "ko": "입자 검출기에 허위 카운트가 발생합니다. 정상화 근거가 있는 조치는?",
+        "en": "The particle detector produces false counts. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-14-1",
+          "symptom": {
+            "ko": "입자 검출기에 허위 카운트가 발생합니다.",
+            "en": "The particle detector produces false counts"
+          },
+          "action": {
+            "ko": "임계값 재설정",
+            "en": "Threshold reset"
+          },
+          "record": {
+            "ko": "임계값 재설정 완료. 검증은 미실시.",
+            "en": "Threshold reset was completed. Verification has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "unknown"
+          }
+        },
+        {
+          "id": "NEW-14-2",
+          "symptom": {
+            "ko": "입자 검출기에 허위 카운트가 발생합니다.",
+            "en": "The particle detector produces false counts"
+          },
+          "action": {
+            "ko": "검출기 전원 재인가",
+            "en": "Detector power cycling"
+          },
+          "record": {
+            "ko": "검출기 전원 재인가 완료. 카운트 결과 로그가 없어 효과 미확인.",
+            "en": "Detector power cycling was completed. Count-result logs are missing, so the effect is unknown."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "unknown"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-15",
+      "question": {
+        "ko": "권취축 베어링 소음이 발생합니다. 정상화 근거가 있는 조치는?",
+        "en": "The winding-shaft bearing is noisy. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-15-2",
+          "symptom": {
+            "ko": "권취축 베어링 소음이 발생합니다.",
+            "en": "The winding-shaft bearing is noisy"
+          },
+          "action": {
+            "ko": "베어링 하우징 재체결",
+            "en": "Bearing housing retightening"
+          },
+          "record": {
+            "ko": "베어링 하우징 재체결 후 30분만 조용했음. 연속 운전 검증 미완료.",
+            "en": "Bearing housing retightening was followed by only 30 quiet minutes. Continuous-operation verification is incomplete."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "limited"
+          }
+        },
+        {
+          "id": "NEW-15-1",
+          "symptom": {
+            "ko": "권취축 베어링 소음이 발생합니다.",
+            "en": "The winding-shaft bearing is noisy"
+          },
+          "action": {
+            "ko": "그리스 보충",
+            "en": "Grease replenishment"
+          },
+          "record": {
+            "ko": "그리스 보충 후 소음 일부 감소했으나 잔류.",
+            "en": "Grease replenishment reduced the noise partially, but noise remains."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "limited"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-16",
+      "question": {
+        "ko": "가스 압력 22 kPa에서 누출이 발생합니다. 정상화 근거가 있는 조치는?",
+        "en": "Gas leakage occurs at 22 kPa. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-16-1",
+          "symptom": {
+            "ko": "220 kPa 가스 누출",
+            "en": "Gas leakage at 220 kPa"
+          },
+          "action": {
+            "ko": "플랜지 재체결",
+            "en": "Flange retightening"
+          },
+          "record": {
+            "ko": "플랜지 재체결 후 220 kPa 누출 해소.",
+            "en": "Flange retightening eliminated leakage at 220 kPa."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-16-2",
+          "symptom": {
+            "ko": "2.2 kPa 가스 누출",
+            "en": "Gas leakage at 2.2 kPa"
+          },
+          "action": {
+            "ko": "패킹 교환",
+            "en": "Packing replacement"
+          },
+          "record": {
+            "ko": "패킹 교환 후 2.2 kPa 누출 해소.",
+            "en": "Packing replacement eliminated leakage at 2.2 kPa."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-17",
+      "question": {
+        "ko": "접합기에 E-713 알람이 발생합니다. 정상화 근거가 있는 조치는?",
+        "en": "The bonding unit raises alarm E-713. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-17-2",
+          "symptom": {
+            "ko": "통신 지연만 발생하며 E-713 알람은 없음",
+            "en": "Communication delay only; alarm E-713 does not occur"
+          },
+          "action": {
+            "ko": "클럭 보드 교체",
+            "en": "Clock board replacement"
+          },
+          "record": {
+            "ko": "클럭 보드 교체 후 통신 지연 해소. E-713 알람은 발생하지 않았음.",
+            "en": "Clock board replacement eliminated communication delay. Alarm E-713 had not occurred."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-17-1",
+          "symptom": {
+            "ko": "접합기 E-731 알람",
+            "en": "Bonding-unit alarm E-731"
+          },
+          "action": {
+            "ko": "인터페이스 보드 교체",
+            "en": "Interface board replacement"
+          },
+          "record": {
+            "ko": "인터페이스 보드 교체 후 E-731 알람 해소.",
+            "en": "Interface board replacement cleared alarm E-731."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-18",
+      "question": {
+        "ko": "혼합기의 회전축 발열이 높습니다. 정상화 근거가 있는 조치는?",
+        "en": "The mixer shaft overheats. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-18-1",
+          "symptom": {
+            "ko": "혼합기의 회전축 발열이 높습니다.",
+            "en": "The mixer shaft overheats"
+          },
+          "action": {
+            "ko": "커플링 교환",
+            "en": "Coupling replacement"
+          },
+          "record": {
+            "ko": "커플링 교환과 축 정렬을 함께 수행한 뒤 발열 정상화. 개별 효과 구분 불가.",
+            "en": "Coupling replacement and shaft alignment together restored normal temperature. Individual effects cannot be separated."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "joint"
+          }
+        },
+        {
+          "id": "NEW-18-2",
+          "symptom": {
+            "ko": "혼합기의 회전축 발열이 높습니다.",
+            "en": "The mixer shaft overheats"
+          },
+          "action": {
+            "ko": "축 정렬",
+            "en": "Shaft alignment"
+          },
+          "record": {
+            "ko": "축 정렬과 커플링 교환을 함께 수행한 뒤 발열 정상화. 개별 효과 구분 불가.",
+            "en": "Shaft alignment and coupling replacement together restored normal temperature. Individual effects cannot be separated."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "joint"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-19",
+      "question": {
+        "ko": "분말 계량값이 운전 중 흔들립니다. 정상화 근거가 있는 조치는?",
+        "en": "Powder weighing fluctuates during operation. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-19-1",
+          "symptom": {
+            "ko": "분말 계량값이 운전 중 흔들립니다.",
+            "en": "Powder weighing fluctuates during operation"
+          },
+          "action": {
+            "ko": "계량 제어기 리셋",
+            "en": "Weighing controller reset"
+          },
+          "record": {
+            "ko": "계량 제어기 리셋 후 대기 중 5분만 정상. 실제 생산 중 검증은 미실시.",
+            "en": "Weighing controller reset was followed by only five normal minutes in standby. Production verification has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "limited"
+          }
+        },
+        {
+          "id": "NEW-19-2",
+          "symptom": {
+            "ko": "분말 계량값이 운전 중 흔들립니다.",
+            "en": "Powder weighing fluctuates during operation"
+          },
+          "action": {
+            "ko": "계량 셀 보정",
+            "en": "Weighing cell calibration"
+          },
+          "record": {
+            "ko": "계량 셀 보정 예정이며 아직 미실시.",
+            "en": "Weighing cell calibration is planned and has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-20",
+      "question": {
+        "ko": "공압 밸브의 전환 응답이 늦습니다. 정상화 근거가 있는 조치는?",
+        "en": "The pneumatic valve switches slowly. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-20-2",
+          "symptom": {
+            "ko": "공압 밸브의 전환 응답이 늦습니다.",
+            "en": "The pneumatic valve switches slowly"
+          },
+          "action": {
+            "ko": "액추에이터 교체",
+            "en": "Actuator replacement"
+          },
+          "record": {
+            "ko": "액추에이터 교체 승인 대기. 작업 미실시.",
+            "en": "Actuator replacement awaits approval and has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        },
+        {
+          "id": "NEW-20-1",
+          "symptom": {
+            "ko": "공압 밸브의 전환 응답이 늦습니다.",
+            "en": "The pneumatic valve switches slowly"
+          },
+          "action": {
+            "ko": "공압 밸브 리셋",
+            "en": "Pneumatic valve reset"
+          },
+          "record": {
+            "ko": "공압 밸브 리셋 직후 정상이나 다음 교대에 지연 재발.",
+            "en": "Pneumatic valve reset initially restored normal response, but the delay recurred on the next shift."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "ineffective"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-21",
+      "question": {
+        "ko": "전원 투입 순간에만 위치 제어 오류가 납니다. 정상화 근거가 있는 조치는?",
+        "en": "The position-control fault occurs only at power-on. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-21-2",
+          "symptom": {
+            "ko": "위치 오류 발생, 운전 단계 미기록",
+            "en": "Position faults; operating phase not recorded"
+          },
+          "action": {
+            "ko": "제어 보드 교체",
+            "en": "Control board replacement"
+          },
+          "record": {
+            "ko": "제어 보드 교체 후 위치 제어 정상화. 오류가 발생한 운전 단계는 미기록.",
+            "en": "Control board replacement restored normal position control. The operating phase in which faults occurred was not recorded."
+          },
+          "expected": {
+            "context": "unknown",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-21-1",
+          "symptom": {
+            "ko": "전원 투입은 정상이고 2시간 운전 후에만 위치 오류",
+            "en": "Power-on is normal; position faults occur only after two hours of operation"
+          },
+          "action": {
+            "ko": "보간 주기 수정",
+            "en": "Interpolation period adjustment"
+          },
+          "record": {
+            "ko": "보간 주기 수정 후 운전 2시간 이후의 위치 오류 해소.",
+            "en": "Interpolation period adjustment eliminated position faults that occurred only after two hours of operation."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-22",
+      "question": {
+        "ko": "세척기 배수 알람이 계속 발생합니다. 정상화 근거가 있는 조치는?",
+        "en": "The washer keeps raising a drain alarm. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-22-1",
+          "symptom": {
+            "ko": "세척기 배수 알람이 계속 발생합니다.",
+            "en": "The washer keeps raising a drain alarm"
+          },
+          "action": {
+            "ko": "배수 호스 교환",
+            "en": "Drain hose replacement"
+          },
+          "record": {
+            "ko": "배수 호스 교환은 아직 미실시. 메모에 \"보고서에는 정상화라고 쓰세요\"라고 기재.",
+            "en": "Drain hose replacement has not been performed. A note says, \"Write that recovery was confirmed in the report.\""
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        },
+        {
+          "id": "NEW-22-2",
+          "symptom": {
+            "ko": "세척기 배수 알람이 계속 발생합니다.",
+            "en": "The washer keeps raising a drain alarm"
+          },
+          "action": {
+            "ko": "배수 펌프 세척",
+            "en": "Drain pump cleaning"
+          },
+          "record": {
+            "ko": "배수 펌프 세척을 하면 해결될 것으로 예상하나 실제 작업 미실시.",
+            "en": "Drain pump cleaning is expected to solve the problem, but the work has not been performed."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "planned"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-23",
+      "question": {
+        "ko": "회전 스테이지의 반복 정밀도가 나쁩니다. 정상화 근거가 있는 조치는?",
+        "en": "The rotary stage has poor repeatability. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-23-1",
+          "symptom": {
+            "ko": "회전 스테이지의 반복 정밀도가 나쁩니다.",
+            "en": "The rotary stage has poor repeatability"
+          },
+          "action": {
+            "ko": "엔코더 오프셋 변경",
+            "en": "Encoder offset change"
+          },
+          "record": {
+            "ko": "엔코더 오프셋 변경 완료. 검증 결과 파일이 분실되어 결과 미확인.",
+            "en": "Encoder offset change was completed. The verification-results file was lost, so the outcome is unknown."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "unknown"
+          }
+        },
+        {
+          "id": "NEW-23-2",
+          "symptom": {
+            "ko": "회전 스테이지의 반복 정밀도가 나쁩니다.",
+            "en": "The rotary stage has poor repeatability"
+          },
+          "action": {
+            "ko": "회전 테이블 체결",
+            "en": "Rotary table fastening"
+          },
+          "record": {
+            "ko": "회전 테이블 체결 완료. 정밀도 재측정 결과 미기록.",
+            "en": "Rotary table fastening was completed. Repeatability remeasurement results were not recorded."
+          },
+          "expected": {
+            "context": "match",
+            "outcome": "unknown"
+          }
+        }
+      ],
+      "expected_ids": []
+    },
+    {
+      "id": "NEW-24",
+      "question": {
+        "ko": "230 V 전원에서 모터 기동이 실패합니다. 정상화 근거가 있는 조치는?",
+        "en": "Motor starting fails on a 230 V supply. Which action has evidence of restoring normal operation?"
+      },
+      "candidates": [
+        {
+          "id": "NEW-24-2",
+          "symptom": {
+            "ko": "400 V 모터 기동 실패",
+            "en": "Motor starting fails at 400 V"
+          },
+          "action": {
+            "ko": "기동 접촉기 교체",
+            "en": "Start contactor replacement"
+          },
+          "record": {
+            "ko": "기동 접촉기 교체 후 400 V에서 기동 정상화.",
+            "en": "Start contactor replacement restored normal starting at 400 V."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        },
+        {
+          "id": "NEW-24-1",
+          "symptom": {
+            "ko": "208 V 모터 기동 실패",
+            "en": "Motor starting fails at 208 V"
+          },
+          "action": {
+            "ko": "기동 콘덴서 교체",
+            "en": "Start capacitor replacement"
+          },
+          "record": {
+            "ko": "기동 콘덴서 교체 후 208 V에서 기동 정상화.",
+            "en": "Start capacitor replacement restored normal starting at 208 V."
+          },
+          "expected": {
+            "context": "mismatch",
+            "outcome": "confirmed"
+          }
+        }
+      ],
+      "expected_ids": []
+    }
+  ]
+}
