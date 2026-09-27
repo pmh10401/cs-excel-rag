@@ -46,7 +46,8 @@ def native_rerank(question, hits, answer, translations, *, exact=False):
     return ranked, info
 
 
-def load_engine(root):
+def load_engine(root, encoder_dtype='bfloat16'):
+    os.environ['HF_DEACTIVATE_ASYNC_LOAD'] = '1'
     import torch
     import numpy as np
     from transformers import AutoModel, AutoTokenizer
@@ -59,8 +60,15 @@ def load_engine(root):
         def __init__(self):
             super().__init__(cache_size=2048, batch=1, max_tokens=CAPACITY)
             self.tokenizer = AutoTokenizer.from_pretrained(root / 'base', local_files_only=True)
+            print(f'Loading encoder on CPU ({encoder_dtype}); converting before GPU transfer', flush=True)
             self.encoder = AutoModel.from_pretrained(root / 'base', local_files_only=True,
-                dtype=torch.bfloat16, device_map={'': 'mps'}, attn_implementation='sdpa').eval()
+                dtype=getattr(torch, encoder_dtype), device_map={'': 'cpu'}, attn_implementation='sdpa').eval()
+            assert {p.dtype for p in self.encoder.parameters()} == {getattr(torch, encoder_dtype)}
+            # CPU에서 변환을 끝내 GPU 복사 중 큰 가중치의 자료형 변환을 피합니다.
+            print('Encoder ready on CPU; copying unchanged dtype to MPS', flush=True)
+            self.encoder.to('mps')
+            torch.mps.synchronize()
+            print('Encoder ready on MPS', flush=True)
             assert self.encoder.config.hidden_size == 4096
             self.counts = []
 
@@ -155,7 +163,8 @@ def run(args):
              *[Path(__file__).with_name(p) for p in ('lev_rerank.py', 'gliner_translation.py',
                                                      'gliner_followup.py', 'gliner_decide.py')]]
     protocol = dict(date='2026-09-26', hashes={str(p): digest(p) for p in paths}, models=verification,
-        device='mps', encoder_dtype='bfloat16', head_dtype='float32', attention='sdpa', cpu_threads=4,
+        device='mps', encoder_dtype=args.encoder_dtype, head_dtype='float32', attention='sdpa', cpu_threads=4,
+        loading='sequential CPU dtype conversion then same-dtype MPS copy',
         batch_size=1, capacity=CAPACITY, pooling='last token; float32 L2; no chat template',
         native_prompt=RANK_PROMPT, pair_question=QUESTION, pair_boost=.1, pair_no_match_threshold=.5,
         reuse='within question and arm only; native warm replay additionally reported',
@@ -175,7 +184,7 @@ def run(args):
         return
     atomic_report(contract, protocol)
     started = time.perf_counter()
-    engine = load_engine(args.model_root)
+    engine = load_engine(args.model_root, args.encoder_dtype)
     session = dict(load_seconds=time.perf_counter()-started)
     check_path = args.output / 'device-probe.json'
     if not check_path.exists() or not json.loads(check_path.read_text())['complete']:
@@ -234,6 +243,8 @@ def run(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--encoder-dtype', choices=('bfloat16', 'float16'), default='bfloat16',
+                        help='계산 정밀도를 바꾸면 새 출력 폴더에서 CPU/MPS 대조부터 수행합니다.')
     for name, default in (('source', 'gliner-decide'), ('previous', 'gliner-followup'),
             ('translations', 'gliner-translation'), ('lev', 'lev'), ('model-root', 'clm'), ('output', 'clm')):
         parser.add_argument('--'+name, type=Path, default=Path(f'outputs/{default}-20260926'))
