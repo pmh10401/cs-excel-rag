@@ -310,6 +310,8 @@ def main(root):
                 request('/api/ask', {'question': 'UI-DEMO-001의 조치내용은?'}, status=202)
                 failed_answer = finished('error')
                 assert failed_answer['code'] == 'validation_failed'
+                assert '불일치 표기: 999' in failed_answer['error']
+                assert '조치내용(1)' in failed_answer['error']
                 events = failed_answer['result']['validation_events']
                 assert len(events) == 2 and events[-1]['outcome'] == 'failed'
                 assert all('response' not in event for event in events)

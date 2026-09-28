@@ -163,13 +163,13 @@ def check_answer_diagnostics():
         content = payload if isinstance(payload, str) else json.dumps(payload, ensure_ascii=False)
         return SimpleNamespace(choices=[SimpleNamespace(finish_reason=reason, message=SimpleNamespace(content=content))])
 
-    def run(responses, failure=None, *, selected_hits=hits, settings=config, detail=None):
+    def run(responses, failure=None, *, selected_hits=hits, settings=config, detail=None, question='관찰 시간은?'):
         create = Mock(side_effect=responses)
         client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
         detail = {'retrieval_note': 'keep'} if detail is None else detail
         with patch.object(llm.time, 'monotonic', side_effect=[10, 10.25, 12, 12.5]):
             try:
-                reply, _ = llm.answer(client, settings, '관찰 시간은?', selected_hits, details=detail)
+                reply, _ = llm.answer(client, settings, question, selected_hits, details=detail)
             except Exception as error:
                 assert failure and isinstance(error, failure), repr(error)
                 if isinstance(responses[-1], Exception):
@@ -197,12 +197,37 @@ def check_answer_diagnostics():
     detail, create = run([response(bad), response(good)])
     first, second = detail['validation_events']
     assert first['category'] == 'numeric' and '숫자' in first['error']
+    for message in ('답변 1', '불일치 표기: 90', '원문 숫자: 30', 'CS-DIAG/작업1 / 조치내용(1)'):
+        assert message in first['error'], first['error']
+        assert message in create.call_args.kwargs['messages'][-1]['content']
     assert first['response'] == json.dumps(bad, ensure_ascii=False)
     assert second['category'] == 'passed'
     assert [item['outcome'] for item in (first, second)] == ['succeeded', 'succeeded']
     assert detail['answer_status'] == 'ok' and detail['retrieval_note'] == 'keep'
     assert create.call_args.kwargs['messages'][-2]['content'] == first['response']
     assert create.call_args_list[0].kwargs['messages'][0]['content'] == llm.CLAIM_PROMPT
+    # 다른 열에 숫자가 있어도 인용하지 않으면 거절하고, 모델이 해당 근거를 보완한 뒤에만 통과합니다.
+    uncited_source = source | {'cells': source['cells'] | {'관찰기록': '90분 관찰했습니다.'}}
+    repaired = {'claims': [{'text': '90분 관찰했습니다.',
+                           'evidence': [{'id': source['id'], 'column': '관찰기록'}]}]}
+    detail, _ = run([response(bad), response(repaired)], selected_hits=[{'evidence': [uncited_source]}])
+    assert detail['validation_events'][0]['category'] == 'numeric'
+    assert detail['validation_events'][1]['category'] == 'passed'
+    assert detail['claims'][0]['evidence'][0]['quote'] == '90분 관찰했습니다.'
+    # 별도 업무 DB 없이 사용자가 알려 준 질문 조건만 합성 원문으로 재현합니다.
+    spin_question = '스핀에서 문제가 발생할 시 할 수 있는 조치들을 알려줘. 참고문헌 날짜를 추가하고 인용은 중복하지 마.'
+    spin_source = {'id': 'CS-SPIN/접수', 'kind': '접수', 'cells': {
+        '불량발생일': '2026-09-01', '현상': '스핀 알람 발생', '조치': '배선 재체결 후 알람 해소.'}}
+    spin_refs = [{'id': spin_source['id'], 'column': col} for col in ('불량발생일', '현상', '조치')]
+    spin_text = '불량발생일 2026.09.01인 스핀 알람 사례에서 배선 재체결 후 알람이 해소되었습니다.'
+    omitted = {'claims': [{'text': spin_text, 'evidence': spin_refs[1:]}]}
+    repaired = {'claims': [{'text': spin_text, 'evidence': spin_refs}]}
+    detail, create = run([response(omitted), response(repaired)], selected_hits=[{'evidence': [spin_source]}], question=spin_question)
+    assert detail['validation_events'][0]['category'] == 'date'
+    assert '날짜 열' in create.call_args.kwargs['messages'][-1]['content']
+    assert detail['validation_events'][1]['category'] == 'passed'
+    assert detail['answer_text'].count('[CS-SPIN/접수]') == 1
+    assert detail['claims'][0]['evidence'][0]['quote'] == '2026-09-01'
     # 마지막 예외가 발생해도 최초 검사 오류와 실패한 보정 응답을 모두 보관합니다.
     quote_bad = {'claims': [{'text': '30분 관찰했습니다.', 'evidence': [reference | {'quote': '30분'}]}]}
     factual_bad = {'claims': [{'text': '정상화했습니다.', 'evidence': [reference]}]}

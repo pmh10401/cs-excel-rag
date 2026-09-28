@@ -148,6 +148,11 @@ def main(root):
         dated = {'claims': [{'text': '2026년 9월 1일 접수되었습니다.', 'evidence': [
             {'id': 'CS-DEMO-001/접수', 'column': '접수일시', 'quote': rows[0]['접수일시']}]}]}
         assert '2026년 9월 1일' in llm.validate_claims(dated, hits)
+        # 날짜의 구분자·0 채움은 바뀌어도 년월일 전체가 같으면 허용합니다.
+        for formatted in ('2026.09.01', '2026/9/1', '2026. 9. 1.', '2026-9-1'):
+            payload = {'claims': [dated['claims'][0] | {'text': f'{formatted} 접수되었습니다.'}]}
+            assert formatted in llm.validate_claims(payload, hits)
+            assert llm.claim_dates(formatted)[0] == llm.claim_dates('2026년 9월 1일')[0]
         flow_hits = search.retrieve(db, 'CS-DEMO-002의 유량은?')
         flow = {'claims': [{'text': '세척 후 유량은 11.8 L/min입니다.', 'evidence': [
             {'id': 'CS-DEMO-002/작업1', 'column': '조치내용(1)', 'quote': rows[1]['조치내용(1)']}]}]}
@@ -155,6 +160,8 @@ def main(root):
         for wrong, source in [
             ({'claims': [dated['claims'][0] | {'text': '2026-01-09 접수되었습니다.'}]}, hits),
             ({'claims': [dated['claims'][0] | {'text': '2026년 9월 31일 접수되었습니다.'}]}, hits),
+            ({'claims': [dated['claims'][0] | {'text': '2026.01.09 접수되었습니다.'}]}, hits),
+            ({'claims': [dated['claims'][0] | {'text': '2026/9/31 접수되었습니다.'}]}, hits),
             ({'claims': [good['claims'][0] | {'text': '-60분 관찰했습니다.'}]}, hits),
             ({'claims': [flow['claims'][0] | {'text': '유량이 11.8 L/min으로 회복되었습니다.'}]}, flow_hits),
             ({'claims': [flow['claims'][0] | {'text': '유량이 11.8 L/min으로 정상화되었습니다.'}]}, flow_hits),

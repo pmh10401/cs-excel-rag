@@ -485,6 +485,8 @@ JSON 객체 하나만 반환한다: {"claims":[{"evidence":[{"id":"CS-DEMO-001/�
 각 주장의 evidence에는 실제 근거의 id와 column만 넣는다. 원문 quote는 프로그램이 붙이므로 복사하지 않는다.
 근거 셀을 먼저 고르고 그 셀에서 확인되는 사실만 text에 쓴다. 다른 열의 증상·원인·부품·위치를 쓰면 그 열도 인용한다.
 예: '펌프 누수 시 씰을 발주했다'는 누수 현상 셀과 발주 조치 셀을 모두 인용한다. 조치 셀만으로 증상까지 뒷받침하지 않는다.
+출처 날짜를 요청하면 날짜가 기록된 열도 같은 주장의 evidence에 넣고 '불량발생일', '접수일시'처럼 날짜의 종류를 밝힌다. 반입일을 불량발생일로 바꾸거나 없는 날짜를 만들지 않는다.
+인용을 중복하지 말라는 요청은 같은 셀 주소를 반복하지 않는다는 뜻이다. 현상·조치·날짜처럼 서로 다른 사실의 근거 열을 생략하지 않는다.
 증상만 입력하거나 과거 해결·조치 사례를 요청하면, 현상·문제현상·알람·설비 정보로 관련성을 확인하고 관련 사례만 답한다.
 증상만 입력한 질문도 과거 조치와 결과를 찾는 요청으로 해석한다. 조치 기록이 있으면 증상의 재진술만으로 답을 끝내지 않는다.
 이때 접수 한 건당 주장 하나로 정리한다. 첫 문장에서 질문에 직접 답하는 과거 조치 또는 확인 결과를 말하고, 같은 사례의 발생 상황과 관찰 결과·한계를 자연스럽게 이어 설명한다. 각 사실의 원문 셀을 모두 인용한다.
@@ -505,6 +507,8 @@ status가 '결과 미확인'이면 자동 연결이 보류된 것이다. 원문�
 수치만 나열하지 말고 조치·관찰 결과·MTTR처럼 무엇에 대한 값인지 밝힌다. 가능·완료 여부는 결론부터 답한다.
 여러 접수는 건별로 구분한다. 접수번호는 필요할 때 원문 그대로 쓴다. text에 대괄호 인용을 쓰지 않는다.
 작업1과 작업2를 구분하고 관찰 시간·숫자·부호·단위·부정·추정·예정·조건을 보존한다. 서로 다른 기록의 값을 합치지 않는다.
+답변의 숫자는 같은 주장의 evidence로 선택한 셀에 있어야 한다. 다른 열의 수치를 쓰면 그 열도 인용한다. 질문의 숫자만을 사실 근거로 사용하지 않는다.
+숫자의 표기·부호·쉼표·소수 자릿수를 원문 그대로 쓴다. 예: 1,000을 1000으로, 3.0을 3으로 바꾸지 않는다. 계산·반올림하거나 text에 목록 번호를 붙이지 않는다.
 원문에 단위가 없는 숫자에는 단위를 붙이지 않는다. 금액 셀이 "0"이면 "금액: 0", 개수 셀이 "0"이면 "개수: 0"으로 답한다.
 빈 셀은 미기재로 답하고 0·정상·미실시로 해석하지 않는다. 전용 열이 비어 있어도 관련 조치내용에 사실이 있으면 그 셀을 인용한다.
 발주와 교체, 예정과 실행, 일시 정상과 영구 해결을 구분한다. 계획만으로 현재 미완료라고 판단하지 않는다.
@@ -517,11 +521,12 @@ def claim_dates(value):
     """날짜 전체를 먼저 비교하고, 남은 측정값에서만 숫자와 부호를 검사합니다."""
     dates = set()
     def replace(match):
-        year, month, day, korean_month, korean_day = match.groups()
+        year, separator, month, day, korean_month, korean_day = match.groups()
         dates.add(date(int(year), int(month or korean_month), int(day or korean_day)))
         return ' '
-    # ponytail: 실제 나타난 ISO 날짜·한국어 년월일만 지원. 다른 표기는 사례가 생길 때 추가합니다.
-    remaining = re.sub(r'(?<![\w+\-])(\d{4})(?:-(\d{2})-(\d{2})(?!\d)|년\s*(\d{1,2})월\s*(\d{1,2})일)', replace, value)
+    # ponytail: 년·월·일이 모두 있는 명확한 표기만 지원합니다. 두 자리 연도·월일 순서는 추측하지 않습니다.
+    remaining = re.sub(r'(?<![\w+\-])(\d{4})(?:([./-])[ \t]*(\d{1,2})\2[ \t]*(\d{1,2})(?!\d|[./-]\d)'
+                       r'|년\s*(\d{1,2})월\s*(\d{1,2})일)', replace, value)
     return dates, remaining
 
 
@@ -544,7 +549,7 @@ def validate_claims(payload, hits):
         raise ClaimValidationError('claims에 근거를 가진 답변 1~5개가 필요합니다.', 'schema')
     sources = {section['id']: section for hit in hits for section in hit['evidence']}
     replies = []
-    for claim in payload['claims']:
+    for claim_index, claim in enumerate(payload['claims'], 1):
         if (not isinstance(claim, dict) or set(claim) != {'text', 'evidence'}
                 or not isinstance(claim['text'], str) or not claim['text'].strip()
                 or not isinstance(claim['evidence'], list) or not claim['evidence']):
@@ -665,10 +670,26 @@ def validate_claims(payload, hits):
         text_dates, text = claim_dates(text)
         source_dates, quoted_text = claim_dates('\n'.join(quotes))
         if not text_dates.issubset(source_dates):
-            raise ClaimValidationError('답변 날짜가 인용한 원문의 날짜와 다릅니다. 년·월·일 전체를 확인하세요.', 'date')
+            raise ClaimValidationError(
+                f'답변 {claim_index}의 날짜가 인용한 원문의 날짜와 다르거나 날짜 열의 인용이 빠졌습니다. '
+                f"확인되지 않은 날짜: {', '.join(d.isoformat() for d in sorted(text_dates - source_dates)[:6])}. "
+                f"인용 원문 날짜: {', '.join(d.isoformat() for d in sorted(source_dates)[:6]) or '없음'} (각 최대 6개). "
+                '해당 날짜가 기록된 원문 열을 같은 주장의 evidence에 추가하거나 근거 없는 날짜를 삭제하세요. '
+                '인용 중복을 줄이더라도 날짜 열을 생략하지 말고 년·월·일 전체를 확인하세요.', 'date')
         numbers = lambda value: set(re.findall(r'[+-]?\d+(?:[.,]\d+)*', value))
-        if not numbers(text).issubset(numbers(quoted_text)):
-            raise ClaimValidationError('답변의 숫자·부호가 인용한 원문 구절에 없습니다.', 'numeric')
+        source_numbers = numbers(quoted_text)
+        missing_numbers = numbers(text) - source_numbers
+        if missing_numbers:
+            # 원문 전체를 오류에 복사하지 않고, UI와 같은 보정 요청에 짧은 비교 정보를 전달합니다.
+            preview = lambda values: ', '.join(value[:32] for value in sorted(values)[:6]) or '없음'
+            locations = '; '.join(f"{e['id'][:60]} / {e['column'][:40]}" for e in claim['evidence'][:3])
+            raise ClaimValidationError(
+                f'답변 {claim_index}의 숫자·부호가 인용한 원문 구절에 없습니다. '
+                f'불일치 표기: {preview(missing_numbers)}. 인용 원문 숫자: {preview(source_numbers)}. '
+                f'인용 위치: {locations} (숫자 최대 6개·위치 최대 3개 표시). '
+                '해당 수치가 있는 원문 셀을 evidence에 추가하거나 근거 없는 설명을 삭제하세요. '
+                '수치가 같아도 쉼표·소수 자릿수·부호 표기는 원문과 같게 쓰고 계산·단위 변환·목록 번호를 추가하지 마세요.',
+                'numeric')
         # 관찰 시간과 대표적인 측정 단위는 같은 숫자라도 바꾸면 다른 사실입니다.
         # ponytail: 명시한 단위 표기만 검사; 현장 고유 단위는 사례가 생길 때 목록에 추가합니다.
         units = r'(L/min|mL/min|kPa|MPa|Pa|bar|mm|cm|km|kg|kW|Hz|RPM|rpm|℃|°C|小时|小時|分钟|分鐘|秒|次|个|個|台|시간|분|초|회|도|개|원|%|V|A|W|m|g|L)'
