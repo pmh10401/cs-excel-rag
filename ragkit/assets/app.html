@@ -170,6 +170,9 @@
           <h1>질문</h1>
           <p class="lead">문제 현상을 입력하면 유사한 과거 사례의 조치와 관찰 결과·미확인 사항을 찾아봅니다. 설비명·알람 코드·발생 조건을 함께 쓰면 범위를 좁힐 수 있습니다.</p>
           <p class="muted">질문은 접수 순서대로 처리합니다. 내 브라우저에서는 한 번에 한 건을 제출하며 새로고침해도 상태를 확인할 수 있습니다. 서버를 종료하면 대기·결과는 초기화됩니다.</p>
+          <div class="actions"><button type="button" id="follow-up-btn" disabled>최근 답변에 이어서 질문</button><button type="button" id="new-conversation-btn" class="quiet">새 대화</button></div>
+          <p id="conversation-mode" class="status" role="status">새 질문입니다.</p>
+          <details id="conversation-history" hidden><summary>최근 대화 확인</summary><div id="conversation-turns"></div><p class="muted">최근 5문답을 이 브라우저 세션에 보관합니다. 후속 질문은 최근 최대 3문답으로 대상을 파악하고 DB 원문을 다시 검색합니다. 서버 재시작·세션 만료 시 초기화됩니다.</p></details>
           <form id="ask-form">
             <label for="question">문제 현상 또는 질문</label>
             <textarea id="question" name="question" rows="4" required maxlength="2000" placeholder="예: 진공 알람이 반복되고 목표 압력에 늦게 도달합니다. 과거 유사 사례에서 어떤 조치를 했고 결과는 어땠나요?"></textarea>
@@ -183,6 +186,9 @@
               <input id="reference-limit" type="number" min="1" max="100" step="1" value="3" required>
             </div>
             <p class="muted">질문하거나 검색을 비교하면 설정이 저장됩니다. 자동은 상위 100건 안에서 질문·원문·답변 및 추론 분량을 고려합니다. 서버 문맥을 확인하지 못하면 설정값 또는 문자 제한을 사용하며 결과에 표시합니다. 원문 셀은 자르지 않습니다.</p>
+            <label for="instruction-language">답변 모델의 지시 언어</label>
+            <select id="instruction-language"><option value="ko">한국어 지시 (기본)</option><option value="en">영어 지시 · 한국어 답변</option></select>
+            <p class="muted">답변·보정·후속 질문 정리 지시의 언어를 선택합니다. 원문과 인용 검사는 유지하며 영어 질문 번역 설정과는 별개입니다. 영어 지시가 더 정확하다는 뜻은 아닙니다.</p>
             <label class="choice"><input type="checkbox" id="bilingual" checked> 영어 번역 질문 함께 사용</label>
             <p class="muted">한국어 질문을 한 번 번역해 원문과 함께 답변 모델에 전달합니다. 영어 검색 자료가 있으면 키워드·결합 검색에도 활용합니다. 벡터 질의는 원문을 사용하며, 번역 실패 시 원문만으로 계속합니다.</p>
             <div class="actions"><button type="submit" id="ask-btn">질문하기</button><button type="button" id="compare-btn">검색만 비교</button></div>
@@ -193,6 +199,7 @@
           <article id="ask-result" hidden>
             <h2 id="ask-result-title">답변</h2>
             <p id="ask-status" class="answer-status" role="status"></p>
+            <details id="ask-context" hidden><summary>문맥을 반영한 검색 질문</summary><p id="ask-resolved-question" class="quote"></p><p class="muted">이전 답변은 질문 이해에만 사용합니다. 사실과 인용은 이번에 검색한 DB 원문으로 검사합니다.</p></details>
             <details id="ask-translation" hidden>
               <summary>영어 번역 질문 확인</summary>
               <p class="muted">질문 이해를 위한 보조 표현입니다. 답변과 인용 근거는 한국어 원문을 기준으로 합니다.</p>

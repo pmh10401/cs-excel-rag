@@ -12,7 +12,7 @@ from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import build_opener, HTTPCookieProcessor, Request
 
-from ragkit import records, storage, web
+from ragkit import records, storage, web, llm
 
 
 def until(predicate):
@@ -107,6 +107,7 @@ def main(root):
                 assert c.request('/api/job')['queue_position'] == 2
                 assert c.request('/api/job')['result'] is None
                 a.request('/api/ask', question('A'), status=409)
+                a.request('/api/conversation/reset', {}, status=409)
                 b.request('/api/ask', question('B'), status=409)
                 c.request('/api/settings', {'normalization_workers': 2}, status=409)
                 c.request('/api/inspect', {'path': str(excel)}, status=409)
@@ -179,6 +180,63 @@ def main(root):
                 a.request('/api/settings', {'reference_limit': 2}, extra=lan)
                 a.request('/api/state', extra={'Host': f'192.168.0.51:{app.port}'}, status=403)
                 a.request('/api/settings', {'reference_limit': 2}, extra=lan | {'Origin': 'http://192.168.0.51'}, status=403)
+
+                # 서버에 보관한 자신의 대화만 사용해 질문을 풀고, 같은 DB를 다시 검색합니다.
+                history = a.request('/api/job')['conversation']
+                assert len(history) == 1 and history[0]['question'] == question('A')['question']
+                assert b.request('/api/job')['conversation'] == []  # 실패 응답은 문맥에 넣지 않습니다.
+                b.request('/api/ask', {'question': '그 조치는?', 'follow_up': True}, status=400)
+                a.request('/api/ask', {'question': '조치는?', 'instruction_language': 'other'}, status=400)
+                a.request('/api/ask', {'question': '조치는?', 'follow_up': 'true'}, status=400)
+                a.request('/api/compare-search', {'question': '조치는?', 'follow_up': True}, status=400)
+                receipt = history[0]['answer_claims'][0]['receipts'][0]
+                resolved_question = receipt + '의 조치내용(1)은?'
+                def follow_response(**request):
+                    prompt = request['messages'][0]['content']
+                    user = request['messages'][1]['content']
+                    if prompt == llm.FOLLOW_UP_PROMPTS['en']:
+                        payload = json.loads(user)
+                        assert len(payload['history']) <= 3
+                        assert '사용자C' not in user and '사용자B' not in user
+                        assert 'PRIVATE-CLIENT-HISTORY' not in user
+                        data = ({'clarification': '어떤 사례를 뜻하나요?'} if payload['question'] == '모호함'
+                                else {'question': resolved_question})
+                    else:
+                        assert prompt == llm.answer_prompt('en')
+                        assert user.startswith('질문: ' + resolved_question + '\n')
+                        assert '"history"' not in user
+                        sources = json.loads(user.split('원문 자료:\n')[1])
+                        source = next(s for s in sources if s['cells'].get('조치내용(1)'))
+                        data = {'claims': [{'text': source['cells']['조치내용(1)'],
+                            'evidence': [{'id': source['id'], 'column': '조치내용(1)'}]}]}
+                    return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop',
+                        message=SimpleNamespace(content=json.dumps(data, ensure_ascii=False)))])
+                follow = {'question': '첫 번째 사례의 조치는?', 'follow_up': True, 'instruction_language': 'en',
+                          'reference_limit': 0, 'history': 'PRIVATE-CLIENT-HISTORY'}
+                follow_client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=follow_response)), close=lambda: None)
+                with patch.object(web, 'OpenAI', return_value=follow_client), patch.object(web, 'retrieve', wraps=web.retrieve) as retrieval:
+                    for _ in range(5):
+                        a.request('/api/ask', follow, status=202)
+                        assert until(lambda: completed(a))['status'] == 'done'
+                        until(lambda: not app.busy())
+                    result = a.request('/api/job')['result']
+                    assert result['question'] == follow['question'] and result['resolved_question'] == resolved_question
+                    assert result['instruction_language'] == 'en' and result['follow_up']
+                    assert retrieval.call_count == 5 and retrieval.call_args.args[1] == resolved_question
+                    assert len(a.request('/api/job')['conversation']) == 5
+                    assert len(c.request('/api/job')['conversation']) == 1
+                    before = a.request('/api/job')['conversation']
+                    a.request('/api/ask', follow | {'question': '모호함'}, status=202)
+                    assert until(lambda: completed(a))['result']['status'] == 'clarification'
+                    until(lambda: not app.busy())
+                    assert retrieval.call_count == 5 and a.request('/api/job')['conversation'] == before
+                a.reload()
+                assert a.request('/api/job')['conversation'] == before
+                a.request('/api/conversation/reset', {}, extra={'Origin': 'http://evil.test'}, status=403)
+                a.request('/api/conversation/reset', {'unexpected': True}, status=400)
+                a.request('/api/conversation/reset', {})
+                assert a.request('/api/job')['conversation'] == [] and a.request('/api/job')['status'] == 'idle'
+                assert len(c.request('/api/job')['conversation']) == 1
 
                 # 작업자가 시작하기 직전에도 대기 상태를 표시하고 50건에서 접수를 제한합니다.
                 with patch.object(threading.Thread, 'start'):

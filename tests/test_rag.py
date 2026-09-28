@@ -63,6 +63,54 @@ def main(root):
         assert '한 건도' in str(error) and details['references']['selected'] == 0
     else:
         raise AssertionError('최상위 사례가 한도를 넘는데 일부 셀만 사용했습니다.')
+    # 실패 응답이 길어도 원문을 자르거나 출력 여유를 줄이지 않고 두 번째 호출까지 진행합니다.
+    retry_hits = [{'evidence': [{'id': 'RETRY/접수', 'kind': '접수',
+                               'cells': {'조치': '배선을 재체결했습니다.'}}]}]
+    retry_question = '스핀 조치는?'
+    good_retry = json.dumps({'claims': [{'text': '배선을 재체결했습니다.',
+        'evidence': [{'id': 'RETRY/접수', 'column': '조치'}]}]}, ensure_ascii=False)
+    long_bad = json.dumps({'claims': [{'text': '999분 ' + '확인했습니다. ' * 2000,
+        'evidence': [{'id': 'RETRY/접수', 'column': '조치'}]}]}, ensure_ascii=False)
+    def model_response(content, reason='stop'):
+        return SimpleNamespace(choices=[SimpleNamespace(finish_reason=reason, message=SimpleNamespace(content=content))])
+    for language in ('ko', 'en'):
+        cfg = {'model': 'mock', 'reasoning_effort': 'high', 'answer_instruction_language': language}
+        _, original_messages = llm.case_answer_messages(retry_question, retry_hits, instruction_language=language)
+        original_chars = sum(len(m['content']) for m in original_messages)
+        for padding, mode in ((900, 'without_response'), (0, 'regenerate')):
+            create = Mock(side_effect=[model_response(long_bad), model_response(good_retry)])
+            client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+            details = {}
+            llm.answer(client, cfg | {'max_context_chars': original_chars + padding}, retry_question, retry_hits, details=details)
+            first, second = [call.kwargs['messages'] for call in create.call_args_list]
+            assert second[:2] == first == original_messages
+            assert sum(len(m['content']) for m in second) <= original_chars + padding
+            assert details['validation_events'][0]['retry_context'] == mode
+            assert details['attempts'] == 2 and details['instruction_language'] == language
+            if padding:
+                assert second[-1]['content'].endswith(llm.ANSWER_REPAIR[language])
+        # 출력 한도 재시도도 요청이 꽉 찬 경계에서 작동합니다.
+        create.side_effect = [model_response('잘린 응답', 'length'), model_response(good_retry)]
+        llm.answer(client, cfg | {'max_context_chars': original_chars}, retry_question, retry_hits, details=details)
+        assert details['retried_length'] and details['attempts'] == 2
+        token_cfg = cfg | {'answer_tokenizer': 'o200k_harmony', 'answer_max_tokens': 500}
+        token_cfg['context_window'] = llm.answer_input_reservation(original_messages, token_cfg)[0] + 500
+        create.reset_mock()
+        create.side_effect = [model_response(long_bad), model_response(good_retry)]
+        llm.answer(client, token_cfg, retry_question, retry_hits, details=details)
+        assert all(call.kwargs['max_tokens'] == 500 for call in create.call_args_list)
+        assert create.call_args_list[1].kwargs['messages'] == original_messages
+    # 후속 질문 정리는 모호한 대상을 추측하지 않고 확인 질문을 반환할 수 있습니다.
+    create.side_effect = [model_response('{"clarification":"어떤 사례를 뜻하나요?"}'), model_response('{"question":""}')]
+    history = [{'question': '스핀 조치는?', 'answer_claims': [{'text': '배선 재체결', 'receipts': ['RETRY']}]}]
+    assert 'clarification' in llm.resolve_follow_up(client, cfg, '그것은?', history)
+    assert create.call_args.kwargs['messages'][0]['content'] == llm.FOLLOW_UP_PROMPTS['en']
+    try:
+        llm.resolve_follow_up(client, cfg, '그것은?', history)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('빈 후속 검색 질문을 허용했습니다.')
     case_rules = json.loads((root / 'cslist_cases.json').read_text(encoding='utf-8'))
     for index, wrong in [(0, '관찰 시간을 확인할 수 없습니다.'), (3, '씰 교체를 완료했습니다.'),
                          (6, '온도는 86도이며 금액을 확인할 수 없습니다.'), (8, '밸브 점검을 완료했습니다.')]:

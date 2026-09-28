@@ -14,19 +14,9 @@ from ragkit import llm
 from ragkit.retrieval_evaluation import atomic_report
 
 
-PROMPT = Path(__file__).with_name('answer_prompt_en.txt')
-REPAIR_KO = ('\n이전 응답을 처음 제공한 원문 셀과 대조해 수정하세요. '
-             '인용할 셀을 먼저 고르고 해당 셀로 뒷받침되지 않는 설명은 삭제하세요. '
-             '질문의 모든 항목을 claims 목록 안에 넣은 JSON 객체 하나만 반환하세요.')
-REPAIR_EN = ('\nCorrect the previous response against the original cells first provided. '
-             'Select evidence cells first and remove explanations unsupported by those cells. '
-             'Return one JSON object with every part of the question addressed in its claims list.')
-LENGTH_KO = ('이전 생성이 출력 한도에 도달했습니다. 검토를 간결하게 마치고 JSON을 완성하세요. '
-             '질문 항목을 빠뜨리지 말고 각 접수의 조치·관찰 결과 등 요청한 사실만 짧게 답하세요. '
-             'evidence에는 id와 column만 넣고 원문을 복사하지 마세요.')
-LENGTH_EN = ('The previous generation reached the output limit. Finish the analysis briefly and complete the JSON. '
-             'Without omitting any part of the question, briefly answer only the requested facts, such as each '
-             'receipt\'s actions and observed results. Put only id and column in evidence; do not copy the original text.')
+PROMPT = Path(llm.__file__).with_name('assets') / 'answer_prompt_en.txt'
+REPAIR_KO, REPAIR_EN = llm.ANSWER_REPAIR['ko'], llm.ANSWER_REPAIR['en']
+LENGTH_KO, LENGTH_EN = llm.ANSWER_LENGTH_RETRY['ko'], llm.ANSWER_LENGTH_RETRY['en']
 
 
 def translate_request(request, config):

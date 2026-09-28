@@ -20,7 +20,7 @@ from openai import APIError, APITimeoutError, OpenAI
 
 from .cslist import column_group, load_schema, ensure_search_index
 from .input_formats import row_schema, row_rules, is_history, HISTORY_SHEET, HISTORY_SCHEMA
-from .llm import answer, editable, select_answer_cases
+from .llm import answer, editable, select_answer_cases, resolve_follow_up
 from .records import (public_cells, read_excel,
                       HeaderMappingError, load_header_aliases, save_header_aliases,
                       validate_header_aliases)
@@ -40,7 +40,7 @@ STATIC = {
     '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
 }
 GET_API = {'/api/state', '/api/job', '/api/records', '/api/record', '/api/llm-messages'}
-POST_API = {'/api/inspect', '/api/import', '/api/import-many', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop'}
+POST_API = {'/api/inspect', '/api/import', '/api/import-many', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/conversation/reset', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop'}
 PUBLIC_CONFIG = ('model', 'base_url', 'reasoning_effort', 'timeout_seconds',
                  'max_context_chars', 'max_tokens', 'context_window', 'temperature', 'top_p',
                  'answer_max_tokens', 'answer_temperature', 'answer_top_p')
@@ -279,6 +279,8 @@ class App:
         """실제 질문은 로컬에만 기록합니다. 평가의 기대 정답은 사람이 별도로 지정합니다."""
         payload = {'time': time.strftime('%Y-%m-%dT%H:%M:%S%z'), 'question': question,
                    'model': self.config['model'], 'status': status,
+                   'instruction_language': details.get('instruction_language', 'ko'),
+                   'resolved_question': details.get('resolved_question', question),
                    'candidate_ids': [hit.get('record_id', hit['id']) for hit in hits],
                    'validation_events': details.get('validation_events', []),
                    'attempts': details.get('attempts', 0)}
@@ -467,6 +469,7 @@ class App:
             position = next((i for i, (queued, _) in enumerate(self.questions, 1) if queued.get('owner') == owner), 0) if owner else 0
             started, finished = job.get('started'), job.get('finished')
             progress = dict(job['progress']) if isinstance(job.get('progress'), dict) else None
+            conversation = list(self.sessions[owner].get('conversation', [])) if owner else []
         elapsed = round((finished if finished is not None else time.monotonic()) - started, 1) if started else 0
         return {
             'status': job['status'], 'kind': job['kind'],
@@ -474,11 +477,12 @@ class App:
             'elapsed_seconds': elapsed, 'error': job['error'], 'code': job['code'],
             'result': job['result'] if job['status'] not in ('running', 'queued') else None,
             'question': job.get('question'),
+            'conversation': conversation,
             'progress': progress, 'overnight': job.get('overnight'),
             'queue_position': position, 'server_busy': server_busy, 'maintenance_running': maintenance,
         }
 
-    def queue_question(self, owner, func, *, question=None):
+    def queue_question(self, owner, func, *, question=None, start_new=False):
         with self.lock:
             if self.sync_busy or (self.job['status'] == 'running' and self.job['kind'] != 'ask'):
                 raise ApiError(409, '자료 갱신 작업 중입니다. 완료 후 질문하세요.', 'busy')
@@ -486,6 +490,8 @@ class App:
                 raise ApiError(409, '내 질문이 이미 대기 또는 처리 중입니다.', 'busy')
             if len(self.questions) >= 50:
                 raise ApiError(429, '질문 대기열이 가득 찼습니다. 잠시 후 다시 제출하세요.', 'queue_full')
+            if start_new:
+                self.sessions[owner]['conversation'] = []
             job = self._idle_job() | {'kind': 'ask', 'status': 'queued', 'stage': '질문 대기 중', 'owner': owner, 'question': question}
             self.sessions[owner]['job'] = job
             self.questions.append((job, func))
@@ -513,6 +519,30 @@ class App:
                               result=getattr(error, 'extra', {}).get('answer_result'))
             with self.lock:
                 job.update(update, finished=time.monotonic())
+                result = job.get('result') or {}
+                if (job['status'] == 'done' and not result.get('comparison')
+                        and result.get('status') in ('ok', 'aggregate', 'no_match', 'insufficient_evidence')):
+                    # ponytail: 세션당 최근 5문답만 메모리에 보관합니다. 영속 대화가 필요하면 별도 저장을 추가합니다.
+                    claims = [{'text': claim['text'][:1000],
+                               'receipts': list(dict.fromkeys(e['receipt'] for e in claim['evidence']))}
+                              for claim in result['claims']]
+                    turn = {'question': result['question'], 'resolved_question': result['resolved_question'],
+                            'answer_claims': claims, 'answer': result['answer'][:2000] if not claims else '',
+                            'truncated': any(len(c['text']) > 1000 for c in result['claims'])
+                                         or (not claims and len(result['answer']) > 2000)}
+                    session = self.sessions[job['owner']]
+                    session['conversation'] = (session.get('conversation', []) + [turn])[-5:]
+
+    def reset_conversation(self, owner, body):
+        if body != {}:
+            raise ApiError(400, '새 대화 요청에는 추가 항목을 넣지 마세요.')
+        with self.lock:
+            session = self.sessions[owner]
+            if session['job']['status'] in ('queued', 'running'):
+                raise ApiError(409, '내 질문이 끝난 뒤 새 대화를 시작하세요.', 'busy')
+            session['conversation'] = []
+            session['job'] = self._idle_job()
+        return {'reset': True}
 
     def busy(self):
         with self.lock:
@@ -873,6 +903,17 @@ class App:
             raise ApiError(400, '질문을 입력하세요.')
         if len(question) > MAX_QUESTION:
             raise ApiError(400, '질문이 너무 깁니다. 한 가지 질문으로 나누어 입력하세요.')
+        language = body.get('instruction_language', self.config.get('answer_instruction_language', 'ko'))
+        if language not in ('ko', 'en'):
+            raise ApiError(400, '답변 지시 언어는 ko 또는 en이어야 합니다.')
+        follow_up = body.get('follow_up', False)
+        if type(follow_up) is not bool or (comparison and follow_up):
+            raise ApiError(400, '이어서 질문은 답변 요청에서 참 또는 거짓으로 지정하세요.')
+        with self.lock:
+            history = list(self.sessions[owner or self.token].get('conversation', [])) if follow_up else []
+        if follow_up and not history:
+            raise ApiError(400, '이어서 질문할 이전 답변이 없습니다. 먼저 새 질문을 입력하세요.')
+        answer_settings = self.config | {'answer_instruction_language': language}
         bilingual = body.get('bilingual', False)
         if type(bilingual) is not bool:
             raise ApiError(400, '영어 검색 사용 여부는 참 또는 거짓이어야 합니다.')
@@ -890,8 +931,19 @@ class App:
 
         def work():
             started = time.monotonic()
-            details = {'timings': {}}
+            details = {'timings': {}, 'instruction_language': language, 'follow_up': follow_up}
             timings = details['timings']
+            resolved_question = question
+            if follow_up:
+                self.set_stage('이전 대화로 질문의 대상 확인 중')
+                with self.llm_client() as client:
+                    resolved = resolve_follow_up(client, answer_settings, question, history)
+                timings['follow_up'] = round(time.monotonic() - started, 4)
+                if 'clarification' in resolved:
+                    return pack_answer(question, resolved['clarification'], [], None, details,
+                                       time.monotonic() - started, code='clarification')
+                resolved_question = resolved['question']
+            details['resolved_question'] = resolved_question
             self.set_stage('DB 원문 확인 중')
             with closing(self.connect()) as db:
                 if not db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone():
@@ -904,22 +956,22 @@ class App:
                 timings['index_prepare'] = round(time.monotonic() - stage_started, 4)
                 self.set_stage('검색 중')
                 stage_started = time.monotonic()
-                aggregate = count_records(db, question)
+                aggregate = count_records(db, resolved_question)
                 timings['aggregate_check'] = round(time.monotonic() - stage_started, 4)
                 search_started = time.monotonic()
                 hits = []
                 if bilingual and not aggregate:
                     self.set_stage('한국어·영어로 검색 중')
                     with self.llm_client() as client:
-                        hits = bilingual_retrieve(db, question, client, self.config, details=details,
+                        hits = bilingual_retrieve(db, resolved_question, client, self.config, details=details,
                                                   limit=max(20, retrieval_limit) if search_mode == 'hybrid' else retrieval_limit,
                                                   search_english=search_mode != 'vector')
                     timings['bilingual'] = round(time.monotonic() - search_started, 4)
                 if not aggregate and (search_mode != 'keyword' or comparison):
-                    hits = semantic.search_cases(db, question, self.config, mode=search_mode,
+                    hits = semantic.search_cases(db, resolved_question, self.config, mode=search_mode,
                         keyword_hits=hits if bilingual else None, details=details, limit=retrieval_limit)
                 elif not aggregate and not bilingual:
-                    hits = retrieve(db, question, limit=retrieval_limit)
+                    hits = retrieve(db, resolved_question, limit=retrieval_limit)
                     timings['keyword'] = round(time.monotonic() - search_started, 4)
                 timings['retrieval_total'] = round(time.monotonic() - search_started, 4)
                 details['references'] = {'mode': 'auto' if reference_limit == 0 else 'manual',
@@ -938,12 +990,12 @@ class App:
                     self.set_stage('답변 생성 중')
                     with self.llm_client() as client:
                         try:
-                            answer_config = self.config
+                            answer_config = answer_settings
                             if reference_limit == 0:
                                 self.set_stage('답변 모델의 문맥 한도·참고 사례 분량 확인 중')
-                                hits, answer_config = select_answer_cases(self.config, question, hits, details=details)
+                                hits, answer_config = select_answer_cases(answer_settings, resolved_question, hits, details=details)
                             self.set_stage('답변 생성 중')
-                            reply, _context = answer(client, answer_config, question, hits, details=details)
+                            reply, _context = answer(client, answer_config, resolved_question, hits, details=details)
                             code = details.get('answer_status', 'ok')
                         except Exception as error:
                             text, failure_code = self.public_error(error)
@@ -964,7 +1016,7 @@ class App:
                 self.save_answer_diagnostics(question, hits, details, code)
             return pack_answer(question, reply, hits, aggregate, details, time.monotonic() - started, code=code)
 
-        self.queue_question(owner or self.token, work, question=question)
+        self.queue_question(owner or self.token, work, question=question, start_new=not follow_up and not comparison)
         return {'accepted': True, 'kind': 'ask'}
 
     def translate_english(self, body):
@@ -1247,6 +1299,8 @@ class App:
                     send_json(handler, 202, self.vectors(body))
                 elif path in ('/api/ask', '/api/compare-search'):
                     send_json(handler, 202, self.ask(body, comparison=path == '/api/compare-search', owner=owner))
+                elif path == '/api/conversation/reset':
+                    send_json(handler, 200, self.reset_conversation(owner, body))
                 elif path == '/api/reviews':
                     send_json(handler, 200, self.reviews(body))
                 elif path == '/api/reviews/accept-pending':
@@ -1328,9 +1382,12 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
                 additional.append(evidence)
         if additional:
             supplements.append({'evidence': additional})
-    ok = code in ('ok', 'aggregate', 'no_match', 'insufficient_evidence')
+    ok = code in ('ok', 'aggregate', 'no_match', 'insufficient_evidence', 'clarification')
     return {
         'question': question,
+        'resolved_question': (details or {}).get('resolved_question', question),
+        'follow_up': (details or {}).get('follow_up', False),
+        'instruction_language': (details or {}).get('instruction_language', 'ko'),
         'status': code,
         'answer': (details or {}).get('answer_text', reply) if code == 'ok' else reply,
         'elapsed_seconds': round(elapsed, 1),

@@ -267,7 +267,7 @@ def check_answer_diagnostics():
     for empty in (SimpleNamespace(choices=[]), response(''), response('rejected', 'content_filter')):
         detail, _ = run([empty], RuntimeError)
         assert detail['validation_events'][0]['category'] in ('empty_response', 'finish_reason')
-    # 기록만 자르고 검증·보정에는 전체 응답을 사용합니다.
+    # 기록은 잘라도 검증에는 전체 응답을 사용합니다. 보정 요청은 입력 한도를 지킵니다.
     long_response = ' ' * (llm.ANSWER_RESPONSE_LIMIT + 10) + json.dumps(good, ensure_ascii=False)
     detail, _ = run([response(long_response)])
     item = detail['validation_events'][0]
@@ -275,8 +275,10 @@ def check_answer_diagnostics():
     assert item['response_chars'] == len(long_response) and item['response_truncated']
     assert item['category'] == 'passed' and detail['claims'][0]['text'] == good['claims'][0]['text']
     too_long = 'x' * 30000
-    detail, create = run([response(too_long)], ValueError)
-    assert create.call_count == 1 and detail['validation_events'][0]['outcome'] == 'blocked'
+    detail, create = run([response(too_long), response(good)])
+    assert create.call_count == 2 and detail['validation_events'][0]['outcome'] == 'succeeded'
+    assert detail['validation_events'][0]['retry_context'] == 'without_response'
+    assert create.call_args.kwargs['messages'][1] == create.call_args_list[0].kwargs['messages'][1]
     assert detail['validation_events'][0]['category'] == 'json'
     summary = llm.validation_summary(llm.ClaimValidationError('m' * 2000, 'evidence', 'c' * 400))
     assert len(summary['error']) == 1000 and len(summary['column']) == 200

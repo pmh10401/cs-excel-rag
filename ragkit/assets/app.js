@@ -9,6 +9,7 @@ const CONFIG_LABELS = {
 const ASK_TITLE = {
   ok: '답변', aggregate: '집계 결과', no_match: '없는 기록',
   insufficient_evidence: '근거 부족',
+  clarification: '질문 대상 확인',
   validation_failed: '근거 검사 실패', source_changed: '원문 변경', error: '답변을 만들지 못했습니다'
 };
 
@@ -18,7 +19,8 @@ const ui = {
   pending: false, refreshing: false, pages: 1, total: 0, listRequest: 0,
   mappingBlocked: false, mappingPath: '', mappingDirty: false,
   aliasDraft: {}, unknownHeaders: [], missingColumns: [],
-  schemaColumns: [], idColumn: '', reviewImportant: true, reviewChanged: false, reviewGrouped: false
+  schemaColumns: [], idColumn: '', reviewImportant: true, reviewChanged: false, reviewGrouped: false,
+  conversation: [], followUp: false
 };
 
 async function api(path, opts) {
@@ -110,7 +112,9 @@ function updateLocks() {
   ['inspect-btn', 'import-btn', 'normalize-btn', 'header-mapping-save', 'save-settings', 'normalization-workers', 'auto-english', 'vectors-btn', 'vectors-limit', 'review-important', 'review-changed', 'review-grouped'].forEach(function (id) {
     if ($(id)) $(id).disabled = jobLock || reqLock;
   });
-  ['ask-btn', 'compare-btn', 'search-mode'].forEach(id => { $(id).disabled = ui.busy || reqLock; });
+  ['ask-btn', 'search-mode', 'instruction-language', 'new-conversation-btn'].forEach(id => { $(id).disabled = ui.busy || reqLock; });
+  $('compare-btn').disabled = ui.busy || reqLock || ui.followUp;
+  $('follow-up-btn').disabled = ui.busy || reqLock || !ui.conversation.length;
   const hasRecords = !!(ui.last && ui.last.db && ui.last.db.records);
   if ($('normalize-btn')) $('normalize-btn').disabled = jobLock || reqLock || !hasRecords;
   if ($('import-btn')) $('import-btn').disabled = jobLock || reqLock || ui.mappingBlocked || ui.mappingDirty;
@@ -200,6 +204,8 @@ function applyState(s) {
     try {
       const saved = localStorage.getItem('cs-rag-reference-limit');
       if (saved !== null && Number.isInteger(Number(saved)) && Number(saved) >= 0 && Number(saved) <= 100) count = Number(saved);
+      const language = localStorage.getItem('cs-rag-instruction-language');
+      if (['ko', 'en'].includes(language)) $('instruction-language').value = language;
     } catch (_) { /* 브라우저 저장을 차단해도 현재 세션에서는 설정을 사용합니다. */ }
     $('reference-mode').value = count === 0 ? 'auto' : 'manual';
     $('reference-limit').value = String(count || 3);
@@ -225,7 +231,8 @@ function applyState(s) {
 
 function renderJob(job) {
   const banner = $('job-banner');
-  if (job.kind === 'ask' && job.question && !$('question').value.trim()) $('question').value = job.question;
+  renderConversation(job.conversation || []);
+  if (job.kind === 'ask' && job.question && !ui.followUp && !$('question').value.trim()) $('question').value = job.question;
   const running = ['running', 'queued'].includes(job.status);
   ui.serverBusy = job.server_busy ?? running;
   ui.maintenance = job.maintenance_running ?? (running && job.kind !== 'ask');
@@ -1312,9 +1319,43 @@ function renderAnswer(result, showClaims) {
   });
 }
 
+function renderConversation(turns) {
+  const changed = JSON.stringify(turns) !== JSON.stringify(ui.conversation);
+  ui.conversation = turns;
+  if (!turns.length) ui.followUp = false;
+  $('conversation-history').hidden = !turns.length;
+  setText($('conversation-mode'), ui.followUp
+    ? '이어서 질문합니다. 예: “첫 번째 사례의 조치 날짜도 알려줘.”'
+    : '새 질문입니다. 이전 맥락을 사용하려면 “최근 답변에 이어서 질문”을 누르세요.');
+  $('ask-btn').textContent = ui.followUp ? '이어서 질문하기' : '질문하기';
+  if (!changed) return;
+  const box = $('conversation-turns');
+  box.replaceChildren();
+  turns.forEach(turn => {
+    const entry = document.createElement('details');
+    const title = document.createElement('summary');
+    title.textContent = turn.question;
+    entry.append(title);
+    const texts = turn.answer_claims.length ? turn.answer_claims.map(claim =>
+      claim.text + (claim.receipts.length ? ' (' + claim.receipts.join(', ') + ')' : '')) : [turn.answer];
+    texts.forEach(text => {
+      const paragraph = document.createElement('p');
+      paragraph.className = 'quote';
+      paragraph.textContent = text;
+      entry.append(paragraph);
+    });
+    if (turn.truncated) {
+      const note = document.createElement('p');
+      note.textContent = '문맥 보관 한도로 이전 답변의 일부만 표시합니다.';
+      entry.append(note);
+    }
+    box.append(entry);
+  });
+}
+
 function renderAsk(job) {
   const result = job.result;
-  const failed = job.status === 'error' || (result && result.status && !['ok', 'aggregate', 'no_match', 'insufficient_evidence'].includes(result.status));
+  const failed = job.status === 'error' || (result && result.status && !['ok', 'aggregate', 'no_match', 'insufficient_evidence', 'clarification'].includes(result.status));
   const code = (result && result.status) || job.code || (job.status === 'error' ? 'error' : 'ok');
   showAlert('ask-error', job.status === 'error' ? (job.error || '') : (code === 'source_changed' || code === 'validation_failed' ? (result && result.error || job.error || '') : ''));
   if (job.status === 'error' && !result) {
@@ -1323,6 +1364,8 @@ function renderAsk(job) {
   }
   if (!result) return;
   $('ask-result').hidden = false;
+  $('ask-context').hidden = !result.follow_up || result.status === 'clarification';
+  setText($('ask-resolved-question'), result.resolved_question || '');
   $('ask-result').className = 'kind-' + code;
   setText($('ask-result-title'), result.comparison ? '검색 비교' : ASK_TITLE[code] || '답변');
   renderAnswer(result, code === 'ok' && !result.comparison);
@@ -1350,7 +1393,8 @@ function renderAsk(job) {
     }
   }
   setText($('ask-references'), referenceText);
-  setText($('ask-note'), (result.elapsed_seconds != null ? result.elapsed_seconds + '초' : '') + (result.note ? ' · ' + result.note : ''));
+  setText($('ask-note'), (result.elapsed_seconds != null ? result.elapsed_seconds + '초' : '') +
+    ' · ' + (result.instruction_language === 'en' ? '영어 지시 · 한국어 답변' : '한국어 지시') + (result.note ? ' · ' + result.note : ''));
   const diagnostics = (Array.isArray(result.validation_events) ? result.validation_events : []).flatMap(event => {
     if (typeof event === 'string') return [event];
     if (!event) return [];
@@ -1381,7 +1425,7 @@ function renderAsk(job) {
     setText($('ask-search-detail'), (search ? $('ask-search-detail').textContent + '\n\n' : '') + text);
     if (vector.warning) setText($('ask-note'), $('ask-note').textContent + ' · ' + vector.warning);
   }
-  const timingLabels = {source_check: 'DB 원문 확인', index_prepare: '검색 자료 준비',
+  const timingLabels = {follow_up: '후속 질문 문맥 확인', source_check: 'DB 원문 확인', index_prepare: '검색 자료 준비',
     keyword: '키워드 검색', bilingual: '한국어·영어 검색', index_load: '벡터 자료 준비',
     embedding: '질문 임베딩', vector_search: '벡터 검색', source_lookup: '근거 원문 조회',
     fusion: '검색 순위 결합', retrieval_total: '검색 전체', answer: '답변 생성·검사', total: '전체'};
@@ -1394,7 +1438,7 @@ function renderAsk(job) {
       (result.source_db ? '\nDB에 등록된 원문 사용 · Excel 파일 불필요' : '') +
       (result.index_rebuilt ? '\n이전 버전의 검색 자료를 한 번 갱신했습니다.' : ''));
   }
-  if (['no_match', 'aggregate', 'insufficient_evidence'].includes(code)) showAlert('ask-error', '');
+  if (['no_match', 'aggregate', 'insufficient_evidence', 'clarification'].includes(code)) showAlert('ask-error', '');
   if (failed && result.error) showAlert('ask-error', result.error);
 }
 
@@ -1414,7 +1458,9 @@ async function startAsk(comparison = false) {
     const settings = await api('/api/settings', {method: 'POST', body: {reference_limit: referenceLimit}});
     if (ui.last) ui.last.settings = Object.assign({}, ui.last.settings, settings);
     try { localStorage.setItem('cs-rag-reference-limit', String(referenceLimit)); } catch (_) {}
-    await api(comparison ? '/api/compare-search' : '/api/ask', {method: 'POST', body: {question: question, bilingual: $('bilingual').checked, search_mode: $('search-mode').value, reference_limit: referenceLimit}});
+    try { localStorage.setItem('cs-rag-instruction-language', $('instruction-language').value); } catch (_) {}
+    await api(comparison ? '/api/compare-search' : '/api/ask', {method: 'POST', body: {question: question, bilingual: $('bilingual').checked, search_mode: $('search-mode').value, reference_limit: referenceLimit,
+      instruction_language: $('instruction-language').value, follow_up: ui.followUp}});
     startPoll();
     await refreshJob();
   } catch (err) {
@@ -1573,6 +1619,30 @@ $('search-form').addEventListener('submit', function (ev) {
 $('prev-page').addEventListener('click', function () { if (ui.page > 1) changePage(-1); });
 $('next-page').addEventListener('click', function () { changePage(1); });
 $('ask-form').addEventListener('submit', function (ev) { ev.preventDefault(); startAsk(); });
+$('follow-up-btn').addEventListener('click', () => {
+  ui.followUp = true;
+  renderConversation(ui.conversation);
+  $('question').value = '';
+  $('question').focus();
+  updateLocks();
+});
+$('new-conversation-btn').addEventListener('click', async () => {
+  if (ui.busy || ui.pending) return;
+  setPending(true);
+  try {
+    await api('/api/conversation/reset', {method: 'POST', body: {}});
+    ui.followUp = false;
+    ui.handled = '';
+    renderConversation([]);
+    $('question').value = '';
+    $('ask-result').hidden = true;
+    showAlert('ask-error', '');
+    setText($('ask-progress'), '');
+    await refreshJob();
+    $('question').focus();
+  } catch (err) { showAlert('ask-error', err.message); }
+  finally { setPending(false); }
+});
 window.addEventListener('beforeunload', function (ev) {
   if (!hasDirty() && !ui.mappingDirty) return;
   ev.preventDefault();
