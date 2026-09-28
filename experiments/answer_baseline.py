@@ -78,7 +78,7 @@ def source_hits(db, identities):
     return result
 
 
-def evaluate_case(db, case, arm, config, embedding, client, path, protocol_hash):
+def evaluate_case(db, case, arm, config, embedding, client, path, protocol_hash, *, fixed_hits=None, prepare_request=None):
     """기존 평가기의 검색·답변·원자적 저장을 재사용하고 모델 진단만 함께 보관합니다."""
     dataset = {'provenance': 'Frozen synthetic answer baseline', 'cases': [case]}
     _, case_hash = freeze(dataset)
@@ -96,7 +96,7 @@ def evaluate_case(db, case, arm, config, embedding, client, path, protocol_hash)
 
     def search(question, method):
         details = {}
-        hits = (source_hits(db, case['provided_ids']) if arm == 'provided' else
+        hits = fixed_hits if fixed_hits is not None else (source_hits(db, case['provided_ids']) if arm == 'provided' else
                 semantic.search_cases(db, question, config, embedding_client=embedding, details=details, limit=3))
         return {'hits': hits, 'details': details, 'answer_diagnostics': diagnostics}
 
@@ -105,6 +105,8 @@ def evaluate_case(db, case, arm, config, embedding, client, path, protocol_hash)
         diagnostics['calls'] = calls
 
         def completion(**request):
+            if prepare_request is not None:
+                request = prepare_request(request)
             # 창작 자료만 로컬 outputs에 기록합니다. API 키나 SDK 예외 본문은 저장하지 않습니다.
             call = {'request': request}
             calls.append(call)
