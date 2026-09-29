@@ -416,7 +416,7 @@ def normalize(client, config, row, rules, schema=None, *, previous_error=''):
             result.update({key: proposed[key] for key in proposed if group_rules[key] == 'rewrite'})
         validate_normalized(result, row, rules)
         return NormalizationResult(result, fallbacks) if fallbacks else result
-    # 한 행을 하나의 기록으로 봅니다. 여러 행이 한 사건이면 입력 전에 먼저 묶어야 합니다.
+    # 한 상세 행씩 정리합니다. 같은 CS의 다른 부품·조치 행을 임의로 합치지 않습니다.
     columns = [key for key in row if editable(row, key, rules)]
     if not columns:
         return public_cells(row)

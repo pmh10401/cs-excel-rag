@@ -19,7 +19,7 @@ from urllib.parse import parse_qs, urlparse
 from openai import APIError, APITimeoutError, OpenAI
 
 from .cslist import column_group, load_schema, ensure_search_index
-from .input_formats import row_schema, row_rules, is_history, HISTORY_SHEET, HISTORY_SCHEMA
+from .input_formats import row_schema, row_rules, is_history, HISTORY_SCHEMAS, HISTORY_DETAIL_COLUMNS
 from .llm import answer, editable, select_answer_cases, resolve_follow_up
 from .records import (public_cells, read_excel,
                       HeaderMappingError, load_header_aliases, save_header_aliases,
@@ -329,7 +329,7 @@ class App:
             self.normalization_workers = validate_workers(saved['normalization_workers'])
         excel = saved.get('excel')
         reader = saved.get('reader')
-        if saved.get('sheet') in (SHEET, HISTORY_SHEET):
+        if saved.get('sheet') in (SHEET, *HISTORY_SCHEMAS):
             self.input_sheet = saved['sheet']
         if reader in ('openpyxl', 'xlwings'):
             self.reader = reader
@@ -600,7 +600,7 @@ class App:
 
     def state(self, owner=None):
         summary = self.db_summary()
-        schema = HISTORY_SCHEMA if self.input_sheet == HISTORY_SHEET else self.schema
+        schema = HISTORY_SCHEMAS.get(self.input_sheet, self.schema)
         return {
             'excel': self.excel_text,
             'reader': self.reader,
@@ -1078,7 +1078,10 @@ class App:
             for field in LIST_FIELDS:
                 item[LIST_KEYS[field]] = original.get(field, '')
             if is_history(original):
-                item.update(customer=original.get('Site', ''), equipment=original.get('설비', ''), date=original.get('불량발생일', ''))
+                item.update(customer=original.get('SITE', original.get('Site', '')), equipment=original.get('설비', ''),
+                            date=original.get('불량발생일', ''),
+                            detail=' · '.join(original[key] for key in HISTORY_DETAIL_COLUMNS if original.get(key)),
+                            location=original.get('_excel_location', ''))
             items.append(item)
         return {'page': page, 'page_size': size, 'total': total, 'query': q, 'items': items}
 
@@ -1126,6 +1129,7 @@ class App:
             groups.append({'name': name, 'cells': block})
         return {
             'id': prepared['id'],
+            'case_number': original.get(original.get('_id_column', 'id'), prepared['id']),
             'revision': prepared['revision'],
             'source_key': original.get('_source_key', ''),
             'has_proposal': proposal is not None,
@@ -1360,6 +1364,9 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
             for evidence in claim.get('evidence', []):
                 source = sources.get(evidence['id'], {})
                 receipt, _, work = evidence['id'].partition('/')
+                # 검증에는 상세 ID를 유지하고 화면·후속 대화에는 업무 CS 번호를 사용합니다.
+                cells = source.get('cells', {})
+                receipt = cells.get('CS NO') or cells.get('CS 접수번호') or receipt
                 items.append({
                     'id': evidence['id'], 'receipt': receipt,
                     'work': work or source.get('kind', ''), 'column': evidence['column'],

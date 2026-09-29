@@ -3,9 +3,9 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 import hashlib
 import json
 import time
-from .records import public_cells, row_revision, text_for, record_id
+from .records import public_cells, row_revision, text_for, record_id, history_content_key
 from .llm import editable, validate_normalized, normalize, normalization_prompt
-from .input_formats import row_rules, row_schema
+from .input_formats import row_rules, row_schema, is_history
 
 class NormalizationBatchError(ValueError):
     """모든 행을 시도한 뒤 실패 목록을 호출자에게 전달합니다."""
@@ -35,11 +35,34 @@ def stored_rows(db, record_ids=None):
         yield from db.execute('SELECT id, original_json, normalized_json FROM normalized_records' + where + ' ORDER BY id', batch or ())
 
 
+def history_import_rows(db, rows):
+    """같은 상세는 신·구 열 이름과 행 위치에 관계없이 기존 ID·출처로 재사용합니다."""
+    if not db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone():
+        return rows
+    legacy = {}
+    resolved = []
+    for row in rows:
+        if is_history(row) and row.get('_history_detail'):
+            saved = db.execute('SELECT original_json FROM normalized_records WHERE id=?', (record_id(row),)).fetchone()
+            if saved:
+                resolved.append(json.loads(saved[0]))
+                continue
+            number = row['CS NO']
+            if number not in legacy:
+                saved = db.execute('SELECT original_json FROM normalized_records WHERE id=?', ('누적28:' + number,)).fetchone()
+                legacy[number] = json.loads(saved[0]) if saved else None
+            old = legacy[number]
+            if old and is_history(old) and history_content_key(old) == history_content_key(row):
+                row = old
+        resolved.append(row)
+    return resolved
+
+
 def import_summary(db, rows):
     """접수번호로 비교합니다. 다른 파일의 다른 원문은 자동으로 덮어쓰지 않습니다."""
     exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone()
     result = {'added': 0, 'updated': 0, 'unchanged': 0, 'conflicts': []}
-    for row in rows:
+    for row in history_import_rows(db, rows):
         identity = record_id(row)
         old = db.execute('SELECT original_json FROM normalized_records WHERE id=?', (identity,)).fetchone() if exists else None
         if old is None:
@@ -57,6 +80,8 @@ def import_summary(db, rows):
 
 def ingest(db, rows, rules, client=None, config=None, schema=None, progress=None, *, previous_errors=None, cancelled=None,
            append=False, import_result=None):
+    if append:
+        rows = history_import_rows(db, rows)
     previous_errors = dict(previous_errors or {})
     workers = validate_workers((config or {}).get('normalization_workers', 200))
     # 수정 제안은 normalized_json에, 검색에 사용할 원문·채택문은 search_text에 저장합니다.

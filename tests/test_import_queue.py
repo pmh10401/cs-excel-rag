@@ -8,7 +8,7 @@ import time
 from unittest.mock import patch
 
 from openpyxl import Workbook
-from ragkit import source_cache, web
+from ragkit import records, source_cache, web
 from ragkit.input_formats import HISTORY_COLUMNS, HISTORY_SHEET
 
 
@@ -91,7 +91,7 @@ def main(root):
             vectors.assert_called_once_with(input_changed=False)
         with closing(app.connect()) as db:
             originals = {identity: json.loads(raw) for identity, raw in db.execute('SELECT id,original_json FROM normalized_records')}
-            assert set(originals) == {'QUEUE-1', '누적28:QUEUE-1', 'QUEUE-2'}
+            assert set(originals) == {'QUEUE-1', records.record_id(app.read_rows(history, 'openpyxl')[0]), 'QUEUE-2'}
             assert originals['QUEUE-1']['_excel_location'].startswith(first.name + ' / ')
 
         # 오류만 다시 제출할 수 있으며 임베딩 실패도 등록 성공을 취소하지 않습니다.

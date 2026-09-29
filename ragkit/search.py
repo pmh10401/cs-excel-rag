@@ -326,4 +326,4 @@ def count_records(db, question):
     count = db.execute(f'SELECT COUNT(DISTINCT lower({CASE_NUMBER_SQL})) FROM normalized_records' + where, params).fetchone()[0]
     scope = ', '.join(f'{k}="{v}"' for k, v in filters) or '전체'
     return {'count': count, 'filters': filters,
-            'answer': f'현재 DB에 등록된 전체 자료에서 {scope} 접수는 {count}건입니다. 전체 원본의 CS 번호를 집계했으며, 다른 양식의 같은 번호는 한 건으로 셌습니다.'}
+            'answer': f'현재 DB에 등록된 전체 자료에서 {scope} 접수는 {count}건입니다. 전체 원본의 CS 번호를 집계했으며, 여러 상세 행·양식의 같은 번호는 한 건으로 셌습니다.'}

@@ -196,6 +196,15 @@ vm.runInContext(String.raw`(async () => {
   loadRecords = realLoadRecords;
   api = async () => ({total: 1, items: [{id: 'A', pipeline}]});
   await loadRecords(); assert.match($('record-list').textContent, /검토 대기 2셀/);
+  api = async () => ({total: 2, items: [
+    {id: 'detail-1', case_number: 'CS-MULTI-1', source_sheet: '19~26년 누적_260925', detail: '펌프 <img>', location: '새.xlsx / 시트!A2:AB2', customer: 'SITE-A'},
+    {id: 'detail-2', case_number: 'CS-MULTI-1', source_sheet: '19~26년 누적_260925', detail: '밸브', location: '새.xlsx / 시트!A3:AB3'}]});
+  await loadRecords();
+  assert.equal($('record-list').querySelectorAll('button').length, 2);
+  assert.match($('record-list').textContent, /펌프 <img>.*SITE-A.*A2:AB2.*밸브.*A3:AB3/);
+  assert.equal($('record-list').querySelectorAll('img').length, 0);
+  renderRecord({...rec, id: 'detail-1', case_number: 'CS-MULTI-1'});
+  assert.equal($('record-detail').querySelector('h2').textContent, 'CS-MULTI-1');
   renderRecord({...rec, pipeline}); assert.match($('record-detail').textContent, /영어 실패: <img>/);
 
   ui.last = {normalization_workers: 3}; openSettings();

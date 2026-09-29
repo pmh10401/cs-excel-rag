@@ -753,7 +753,7 @@ async function loadRecords() {
       btn.classList.toggle('is-selected', item.id === ui.selected);
       btn.textContent = (item.case_number || item.id) + (item.source_sheet && item.source_sheet !== 'CSList' ? ' · 누적 자료' : '');
       const small = document.createElement('small');
-      small.textContent = [item.title, item.customer, item.date].filter(Boolean).join(' · ');
+      small.textContent = [item.title, item.detail, item.customer, item.date, item.location].filter(Boolean).join(' · ');
       btn.append(small);
       appendPipeline(btn, item.pipeline);
       btn.addEventListener('click', function () { loadRecord(item.id); });
@@ -900,7 +900,7 @@ function renderRecord(rec) {
   const toolbar = document.createElement('div');
   toolbar.className = 'review-toolbar';
   const title = document.createElement('h2');
-  title.textContent = rec.id;
+  title.textContent = rec.case_number || rec.id;
   const save = document.createElement('button');
   save.type = 'button';
   save.id = 'save-btn';

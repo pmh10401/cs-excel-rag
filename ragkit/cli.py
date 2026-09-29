@@ -44,7 +44,7 @@ def main(root, argv=None):
     parser.add_argument('--excel', type=Path, help='입력 .xlsx 또는 변환된 .rag.jsonl.gz 파일')
     parser.add_argument('--convert-input', type=Path, help='Excel을 .rag.jsonl.gz로 변환하고 종료. 모델 호출 없음')
     parser.add_argument('--reader', choices=['openpyxl', 'xlwings'], default='openpyxl', help='일반 파일 직접 읽기 / Windows Excel에서 열린 파일 읽기')
-    parser.add_argument('--sheet', help='CSList 또는 19~26년 누적_2600831. 일반 데모는 점검기록')
+    parser.add_argument('--sheet', help='CSList 또는 19~26년 누적_260925 (구형 19~26년 누적_2600831도 지원). 일반 데모는 점검기록')
     parser.add_argument('--apply-reviews', type=Path, help='검토 JSON을 적용하고 비교 화면 갱신. API 호출 없음')
     questions_group = parser.add_mutually_exclusive_group()
     questions_group.add_argument('--cases', type=Path, help='시험 질문과 사람이 검토할 기준을 담은 JSON 파일')

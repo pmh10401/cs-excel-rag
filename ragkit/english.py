@@ -75,9 +75,9 @@ def document_cells(evidence):
 
 def translation_cells(evidence, schema):
     cells, accepted = document_cells(evidence)
-    from .input_formats import HISTORY_SCHEMA, HISTORY_COLUMNS
-    if set(cells) == set(HISTORY_COLUMNS):
-        schema = HISTORY_SCHEMA
+    from .input_formats import HISTORY_SCHEMAS
+    schema = next((candidate for candidate in HISTORY_SCHEMAS.values()
+                   if set(cells) == set(candidate['columns'])), schema)
     effective = cells | accepted
     # 식별 열·빈칸·숫자만 있는 셀은 번역하지 않습니다. 미채택 제안도 사용하지 않습니다.
     return {key: effective[key] for key in dict.fromkeys(['제목', *schema['rewrite_columns']])

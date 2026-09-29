@@ -14,7 +14,7 @@ from zipfile import ZipFile
 from openpyxl import load_workbook
 from openpyxl.utils.cell import get_column_letter
 from .records import iter_rows_from_cells, read_excel, public_cells, record_id, text_for
-from .input_formats import select_sheet, input_layout
+from .input_formats import select_sheet, input_layout, is_history
 
 SUFFIX = '.rag.jsonl.gz'
 FORMAT = 'rag-source-v1'
@@ -107,7 +107,8 @@ def convert_excel(path, output, sheet_name='CSList', *, progress=None, **options
                     write({'format': FORMAT, 'created_at': datetime.now(timezone.utc).isoformat(),
                            'source_file': path.name, 'source_key': row['_source_key'],
                            'sheet': row['_source_sheet'], 'id_column': row['_id_column'],
-                           'columns': columns, 'source_columns': row.get('_source_columns', {})})
+                           'columns': columns, 'source_columns': row.get('_source_columns', {}),
+                           'history_details': row.get('_history_detail', False)})
                 number = int(row['_excel_location'].rsplit('!', 1)[1].split(':')[0][1:])
                 write({'row': number, 'values': [row[c] for c in columns], 'typed': row['_typed_cells']})
                 count += 1
@@ -144,6 +145,8 @@ def iter_cache(path, sheet_name='CSList', *, required_columns=None, allow_typed=
             require(isinstance(filename, str) and bool(filename) and '/' not in filename and '\\' not in filename)
             require(isinstance(key, str) and re.fullmatch('[0-9a-f]{64}', key) is not None)
             require(isinstance(aliases, dict) and set(aliases) <= set(columns) and all(isinstance(v, str) and v for v in aliases.values()))
+            history_details = meta.get('history_details', False)
+            require(type(history_details) is bool)
             seen, previous, count = set(), 1, 0
             letters = [get_column_letter(i + 1) for i in range(len(columns))]
             prefix = f'{filename} / {sheet}!'
@@ -172,6 +175,9 @@ def iter_cache(path, sheet_name='CSList', *, required_columns=None, allow_typed=
                            _cell_locations={column: f'{prefix}{letter}{number}' for column, letter in zip(columns, letters)})
                 if aliases:
                     row['_source_columns'] = aliases
+                if history_details:
+                    require(is_history(row))
+                    row['_history_detail'] = True
                 identity = record_id(row)
                 require(identity not in seen)
                 text_for(row)

@@ -6,7 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from openpyxl.utils.cell import get_column_letter
 from openpyxl import load_workbook
-from .input_formats import select_sheet, input_layout, is_history
+from .input_formats import select_sheet, input_layout, is_history, HISTORY_RENAMED_COLUMNS
 
 def cell_string(value):
     # 검색과 API용 문자열입니다. Excel의 자료형과 원래 값은 _typed_cells에 별도로 보존합니다.
@@ -19,6 +19,14 @@ def public_cells(row):
     return {key: value for key, value in row.items() if not key.startswith('_')}
 
 
+def history_content_key(row):
+    # 7개 부품 항목뿐 아니라 현상·조치 등 모든 값과 자료형을 비교합니다.
+    # 파일명·행 순서가 달라도 같은 상세이며 구형 열 이름도 내용 비교 때만 맞춥니다.
+    values = [{HISTORY_RENAMED_COLUMNS.get(key, key): value for key, value in cells.items()}
+              for cells in (public_cells(row), row.get('_typed_cells', {}))]
+    return hashlib.sha256(json.dumps(values, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+
+
 def record_id(row, id_column=None):
     # 내부 식별자는 원본 열에서 읽습니다. Excel에 id라는 가짜 열을 추가하지 않습니다.
     if not isinstance(row, dict):
@@ -28,7 +36,10 @@ def record_id(row, id_column=None):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f'비어 있지 않은 문자열 {key}가 필요합니다.')
     # 같은 CS 번호의 다른 양식을 덮어쓰지 않습니다. 셀의 CS NO 자체는 그대로 둡니다.
-    return '누적28:' + value if is_history(row) else value
+    if is_history(row):
+        # 구형 DB의 ID·검토 키는 유지합니다. 새 입력만 내용 기반 상세 ID를 사용합니다.
+        return '누적28상세:' + history_content_key(row) if row.get('_history_detail') else '누적28:' + value
+    return value
 
 
 def row_revision(row):
@@ -299,6 +310,8 @@ def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed,
         row = dict(zip(headers, (cell_string(value) for value in values)))
         row['_id_column'] = id_column
         row['_source_sheet'] = sheet_name
+        if is_history(row):
+            row['_history_detail'] = True
         if source_columns:
             row['_source_columns'] = source_columns
         row['_typed_cells'] = {key: {'kind': type(cell.value).__name__,
@@ -312,6 +325,8 @@ def iter_rows_from_cells(path, sheet_name, cells, required_columns, allow_typed,
         except ValueError as error:
             raise ValueError(f'{location} {row_number}행: {error}') from error
         if identity in seen:
+            if is_history(row):
+                continue  # 같은 값·자료형의 반복 행은 첫 원문 셀 위치로 한 번만 처리합니다.
             raise ValueError(f'{location}!{cell_row[headers.index(id_column)].coordinate}: 중복 ID ({id_column}) {identity}. '
                              '같은 접수번호의 행을 확인하세요.')
         seen.add(identity)
