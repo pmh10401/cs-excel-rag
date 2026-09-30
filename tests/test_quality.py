@@ -13,8 +13,8 @@ from openpyxl import Workbook
 from ragkit import cslist, english, llm, records, search, storage
 
 
-def check_numeric_prevention():
-    # 첫 요청이 원문 숫자를 그대로 노출하거나 표시자를 복원하지 않으면 실패합니다.
+def check_numeric_rollback():
+    # 첫 요청은 원문을 그대로 보내고, 숫자 오류가 난 셀만 표시자로 보정합니다.
     source = '1. iur low arm 으로 ifep2에서 pick한 wafer'
     row = {'id': 'LIST-001', '원인(1)': source, '조치내용(1)': '전압 -3 V. 30분 관찰.', '빈칸': ''}
     before = dict(row)
@@ -23,8 +23,9 @@ def check_numeric_prevention():
     def create(**request):
         calls.append(request)
         payload = json.loads(request['messages'][1]['content'])
-        assert payload['원본 셀']['원인(1)'] == '__CS_NUMBER_0__. iur low arm 으로 __CS_NUMBER_1__에서 pick한 wafer'
-        assert payload['표시자 원문']['원인(1)'] == {'__CS_NUMBER_0__': '1', '__CS_NUMBER_1__': 'ifep2'}
+        assert payload['원본 셀'] == before
+        assert '표시자 원문' not in payload
+        assert llm.NUMBER_PROMPT not in request['messages'][0]['content']
         assert payload['수정할 열'] == ['원인(1)', '조치내용(1)']
         value = {key: payload['원본 셀'][key].replace('arm 으로', 'arm으로').replace('관찰.', '관찰했습니다.')
                  for key in payload['수정할 열']}
@@ -47,16 +48,19 @@ def check_numeric_prevention():
         assert translated == {'현상': '1. Wafer picked from ifep2 using the iur low arm.'}
         assert request.call_count == 1
 
-    # 첫 응답의 목록 표시자가 빠져도 정상인 다른 셀은 복원하여 재사용합니다.
+    # 첫 응답의 목록 번호가 빠져도 정상인 다른 셀은 재요청하지 않습니다.
     calls.clear()
     def drop_list(**request):
         calls.append(request)
         payload = json.loads(request['messages'][1]['content'])
         if len(calls) == 1:
-            values = {'원인(1)': 'iur low arm으로 __CS_NUMBER_1__에서 pick한 wafer',
-                      '조치내용(1)': '전압 __CS_NUMBER_0__. __CS_NUMBER_1__ 관찰했습니다.'}
+            assert payload['원본 셀'] == before and '표시자 원문' not in payload
+            values = {'원인(1)': 'iur low arm으로 ifep2에서 pick한 wafer',
+                      '조치내용(1)': '전압 -3 V. 30분 관찰했습니다.'}
         else:
             assert payload['수정할 열'] == ['원인(1)']
+            assert payload['보정 참고']['원인(1)']['표시자 원문'] == {'__CS_NUMBER_0__': '1', '__CS_NUMBER_1__': 'ifep2'}
+            assert llm.NUMBER_PROMPT in request['messages'][0]['content']
             values = {'원인(1)': payload['원본 셀']['원인(1)'].replace('arm 으로', 'arm으로')}
         return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop', message=SimpleNamespace(content=json.dumps(values)))])
     client.chat.completions.create = drop_list
@@ -92,7 +96,7 @@ def check_numeric_prevention():
         assert '식별자' in str(error), error
     else:
         raise AssertionError('숫자만 같고 다른 장비 코드를 허용했습니다.')
-    print('PASS: 첫 요청의 목록 번호·장비 코드·부호·단위 보호와 복원·영어 번역·원문 불변')
+    print('PASS: 다듬기 첫 요청의 원문 전송·실패 셀만 숫자 보정·영어 보호·원문 불변')
 
 
 def check_numeric_repair():
@@ -380,7 +384,7 @@ def check_answer_diagnostics():
 
 
 def main(root):
-    check_numeric_prevention()
+    check_numeric_rollback()
     check_numeric_repair()
     check_numeric_fallback(root)
     check_answer_diagnostics()

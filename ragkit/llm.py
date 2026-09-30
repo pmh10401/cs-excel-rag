@@ -23,8 +23,6 @@ Markdown이나 새 요약문·분류 항목을 추가하지 않는다. 보존 �
 숫자·단위·시각·모델명·장비 식별자·조건·부정·예외를 그대로 보존한다. 숫자와 측정 단위의 짝과 등장 순서를 바꾸거나 추가·삭제·변환하지 않되 숫자와 단위 사이 띄어쓰기만 허용한다.
 출처·문서번호·장비명 같은 식별 정보는 그대로 유지한다. 불명확한 약어는 임의로 풀지 않는다.
 추정은 추정으로, 예정은 예정으로, 완료는 완료로 표현한다. 빈칸은 정상·0·미실시의 증거가 아니다.
-'재발 미확인'은 '재발 여부는 확인되지 않았습니다.'이며 '재발 없음'이나 '재발 확인'이 아니다. 미확인의 대상을 바꾸지 않는다.
-'배선 접촉 불량 확인'은 확인 결과다. 확인하라는 지시로 바꾸지 않는다.
 주 용도는 사용자가 문제 현상을 입력하여 과거 조치를 찾는 검색이다. 멋진 요약보다 증상을 구별할 정보를 보존한다.
 소음·진동·누수·누설·멈춤·알람 같은 구체적인 현상을 '이상'이나 '문제'로 뭉뚱그리지 않는다.
 발생 위치·운전 조건·빈도·발생 순서·재현 여부·관찰 시간을 빠뜨리지 않는다. 여러 증상은 각각 남긴다.
@@ -49,8 +47,6 @@ def normalization_prompt(row):
 JSON 객체 하나만 반환한다. 설명·Markdown·원문 복사 항목을 추가하지 않는다. 변경할 필요가 없어도 해당 열을 생략하지 않는다.
 중국어와 영어가 한 셀에 섞여 있어도 빠뜨리지 않는다. 각 셀의 사실은 그 셀에 남긴다. 다른 셀의 내용이나 새 원인·조치·결과를 추가하지 않는다.
 원문의 부정·추정·예정·미실시·재발·조건·관찰 시간과 조치 순서를 보존한다. 발주를 교체로, 잠시 정상을 영구 해결로 바꾸지 않는다.
-'재발 미확인'은 '재발 여부는 확인되지 않았습니다.'이며 '재발 없음'이나 '재발 확인'이 아니다. 미확인의 대상을 바꾸지 않는다.
-'배선 접촉 불량 확인'은 확인 결과다. 확인하라는 지시로 바꾸지 않는다.
 모델명·코드·부품 식별자·불명확한 고유명사와 약어는 원문 그대로 유지한다. 숫자의 값·부호·등장 순서와 숫자에 붙은 단위를 그대로 유지한다.
 단위 변환이나 번역은 하지 않는다. 예: 2小时는 2小时로 유지한다. 숫자와 단위 사이 띄어쓰기만 허용한다.
 예: '运行2小时后漏水，原因待确认' → '2小时 운전 후 누수가 발생했습니다. 원인은 확인 대기 중입니다.'
@@ -462,18 +458,11 @@ def normalize(client, config, row, rules, schema=None, *, previous_error=''):
     columns = [key for key in row if editable(row, key, rules)]
     if not columns:
         return public_cells(row)
+    # 첫 요청은 원문으로 보냅니다. 표시자 보호는 숫자 검사에 실패한 셀의 보정에만 적용합니다.
     payload = {'원본 셀': public_cells(row), '수정할 열': columns}
-    fragments = {}
-    for key in columns:
-        protected, tokens, _ = protect_numbers(row[key])
-        payload['원본 셀'][key] = protected
-        if tokens:
-            fragments[key] = tokens
-    if fragments:
-        payload['표시자 원문'] = fragments
     if row.get('_work_group'):
         payload['작업 구분'] = row['_work_group']
-    messages = [{'role': 'system', 'content': normalization_prompt(row) + (NUMBER_PROMPT if fragments else '')},
+    messages = [{'role': 'system', 'content': normalization_prompt(row)},
                 {'role': 'user', 'content': json.dumps(payload, ensure_ascii=False)}]
     if previous_error:
         messages.append({'role':'user', 'content':
