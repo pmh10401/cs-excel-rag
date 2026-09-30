@@ -74,7 +74,7 @@ def main(root):
             user = kwargs['messages'][1]['content']
             if '원문 자료:\n' in user:
                 answer_questions.append(user.split('원문 자료:\n')[0])
-            if kwargs['messages'][0]['content'] == english.TRANSLATE_PROMPT:
+            if kwargs['messages'][0]['content'].startswith(english.TRANSLATE_PROMPT):
                 data = {key: value + ' maintenance' for key, value in json.loads(user).items()}
             elif kwargs['messages'][0]['content'] == english.QUERY_PROMPT:
                 data = {'query': 'maintenance'}

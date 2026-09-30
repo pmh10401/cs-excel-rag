@@ -10,7 +10,89 @@ from unittest.mock import Mock, patch
 from contextlib import closing
 
 from openpyxl import Workbook
-from ragkit import cslist, llm, records, search, storage
+from ragkit import cslist, english, llm, records, search, storage
+
+
+def check_numeric_prevention():
+    # 첫 요청이 원문 숫자를 그대로 노출하거나 표시자를 복원하지 않으면 실패합니다.
+    source = '1. iur low arm 으로 ifep2에서 pick한 wafer'
+    row = {'id': 'LIST-001', '원인(1)': source, '조치내용(1)': '전압 -3 V. 30분 관찰.', '빈칸': ''}
+    before = dict(row)
+    calls = []
+
+    def create(**request):
+        calls.append(request)
+        payload = json.loads(request['messages'][1]['content'])
+        assert payload['원본 셀']['원인(1)'] == '__CS_NUMBER_0__. iur low arm 으로 __CS_NUMBER_1__에서 pick한 wafer'
+        assert payload['표시자 원문']['원인(1)'] == {'__CS_NUMBER_0__': '1', '__CS_NUMBER_1__': 'ifep2'}
+        assert payload['수정할 열'] == ['원인(1)', '조치내용(1)']
+        value = {key: payload['원본 셀'][key].replace('arm 으로', 'arm으로').replace('관찰.', '관찰했습니다.')
+                 for key in payload['수정할 열']}
+        return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop', message=SimpleNamespace(content=json.dumps(value)))])
+
+    config = {'model': 'mock', 'reasoning_effort': 'high'}
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+    result = llm.normalize(client, config, row, {'원인(1)': 'rewrite', '조치내용(1)': 'rewrite', '빈칸': 'rewrite'})
+    assert result == before | {'원인(1)': '1. iur low arm으로 ifep2에서 pick한 wafer',
+                               '조치내용(1)': '전압 -3 V. 30분 관찰했습니다.'}
+    assert row == before and len(calls) == 1 and not getattr(result, 'fallbacks', {})
+    llm.validate_normalized(result, row, {'원인(1)': 'rewrite', '조치내용(1)': 'rewrite'})
+
+    def translate(_client, _config, prompt, payload):
+        assert payload == {'현상': '__CS_NUMBER_0__. iur low arm 으로 __CS_NUMBER_1__에서 pick한 wafer'}
+        return {'현상': '__CS_NUMBER_0__. Wafer picked from __CS_NUMBER_1__ using the iur low arm.'}
+
+    with patch.object(english, 'request_json', side_effect=translate) as request:
+        translated = english.translate_cells(client, config, {'현상': source})
+        assert translated == {'현상': '1. Wafer picked from ifep2 using the iur low arm.'}
+        assert request.call_count == 1
+
+    # 첫 응답의 목록 표시자가 빠져도 정상인 다른 셀은 복원하여 재사용합니다.
+    calls.clear()
+    def drop_list(**request):
+        calls.append(request)
+        payload = json.loads(request['messages'][1]['content'])
+        if len(calls) == 1:
+            values = {'원인(1)': 'iur low arm으로 __CS_NUMBER_1__에서 pick한 wafer',
+                      '조치내용(1)': '전압 __CS_NUMBER_0__. __CS_NUMBER_1__ 관찰했습니다.'}
+        else:
+            assert payload['수정할 열'] == ['원인(1)']
+            values = {'원인(1)': payload['원본 셀']['원인(1)'].replace('arm 으로', 'arm으로')}
+        return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop', message=SimpleNamespace(content=json.dumps(values)))])
+    client.chat.completions.create = drop_list
+    repaired = llm.normalize(client, config, row, {'원인(1)': 'rewrite', '조치내용(1)': 'rewrite'})
+    assert repaired == result and len(calls) == 2
+
+    # 표시자 속 0이 원문의 0과 같아도 잘못 붙인 측정 단위를 통과시키지 않습니다.
+    zero = {'id': 'ZERO-001', '현상': '0'}
+    bad = SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop', message=SimpleNamespace(content='{"현상":"__CS_NUMBER_0__ kPa"}'))])
+    client.chat.completions.create = Mock(return_value=bad)
+    kept = llm.normalize(client, config, zero, {'현상': 'rewrite'})
+    assert kept == zero and set(kept.fallbacks) == {'현상'}
+    assert client.chat.completions.create.call_count == 2
+
+    try:
+        llm.validate_normalized({'id': 'LIST-001', '현상': source[3:]},
+                               {'id': 'LIST-001', '현상': source}, {'현상': 'rewrite'})
+    except llm.NumericChange as error:
+        assert '목록 번호 1' in str(error) and '누락' in str(error), error
+    else:
+        raise AssertionError('목록 번호 누락을 허용했습니다.')
+    try:
+        llm.validate_normalized({'id': 'VOLT-001', '현상': '5 V'},
+                               {'id': 'VOLT-001', '현상': '1.5 V'}, {'현상': 'rewrite'})
+    except llm.NumericChange as error:
+        assert '목록 번호' not in str(error), error
+    else:
+        raise AssertionError('소수 측정값의 변경을 허용했습니다.')
+    try:
+        llm.validate_normalized({'id': 'CODE-001', '현상': 'ifem2에서 pick한 wafer'},
+                               {'id': 'CODE-001', '현상': 'ifep2에서 pick한 wafer'}, {'현상': 'rewrite'})
+    except ValueError as error:
+        assert '식별자' in str(error), error
+    else:
+        raise AssertionError('숫자만 같고 다른 장비 코드를 허용했습니다.')
+    print('PASS: 첫 요청의 목록 번호·장비 코드·부호·단위 보호와 복원·영어 번역·원문 불변')
 
 
 def check_numeric_repair():
@@ -298,6 +380,7 @@ def check_answer_diagnostics():
 
 
 def main(root):
+    check_numeric_prevention()
     check_numeric_repair()
     check_numeric_fallback(root)
     check_answer_diagnostics()

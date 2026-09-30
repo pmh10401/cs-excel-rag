@@ -2,6 +2,7 @@
 from contextlib import closing
 import copy
 import json
+import re
 import sqlite3
 import tempfile
 import threading
@@ -29,7 +30,7 @@ def translation_repairs(root):
             raise AssertionError(result)
 
     def repair(_client, _config, prompt, payload):
-        if prompt == english.TRANSLATE_PROMPT:
+        if prompt.startswith(english.TRANSLATE_PROMPT) and 'Correction attempt' not in prompt:
             return {'현상': original.replace('11.8', '11.9'), '조치내용(1)': 'Filter replaced'}
         assert set(payload) == {'현상'} and 'Previous validation error' in prompt
         assert '__CS_NUMBER_' in payload['현상'] and 'SCW132' not in payload['현상']
@@ -82,6 +83,13 @@ def translation_repairs(root):
                       {key: value + ' inspection' for key, value in payload.items()}) as request:
         translated = english.translate_cells(object(), config | {'max_context_chars': 150}, {'현상': source})
         assert request.call_count == len(parts) and llm.measured(translated['현상']) == llm.measured(source)
+    # 짧은 숫자들이 표시자로 길어져도 실제 전송 셀의 문자 한도를 지킵니다.
+    def bounded(_client, _config, _prompt, payload):
+        assert len(json.dumps(payload, ensure_ascii=False)) <= 80
+        return {key: value + ' inspection' for key, value in payload.items()}
+    with patch.object(english, 'request_json', side_effect=bounded) as request:
+        dense = english.translate_cells(object(), config | {'max_context_chars': 80}, {'현상': '1 2 3 4 5 점검'})
+        assert re.findall(r'\d+', dense['현상']) == ['1', '2', '3', '4', '5'] and request.call_count > 1
     try:
         list(english.split_cell('현상', 'X' * 200, 150))
     except ValueError as error:
@@ -358,7 +366,7 @@ def main(root):
             storage.ingest(db, source, rules, schema=schema)
         def reply(**kwargs):
             prompt, user = [message['content'] for message in kwargs['messages']]
-            if prompt == english.TRANSLATE_PROMPT:
+            if prompt.startswith(english.TRANSLATE_PROMPT):
                 return response({key: value + ' maintenance' for key, value in json.loads(user).items()})
             if prompt == english.QUERY_PROMPT:
                 return response({'query': 'maintenance'})

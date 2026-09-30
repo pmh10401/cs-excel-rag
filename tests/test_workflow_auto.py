@@ -123,9 +123,10 @@ def main(root):
             job=app.job_snapshot()
             assert job['kind']=='auto_search' and job['status']=='done',job
             assert job['result']['english']['generated']==1 and len(calls)==count+1
-            assert calls[-1]['현상']==entry['value']
         with closing(app.connect()) as db:
             assert db.execute('SELECT value FROM cell_reviews WHERE record_id=? AND column_name=?',(ids[0],'현상')).fetchone()[0]==entry['value']
+            translated = json.loads(db.execute('SELECT translated_json FROM english_translations WHERE record_id=?', (ids[0],)).fetchone()[0])
+            assert translated['현상'] == entry['value'] + ' maintenance'
         # 후속 연결 실패도 저장된 원문과 검토를 취소하지 않습니다.
         with patch.object(web,'OpenAI',side_effect=RuntimeError('LOCAL-SECRET connection')):
             assert app.update_search([ids[0]])['english_warning']=='*** connection'

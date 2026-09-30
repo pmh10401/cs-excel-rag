@@ -206,6 +206,7 @@ def main(root):
               'embedding': {'base_url': 'http://127.0.0.1:1/v1', 'model': 'mock', 'auto_index': False}}
     requests = []
     translations = {'冷却泵漏水': '냉각 펌프 누수', '运行2小时后漏水': '2小时 운전 후 누수가 발생했습니다.',
+                    '运行__CS_NUMBER_0__后漏水': '__CS_NUMBER_0__ 운전 후 누수가 발생했습니다.',
                     '更换密封后恢复正常': '씰 교체 후 정상화되었습니다.',
                     'Seal ordered; not replaced': '씰을 발주했으며, 교체는 하지 않았습니다.',
                     '原因待确认': '원인은 확인 대기 중입니다.', '颗粒增加': '파티클이 증가했습니다.'}

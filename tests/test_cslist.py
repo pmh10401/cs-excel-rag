@@ -58,7 +58,7 @@ def main(root):
     payloads = []
     def fake_create(**request):
         payloads.append(request)
-        if request['messages'][0]['content'] == llm.NORMAL_PROMPT:
+        if request['messages'][0]['content'].startswith(llm.NORMAL_PROMPT):
             data = json.loads(request['messages'][1]['content'])
             original = data['원본 셀']
             # 서로 다른 작업 내용을 같은 수정 요청에 넣지 않았는지 확인합니다.

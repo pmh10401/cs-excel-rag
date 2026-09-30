@@ -281,7 +281,7 @@ def main(root):
         assert '빈 셀 유지' in rendered
     # 실제 main을 임시 출력 폴더에서 실행합니다. 모의 응답은 품질 평가 결과가 아닙니다.
     def fake_create(**payload):
-        if payload['messages'][0]['content'] == llm.NORMAL_PROMPT:
+        if payload['messages'][0]['content'].startswith(llm.NORMAL_PROMPT):
             value = json.loads(payload['messages'][1]['content'])
             # 원문 셀을 그대로 반환하여 구조·빈칸·전체 데이터 흐름만 확인합니다.
             content = json.dumps({key:value['원본 셀'][key] for key in value['수정할 열']}, ensure_ascii=False)
