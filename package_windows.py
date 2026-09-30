@@ -20,6 +20,7 @@ def main():
                'retrieval_evaluation.py', 'llm_trace.py', 'overnight.py', 'assets/review.js', 'assets/theme.css', 'assets/app.html', 'assets/app.css', 'assets/app.js', 'assets/answer_prompt_en.txt', 'assets/tokenizer/fb374d419588a4632f3f557e76b4b70aebbca790']
     files = [(ROOT / 'windows-demo' / name, name) for name in assets]
     files += [(ROOT / 'ragkit' / name, 'ragkit/' + name) for name in modules]
+    files.append((ROOT / 'experiments/bilingual_normalize.py', 'experiments/bilingual_normalize.py'))
     files += [(ROOT / 'tests' / name, 'tests/' + name) for name in (
         '__init__.py', 'test_windows.py', 'test_cslist.py', 'test_excel_app.py', 'test_rag.py', 'test_headers.py',
         'test_ui.py', 'test_resume.py', 'test_quality.py', 'test_parallel.py', 'test_search_focus.py',
@@ -47,7 +48,8 @@ def main():
         env = dict(os.environ, PYTHONNOUSERSITE='1')
         env.pop('PYTHONPATH', None)
         for args in (['test_demo.py'], ['demo.py', '--search-only'], ['evaluate.py', '--help'],
-                     ['demo.py', '--schema', 'cslist_schema.json', '--search-only'], ['demo.py', '--menu'], ['evaluate_search.py', '--help']):
+                     ['demo.py', '--schema', 'cslist_schema.json', '--search-only'], ['demo.py', '--menu'], ['evaluate_search.py', '--help'],
+                     ['-m', 'experiments.bilingual_normalize', '--config', 'config.json', '--output', 'outputs/bilingual-100', '--prepare-only']):
             # 2,000건 검토·번역의 DB 검사가 추가되어 전체 검사에만 더 긴 시간을 허용합니다.
             result = subprocess.run([sys.executable, *args], cwd=folder, env=env, input='0\n', capture_output=True, text=True,
                                     timeout=180 if args == ['test_demo.py'] else 60)

@@ -270,6 +270,7 @@ def bilingual_questions(root):
 
 
 def main(root):
+    check_bilingual_normalization()
     bilingual_questions(root)
     translation_repairs(root)
     parallel_translation(root)
@@ -384,6 +385,73 @@ def main(root):
         assert report['cases'][0]['quality']['search']['mode'] == 'bilingual'
         assert report['cases'][0]['error'] is None
     print('PASS: 영어 검색 2000건·내용 재사용·한국어 인용·잘림/숫자 검사·실패 후 계속·검토 후 무효화')
+
+
+def check_bilingual_normalization():
+    """한 요청의 두 결과를 따로 검사하고 잘못된 번역이 한국어 성공을 취소하지 않습니다."""
+    from ragkit import llm
+    from types import SimpleNamespace as NS
+    row = {'id': 'PAIR-1', '제목': '웨이퍼 확인',
+           '현상': '1. iur low arm 으로 ifep2에서 pick한 wafer', '조치': '교체 안함. 30분 관찰', '원인': ''}
+    rules = {key: 'rewrite' if key in ('현상', '조치', '원인') else 'preserve' for key in row}
+    original = dict(row)
+    calls = []
+    bad = set()
+    def create(**request):
+        payload = json.loads(request['messages'][1]['content']); calls.append(payload)
+        if '영어로 번역할 열' in payload:
+            ko = {key: payload['원본 셀'][key] for key in payload['수정할 열']}
+            en = {key: payload['원본 셀'][key] + ' maintenance' for key in payload['영어로 번역할 열']}
+            if 'english' in bad:
+                en['조치'] = ''
+            if 'korean' in bad:
+                ko['현상'] = 'ifem2 변경'
+            values = {'korean': ko, 'english': en}
+            if 'missing_english' in bad:
+                values.pop('english')
+        else:
+            assert payload['수정할 열'] == ['현상'], '통과한 한국어 셀도 다시 요청했습니다.'
+            values = {'현상': payload['원본 셀']['현상'] + ' 확인했습니다.'}
+        return NS(choices=[NS(finish_reason='stop', message=NS(content=json.dumps(values, ensure_ascii=False)))])
+    client = NS(chat=NS(completions=NS(create=create)))
+    config = {'model': 'test', 'reasoning_effort': 'high'}
+    result = english.normalize_bilingual(client, config, row, rules)
+    assert len(calls) == 1 and result['normalized'] == row and row == original
+    assert set(calls[0]['수정할 열']) == {'현상', '조치'} and '원인' not in calls[0]['영어로 번역할 열']
+    assert result['english']['현상'] == row['현상'] + ' maintenance'
+    assert result['english']['제목'] == row['제목'] + ' maintenance'
+    assert not result['english_failures'] and '__CS_NUMBER_' not in json.dumps(result)
+    bad.add('english'); calls.clear()
+    result = english.normalize_bilingual(client, config, row, rules)
+    assert len(calls) == 1 and result['normalized'] == row
+    assert '조치' in result['english_failures'] and '조치' not in result['english']
+    assert '현상' in result['english'], '정상 번역을 버렸습니다.'
+    bad.clear(); bad.add('missing_english'); calls.clear()
+    result = english.normalize_bilingual(client, config, row, rules)
+    assert len(calls) == 1 and result['normalized'] == row and not result['english']
+    assert set(result['english_failures']) == {'제목', '현상', '조치'}
+    bad.clear(); bad.add('korean'); calls.clear()
+    result = english.normalize_bilingual(client, config, row, rules)
+    assert len(calls) == 2 and result['normalized']['현상'].endswith('확인했습니다.')
+    assert '현상' not in result['english'] and '현상' in result['english_failures']
+    assert '조치' in result['english'] and row == original
+    llm.validate_normalized(result['normalized'], row, rules)
+    # 실제 누적 양식에서도 실패 셀 보정 규칙을 유지합니다.
+    from ragkit.input_formats import HISTORY_RULES, HISTORY_SCHEMA, HISTORY_SHEET, HISTORY_COLUMNS
+    history = {key: '' for key in HISTORY_COLUMNS} | {'CS NO': 'PAIR-2', '현상': row['현상'], '조치': row['조치'],
+               '_id_column': 'CS NO', '_source_sheet': HISTORY_SHEET, '_typed_cells': {}}
+    result = english.normalize_bilingual(client, config, history, HISTORY_RULES, HISTORY_SCHEMA)
+    assert result['normalized']['CS NO'] == 'PAIR-2' and '현상' not in result['english']
+    # 작업1 문맥에는 작업2의 셀을 전달하지 않습니다.
+    group_row = {'CS 접수번호': 'PAIR-3', '제목': '작업 기록', '조치내용(1)': '씰 교체', '조치내용(2)': '미실시'}
+    schema = {'id_column': 'CS 접수번호', 'context_columns': list(group_row), 'rewrite_columns': ['조치내용(1)', '조치내용(2)']}
+    group_row['_id_column'] = 'CS 접수번호'
+    group_rules = {key: 'rewrite' if key.startswith('조치내용') else 'preserve' for key in group_row}
+    bad.clear(); calls.clear()
+    result = english.normalize_bilingual(client, config, group_row, group_rules, schema)
+    assert len(calls) == 2 and set(result['english']) == {'제목', '조치내용(1)', '조치내용(2)'}
+    assert '조치내용(2)' not in calls[0]['원본 셀'] and '조치내용(1)' not in calls[1]['원본 셀']
+    print('PASS: 통합 요청·숫자 복원·영어 실패 격리·실패한 한국어 셀만 보정·번역 기준 변경 시 재사용 금지')
 
 
 if __name__ == '__main__':
