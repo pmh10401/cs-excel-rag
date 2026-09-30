@@ -26,7 +26,7 @@ def main():
         'test_korean_search.py', 'test_bulk_reviews.py', 'test_english.py', 'test_semantic.py',
         'test_source_cache.py', 'test_embedding_startup.py', 'test_workflow_auto.py', 'test_retrieval_evaluation.py',
         'test_overnight.py', 'test_multiuser.py', 'test_action_outcomes.py', 'test_incremental.py',
-        'test_history_input.py', 'test_import_queue.py')]
+        'test_history_input.py', 'test_import_queue.py', 'test_detail_claims.py')]
     # 한국 시간 기준 생성 시각을 초 단위로 붙입니다. 파일 내용은 ZIP이며 풀기 전에 .zip으로 바꿉니다.
     timestamp = datetime.now(timezone(timedelta(hours=9))).strftime('%Y%m%d-%H%M%S')
     output = ROOT / 'outputs' / f'RAG-Windows-CS128-{timestamp}.TXT'

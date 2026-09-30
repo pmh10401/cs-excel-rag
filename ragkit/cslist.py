@@ -4,7 +4,7 @@ import hashlib
 import re
 from .records import public_cells, record_id
 from .search import word_tokens, word_grams, search_concepts
-from .input_formats import row_schema, CASE_NUMBER_SQL
+from .input_formats import row_schema, CASE_NUMBER_SQL, CASE_FAMILY_SQL
 
 # 검색 본문·채택문 검증 규칙이 바뀌면 올립니다. 기존 DB는 첫 사용 때 한 번 갱신합니다.
 SEARCH_VERSION = 3
@@ -23,9 +23,17 @@ def ensure_document_ids(db):
     db.execute('INSERT INTO rag_document_ids SELECT record_id,rowid FROM rag_documents')
 
 
+def ensure_case_indexes(db):
+    # 원문 JSON·상세 ID를 유지하고 기존 DB에도 검색용 식 인덱스를 보완합니다.
+    db.execute(f'CREATE INDEX IF NOT EXISTS records_case_number ON normalized_records (lower({CASE_NUMBER_SQL}))')
+    db.execute(f'CREATE INDEX IF NOT EXISTS records_case_family ON normalized_records ({CASE_FAMILY_SQL})')
+
+
 def ensure_search_index(db, rules, schema):
     """입수·검토 때 만든 색인을 재사용하고 구형 DB만 한 번 마이그레이션합니다."""
     tables = {name for (name,) in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    if 'normalized_records' in tables:
+        ensure_case_indexes(db)
     expected = {
         'rag_documents': ['document_id', 'record_id', 'content', 'evidence'],
         'rag_original_documents': ['document_id', 'record_id', 'content', 'evidence'],
@@ -185,7 +193,7 @@ def rebuild_search(db, prepared, schema, *, rules=None, incremental=False):
     # SAVEPOINT는 독립 호출과 기존 검토 저장 트랜잭션 안의 호출 모두에서 원자성을 지킵니다.
     db.execute('SAVEPOINT rebuild_search')
     try:
-        db.execute(f'CREATE INDEX IF NOT EXISTS records_case_number ON normalized_records (lower({CASE_NUMBER_SQL}))')
+        ensure_case_indexes(db)
         db.execute('DROP TABLE IF EXISTS rag_chunks')
         for table, prefix in (
             ('rag_documents', 'document_id, record_id, content, evidence'),

@@ -300,7 +300,7 @@ def prefer_action_variants(hits, question):
     return [next(groups[key]) for key in keys]
 
 
-def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, details=None, embedding_client=None, limit=3):
+def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, details=None, embedding_client=None, limit=3, record_ids=None):
     if type(limit) is not int or not 1 <= limit <= 100:
         raise ValueError('참고 사례 수는 1~100 사이 정수여야 합니다.')
     candidate_limit = max(20, limit)
@@ -309,6 +309,14 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
     details = details if details is not None else {}
     timings = details.setdefault('timings', {})
     started = time.monotonic()
+    if record_ids is not None:
+        hits = retrieve(db, question, limit=limit, record_ids=record_ids)
+        timings['keyword'] = round(time.monotonic() - started, 4)
+        details['vector_search'] = {'mode': 'exact_detail', 'query': question, 'keyword_ids': [h['id'] for h in hits],
+                                   'vector_ids': [], 'hybrid_ids': [], 'vector_records': vector_count(db, config),
+                                   'candidate_ids': {'keyword': [h['id'] for h in hits], 'vector': []},
+                                   'warning': '이전 답변에서 선택한 상세의 현재 원문을 정확히 조회했습니다.'}
+        return hits
     # 보완어는 결합 검색의 후보에만 사용합니다. 키워드 단독 순위는 보존합니다.
     keyword = retrieve(db, question, limit=candidate_limit, expand_query=mode == 'hybrid') if keyword_hits is None else keyword_hits
     if keyword_hits is None:

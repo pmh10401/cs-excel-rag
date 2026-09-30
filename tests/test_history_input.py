@@ -83,9 +83,25 @@ def check_details(root):
         assert {'SITE', '불량발생년월'} <= {cell['column'] for group in detail['groups'] for cell in group['cells']}
         assert app.import_file(moved, 'openpyxl')['import']['unchanged'] == 11
         with closing(app.connect()) as db:
+            # 기존 DB의 빠른 경로에서도 부족한 인덱스만 보완하고 원문·검색 문서는 유지합니다.
+            originals = db.execute('SELECT * FROM normalized_records ORDER BY id').fetchall()
+            documents = db.execute('SELECT * FROM rag_documents ORDER BY record_id').fetchall()
+            db.execute('DROP INDEX IF EXISTS records_case_family')
+            assert not cslist.ensure_search_index(db, rules, schema)
+            assert db.execute('SELECT * FROM normalized_records ORDER BY id').fetchall() == originals
+            assert db.execute('SELECT * FROM rag_documents ORDER BY record_id').fetchall() == documents
+            statements = []
+            db.set_trace_callback(statements.append)
             hits = search.retrieve(db, 'CS NO=CS-MULTI-1', limit=100)
+            db.set_trace_callback(None)
             assert len(hits) == 11
+            for statement in statements:
+                if statement.startswith('SELECT') and 'FROM normalized_records' in statement:
+                    plan = db.execute('EXPLAIN QUERY PLAN ' + statement).fetchall()
+                    assert not any('SCAN normalized_records' in step[-1] for step in plan), \
+                        '정확한 CS 번호 조회에서 원문 테이블 전체를 읽었습니다.'
             assert search.count_records(db, '전체 접수는 몇 건인가요?')['count'] == 1
+            assert search.count_records(db, 'CS NO="cs-multi-1" 접수는 몇 건인가요?')['count'] == 1
             assert len({h['evidence'][0]['locations']['현상'] for h in hits}) == 11
             section = hits[0]['evidence'][0]
             packed = web.pack_answer('조치는?', '', hits, None, {'claims': [{'text': '과거 조치',
@@ -132,6 +148,14 @@ def check_details(root):
             assert list(db.iterdump()) == before, '구형 DB·검토·인용 출처가 바뀌었습니다.'
             old_hits = search.retrieve(db, 'CS NO=CS-LEGACY-1')
             assert english.translation_cells(json.dumps(old_hits[0]['evidence']), schema)['현상'] == '펌프에서 누수가 발생했습니다.'
+            changed_legacy = old_row | {'원인': '씰 마모 확인'}
+            original = db.execute('SELECT original_json FROM normalized_records WHERE id=?',
+                                  ('누적28:CS-LEGACY-1',)).fetchone()
+            storage.ingest(db, [changed_legacy], rules, schema=schema, append=True)
+            assert db.execute('SELECT COUNT(*) FROM normalized_records').fetchone()[0] == 2
+            assert db.execute('SELECT original_json FROM normalized_records WHERE id=?',
+                              ('누적28:CS-LEGACY-1',)).fetchone() == original
+            assert db.execute('SELECT value FROM cell_reviews').fetchall() == [('펌프에서 누수가 발생했습니다.',)]
         # 신형 상세를 먼저 등록한 뒤 구형 열 이름이나 다른 행 위치로 읽어도 재사용합니다.
         with closing(sqlite3.connect(':memory:')) as db:
             storage.ingest(db, [new_row], rules, schema=schema, append=True)
@@ -139,17 +163,38 @@ def check_details(root):
             fresh_old = records.read_excel(old_path, 'CSList', **options)[0]
             moved_row = copy.deepcopy(new_row)
             moved_row['_excel_location'] = moved_row['_excel_location'].replace('2:', '3:')
-            for incoming in (fresh_old, moved_row):
+            for incoming in (fresh_old, moved_row, old_row):
                 assert storage.import_summary(db, [incoming])['unchanged'] == 1
                 storage.ingest(db, [incoming], rules, schema=schema, append=True)
                 assert list(db.iterdump()) == before
         assert app.read_rows(old_path, 'openpyxl')
         assert app.state()['schema_columns'] == LEGACY_HISTORY_COLUMNS
+        # 숫자 접수번호도 셀 자료형이 다른 원본 상세를 검색 때 합치지 않습니다.
+        numeric_path = write('numeric.xlsx', [base | {'CS NO': '12345', '인원': 1},
+                                              base | {'CS NO': '12345', '인원': '1'}])
+        numeric_rows = records.read_excel(numeric_path, 'CSList', **options)
+        with closing(sqlite3.connect(':memory:')) as db:
+            storage.ingest(db, numeric_rows, rules, schema=schema, append=True)
+            for question in ('CS NO=12345', '12345'):
+                hits = search.retrieve(db, question, limit=100)
+                assert len(hits) == 2, '숫자 CS 번호 조회에서 상세가 합쳐졌습니다.'
+                assert len({hit['record_id'] for hit in hits}) == 2
+            selected = records.record_id(numeric_rows[1])
+            question = '그 사례의 조치 날짜는 언제인가요?'
+            scoped = search.retrieve(db, question, record_ids=[selected])
+            assert [hit['record_id'] for hit in scoped] == [selected]
+            assert scoped[0]['evidence'][0]['locations']['현상'].endswith('!T3')
+            with patch.object(semantic, 'vector_hits', side_effect=AssertionError('상세 조회에 벡터 요청')), \
+                    patch.object(english, 'request_json', side_effect=AssertionError('상세 조회에 번역 요청')):
+                for mode in ('keyword', 'vector', 'hybrid'):
+                    assert semantic.search_cases(db, question, {}, mode=mode, record_ids=[selected]) == scoped
+                assert english.bilingual_retrieve(db, question, None, {}, record_ids=[selected]) == scoped
+            assert not search.retrieve(db, question, record_ids=['누적28상세:' + '0' * 64])
         # 신·구 시트가 같이 있으면 최신 시트 우선, 명시한 구형 시트는 그대로 선택합니다.
         from ragkit.input_formats import select_sheet
         assert select_sheet([LEGACY_HISTORY_SHEET, HISTORY_SHEET], 'CSList') == HISTORY_SHEET
         assert select_sheet([LEGACY_HISTORY_SHEET, HISTORY_SHEET], LEGACY_HISTORY_SHEET) == LEGACY_HISTORY_SHEET
-    print('PASS: 부품별 상세·내용 차이·완전 중복·재정렬·캐시·CS 집계·구형 DB 및 검토 보존')
+    print('PASS: 부품별 상세·신구 캐시 양방향 중복 처리·숫자 CS 상세·집계·인덱스 보완·구형 DB 및 검토 보존')
 
 
 def main(root):

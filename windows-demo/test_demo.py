@@ -2,6 +2,7 @@
 from pathlib import Path
 import sys
 import sqlite3
+import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent
@@ -33,6 +34,11 @@ from tests.test_history_input import main as test_history_input
 from tests.test_import_queue import main as test_import_queue
 from tests.test_retrieval_evaluation import main as test_retrieval_evaluation
 
+def test_detail_claims(_root):
+    suite = unittest.defaultTestLoader.loadTestsFromName('tests.test_detail_claims')
+    result = unittest.TextTestRunner(verbosity=1).run(suite)
+    assert result.wasSuccessful(), '상세 근거·후속 질문 검사에 실패했습니다.'
+
 def check_db_lifecycle(test):
     # Mac에서는 열린 파일도 삭제되므로, 연결을 추적해 Windows 전용 오류를 미리 잡습니다.
     opened = []
@@ -59,6 +65,6 @@ def check_db_lifecycle(test):
 
 if __name__ == "__main__":
     for test in (test_windows, test_cslist, test_excel_app, test_rag, test_action_outcomes, test_headers,
-                 test_ui, test_multiuser, test_resume, test_quality, test_parallel, test_search_focus, test_korean_search, test_bulk_reviews, test_english, test_source_cache, test_semantic, test_embedding_startup, test_workflow_auto, test_retrieval_evaluation, test_overnight, test_incremental, test_history_input, test_import_queue):
+                 test_ui, test_multiuser, test_resume, test_quality, test_parallel, test_search_focus, test_korean_search, test_bulk_reviews, test_english, test_source_cache, test_semantic, test_embedding_startup, test_workflow_auto, test_retrieval_evaluation, test_overnight, test_incremental, test_history_input, test_import_queue, test_detail_claims):
         check_db_lifecycle(test)
     print('PASS: 모든 파일 DB 연결을 명시적으로 닫았습니다.')

@@ -42,8 +42,10 @@ def history_import_rows(db, rows):
     legacy = {}
     resolved = []
     for row in rows:
-        if is_history(row) and row.get('_history_detail'):
-            saved = db.execute('SELECT original_json FROM normalized_records WHERE id=?', (record_id(row),)).fetchone()
+        if is_history(row):
+            # 구형 캐시에도 내용 해시를 적용해 입력 순서와 관계없이 같은 상세를 찾습니다.
+            detail_id = '누적28상세:' + history_content_key(row)
+            saved = db.execute('SELECT original_json FROM normalized_records WHERE id=?', (detail_id,)).fetchone()
             if saved:
                 resolved.append(json.loads(saved[0]))
                 continue
@@ -54,6 +56,9 @@ def history_import_rows(db, rows):
             old = legacy[number]
             if old and is_history(old) and history_content_key(old) == history_content_key(row):
                 row = old
+            elif old and is_history(old):
+                # 구형 캐시의 같은 CS도 다른 내용이면 기존 원문·검토를 덮어쓰지 않습니다.
+                row = row | {'_history_detail': True}
         resolved.append(row)
     return resolved
 

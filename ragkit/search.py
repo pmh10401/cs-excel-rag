@@ -3,7 +3,7 @@ from functools import lru_cache
 import json
 import re
 import unicodedata
-from .input_formats import CASE_NUMBER_SQL
+from .input_formats import CASE_NUMBER_SQL, CASE_FAMILY_SQL
 
 # ponytail: 명시한 세 증상과 두 설비만 동의어로 연결합니다. 더 넓은 의미 검색은 별도 평가 후 확장합니다.
 CONCEPTS = {
@@ -153,7 +153,7 @@ def receipt_number(db, question):
     return ''
 
 
-def retrieve(db, question, *, original_only=False, english_question=None, limit=3, expand_query=False):
+def retrieve(db, question, *, original_only=False, english_question=None, limit=3, expand_query=False, record_ids=None):
     if type(limit) is not int or not 1 <= limit <= 100:
         raise ValueError('검색 후보 수는 1~100의 정수여야 합니다.')
     question = focused_query(question)
@@ -163,6 +163,30 @@ def retrieve(db, question, *, original_only=False, english_question=None, limit=
     query = terms(question)
     if not query:
         raise ValueError('질문에 검색할 문자를 입력하세요.')
+    if record_ids is not None:
+        if (not isinstance(record_ids, list) or len(record_ids) > 4
+                or any(not isinstance(identity, str) or not identity.strip() or len(identity) > 200
+                       for identity in record_ids) or len(set(record_ids)) != len(record_ids)):
+            raise ValueError('상세 조회 대상은 중복 없는 원문 ID 최대 4개여야 합니다.')
+        if not record_ids or not db.execute("SELECT 1 FROM sqlite_master WHERE name='rag_documents'").fetchone():
+            return []
+        # 후속 질문의 특정 상세는 검색 순위에 맡기지 않고 현재 DB 원문을 다시 읽습니다.
+        target = 'rag_original_documents' if original_only else 'rag_documents'
+        marks = ','.join('?' for _ in record_ids)
+        mapped = db.execute("SELECT 1 FROM sqlite_master WHERE name='rag_document_ids'").fetchone()
+        condition = (f'rowid IN (SELECT document_rowid FROM rag_document_ids WHERE record_id IN ({marks}))'
+                     if mapped else f'record_id IN ({marks})')
+        # ponytail: 구형 DB의 읽기 전용 조회는 스캔으로 호환하며 UI에서 rowid 매핑을 보완합니다.
+        rows = {row[1]: row for row in db.execute(
+            f'SELECT document_id, record_id, content, evidence FROM {target} WHERE {condition}', record_ids)}
+        hits = []
+        for parent in record_ids:
+            if parent in rows:
+                identity, _, content, encoded = rows[parent]
+                sections = json.loads(encoded)
+                hits.append({'id': identity, 'record_id': parent, 'kind': '문서', 'content': content,
+                             'evidence': sections, 'evidence_ids': [s['id'] for s in sections], 'score': 0.0})
+        return hits[:limit]
     if db.execute("SELECT 1 FROM sqlite_master WHERE name='rag_documents'").fetchone():
         target = 'rag_original_documents' if original_only else 'rag_documents'
         if english_question is not None:
@@ -201,8 +225,8 @@ def retrieve(db, question, *, original_only=False, english_question=None, limit=
         # 같은 접두사의 복수 코드는 OR, 서로 다른 코드 종류와 날짜는 AND입니다.
         constraints = ['(' + ' OR '.join('"' + token + '"' for token in group) + ')'
                        for group in [*code_groups.values(), dates] if group]
-        families = ({re.split('[-_]', identity.casefold())[0] for (identity,) in db.execute(f'SELECT lower({CASE_NUMBER_SQL}) FROM normalized_records')}
-                    if code_groups else set())
+        families = {family for family in code_groups if db.execute(
+            f'SELECT 1 FROM normalized_records WHERE {CASE_FAMILY_SQL}=? LIMIT 1', (family,)).fetchone()}
         receipt_codes = [bytes.fromhex(token.removeprefix('exactcode')).decode()
                          for family, group in code_groups.items() if family in families for token in group]
         # 식별번호는 본문에 언급됐다는 이유로 일치시키지 않고 실제 부모 ID도 확인합니다.
@@ -252,7 +276,7 @@ def retrieve(db, question, *, original_only=False, english_question=None, limit=
             sections = json.loads(evidence)
             hits.append({'id': identity, 'record_id': parent, 'kind': '문서', 'content': content,
                          'evidence': sections, 'evidence_ids': [s['id'] for s in sections], 'score': -rank})
-        if any(exact_terms(question)):
+        if receipt_codes or codes or dates:
             return hits
         unique = distinct_hits(hits)
         if len(unique) < limit and len(hits) == limit and limit < 100:
@@ -314,7 +338,8 @@ def count_records(db, question):
     clauses, params = [], []
     for key, value in filters:
         if key in ('CS 접수번호', 'CS NO'):
-            expression = CASE_NUMBER_SQL
+            expression = f'lower({CASE_NUMBER_SQL})'
+            value = value.casefold()
         else:
             expression = 'json_extract(original_json, ?)'
             params.append('$."' + key + '"')

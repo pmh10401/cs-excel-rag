@@ -65,3 +65,6 @@ def row_rules(row, rules):
 # 원본 JSON에 대한 식이므로 별도의 중복 매핑 테이블을 유지할 필요가 없습니다.
 CASE_NUMBER_SQL = '''COALESCE(json_extract(original_json, '$."CS 접수번호"'),
                               json_extract(original_json, '$."CS NO"'), id)'''
+# 하이픈·밑줄 중 첫 구분자 앞의 CS 접두사를 SQLite 인덱스로 찾습니다.
+CASE_FAMILY_SQL = (f"substr(replace(lower({CASE_NUMBER_SQL}), '_', '-'), 1, "
+                   f"instr(replace(lower({CASE_NUMBER_SQL}), '_', '-') || '-', '-') - 1)")

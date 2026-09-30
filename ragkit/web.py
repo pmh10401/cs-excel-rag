@@ -5,6 +5,7 @@ from collections import deque
 from ipaddress import IPv4Address
 import hmac
 import json
+import re
 import secrets
 import sqlite3
 import sys
@@ -524,11 +525,12 @@ class App:
                         and result.get('status') in ('ok', 'aggregate', 'no_match', 'insufficient_evidence')):
                     # ponytail: 세션당 최근 5문답만 메모리에 보관합니다. 영속 대화가 필요하면 별도 저장을 추가합니다.
                     claims = [{'text': claim['text'][:1000],
-                               'receipts': list(dict.fromkeys(e['receipt'] for e in claim['evidence']))}
+                               'receipts': list(dict.fromkeys(e['receipt'] for e in claim['evidence'])),
+                               'sources': claim.get('sources', [])}
                               for claim in result['claims']]
                     turn = {'question': result['question'], 'resolved_question': result['resolved_question'],
                             'answer_claims': claims, 'answer': result['answer'][:2000] if not claims else '',
-                            'truncated': any(len(c['text']) > 1000 for c in result['claims'])
+                            'truncated': any(len(c['text']) > 1000 or c.get('sources_truncated') for c in result['claims'])
                                          or (not claims and len(result['answer']) > 2000)}
                     session = self.sessions[job['owner']]
                     session['conversation'] = (session.get('conversation', []) + [turn])[-5:]
@@ -934,6 +936,7 @@ class App:
             details = {'timings': {}, 'instruction_language': language, 'follow_up': follow_up}
             timings = details['timings']
             resolved_question = question
+            record_ids = None
             if follow_up:
                 self.set_stage('이전 대화로 질문의 대상 확인 중')
                 with self.llm_client() as client:
@@ -943,7 +946,11 @@ class App:
                     return pack_answer(question, resolved['clarification'], [], None, details,
                                        time.monotonic() - started, code='clarification')
                 resolved_question = resolved['question']
+                if resolved.get('source_ids'):
+                    details['subject_source_ids'] = resolved['source_ids']
+                    record_ids = list(dict.fromkeys(identity.rsplit('/', 1)[0] for identity in resolved['source_ids']))
             details['resolved_question'] = resolved_question
+            scope = {'record_ids': record_ids} if record_ids is not None else {}
             self.set_stage('DB 원문 확인 중')
             with closing(self.connect()) as db:
                 if not db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone():
@@ -956,7 +963,7 @@ class App:
                 timings['index_prepare'] = round(time.monotonic() - stage_started, 4)
                 self.set_stage('검색 중')
                 stage_started = time.monotonic()
-                aggregate = count_records(db, resolved_question)
+                aggregate = None if record_ids is not None else count_records(db, resolved_question)
                 timings['aggregate_check'] = round(time.monotonic() - stage_started, 4)
                 search_started = time.monotonic()
                 hits = []
@@ -965,13 +972,13 @@ class App:
                     with self.llm_client() as client:
                         hits = bilingual_retrieve(db, resolved_question, client, self.config, details=details,
                                                   limit=max(20, retrieval_limit) if search_mode == 'hybrid' else retrieval_limit,
-                                                  search_english=search_mode != 'vector')
+                                                  search_english=search_mode != 'vector', **scope)
                     timings['bilingual'] = round(time.monotonic() - search_started, 4)
                 if not aggregate and (search_mode != 'keyword' or comparison):
                     hits = semantic.search_cases(db, resolved_question, self.config, mode=search_mode,
-                        keyword_hits=hits if bilingual else None, details=details, limit=retrieval_limit)
+                        keyword_hits=hits if bilingual else None, details=details, limit=retrieval_limit, **scope)
                 elif not aggregate and not bilingual:
-                    hits = retrieve(db, resolved_question, limit=retrieval_limit)
+                    hits = retrieve(db, resolved_question, limit=retrieval_limit, **scope)
                     timings['keyword'] = round(time.monotonic() - search_started, 4)
                 timings['retrieval_total'] = round(time.monotonic() - search_started, 4)
                 details['references'] = {'mode': 'auto' if reference_limit == 0 else 'manual',
@@ -1356,17 +1363,31 @@ class App:
 
 def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
     sources = {section['id']: section for hit in (hits or []) for section in hit.get('evidence', [])}
+    subject_columns = set(HISTORY_DETAIL_COLUMNS) | {'설비', '설비코드', '불량발생일', '불량발생년월',
+        '불량발생월', '반입일', '반입년월', '접수일시', '접수일자', 'UNIT(CS)'}
     seen = set()
     def pack_claims(claims):
         packed = []
         for claim in claims:
-            items = []
+            items, subjects, subject_ids, truncated = [], [], set(), False
             for evidence in claim.get('evidence', []):
                 source = sources.get(evidence['id'], {})
                 receipt, _, work = evidence['id'].partition('/')
                 # 검증에는 상세 ID를 유지하고 화면·후속 대화에는 업무 CS 번호를 사용합니다.
                 cells = source.get('cells', {})
                 receipt = cells.get('CS NO') or cells.get('CS 접수번호') or receipt
+                if evidence['id'] not in subject_ids:
+                    subject_ids.add(evidence['id'])
+                    subject = {key: value for key, value in cells.items()
+                               if (key in subject_columns or re.fullmatch(r'(?:UNIT명|Part명)\([12]\)', key))
+                               and isinstance(value, str) and value.strip()}
+                    bounded = {key: value for key, value in subject.items() if len(value) <= 160}
+                    truncated |= len(subject) != len(bounded)
+                    # 원문 주소는 자르지 않습니다. 부족한 대상 정보는 후속 질문에서 확인합니다.
+                    if len(subjects) < 4 and len(evidence['id']) <= MAX_ID and len(receipt) <= MAX_ID:
+                        subjects.append({'id': evidence['id'], 'receipt': receipt, 'cells': bounded})
+                    else:
+                        truncated = True
                 items.append({
                     'id': evidence['id'], 'receipt': receipt,
                     'work': work or source.get('kind', ''), 'column': evidence['column'],
@@ -1375,7 +1396,8 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
                     'action_outcomes': [step for step in source.get('action_outcomes', [])
                                         if step['column'] == evidence['column']],
                 })
-            packed.append({'text': claim.get('text', ''), 'evidence': items})
+            packed.append({'text': claim.get('text', ''), 'evidence': items,
+                           'sources': subjects, 'sources_truncated': truncated})
         return packed
     claims = pack_claims((details or {}).get('claims', []))
     seen.update((e['id'], e['column']) for claim in claims for e in claim['evidence'])

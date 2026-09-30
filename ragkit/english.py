@@ -447,14 +447,18 @@ def build_english(db, client, config, schema, *, limit=20, progress=None, record
     return result
 
 
-def bilingual_retrieve(db, question, client, config, *, details=None, limit=3, search_english=True):
+def bilingual_retrieve(db, question, client, config, *, details=None, limit=3, search_english=True, record_ids=None):
     """질문을 한 번 번역해 검색·답변에 재사용합니다. 실패하면 원문으로 계속합니다."""
-    korean = retrieve(db, question, limit=limit)
+    options = {'record_ids': record_ids} if record_ids is not None else {}
+    korean = retrieve(db, question, limit=limit, **options)
     info = {'mode': 'korean', 'english_query': '', 'english_records': english_count(db),
             'korean_ids': [hit['id'] for hit in korean], 'english_ids': [], 'warning': '',
             'translation_status': 'skipped'}
     if details is not None:
         details['search'] = info
+    if record_ids is not None:
+        info['mode'] = 'exact_detail'
+        return korean
     from .search import receipt_number
     exact = any(exact_terms(question)) or bool(receipt_number(db, question))
     if exact and not korean:
