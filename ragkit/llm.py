@@ -326,10 +326,11 @@ def answer_context_config(config):
 
 
 def case_answer_messages(question, hits, *, english_question='', instruction_language='ko'):
-    """분량 계산과 실제 답변 요청이 동일한 원문 JSON을 사용하도록 한 곳에서 만듭니다."""
+    """분량 계산과 실제 답변 요청이 같은 전송용 JSON을 쓰며 hits의 원문은 보존합니다."""
     context = json.dumps([{'id': section['id'], 'kind': section['kind'],
         **({'action_outcomes': section['action_outcomes']} if section.get('action_outcomes') else {}),
-        'cells': {key: value for key, value in section['cells'].items()
+        # 빈 줄의 공백·탭과 연속 개행 3개 이상만 축소하고 문단 구분 2개는 남깁니다.
+        'cells': {key: re.sub(r'(\r?\n)(?:[ \t]*\r?\n){2,}', r'\1\1', value) for key, value in section['cells'].items()
                   if value.strip() or re.sub(r'\(\d+\)$', '', key) in question}}
         for hit in hits for section in hit['evidence']], ensure_ascii=False, separators=(',', ':'))
     translated = f'\n영어 번역 질문 (이해 보조): {english_question}' if english_question and english_question != question else ''

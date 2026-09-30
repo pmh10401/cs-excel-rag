@@ -38,6 +38,38 @@ def main(root):
     assert method == 'o200k_harmony' and tokens == len(encoder.encode_ordinary(messages[0]['content'])) + 1024
     with patch.object(llm, '_answer_encoder', return_value=None):
         assert llm.answer_input_reservation(messages, {'answer_tokenizer': 'o200k_harmony'})[1] == 'utf8_bytes'
+    # 전송본의 반복 빈 줄만 줄입니다. Windows 개행·항목 순서·원문 인용은 보존합니다.
+    newline_question = '조치내용(1)·MTTR·금액·메모는?'
+    for newline in ('\n', '\r\n'):
+        for count in (1, 2, 3, 12):
+            gap = newline + (' \t' + newline) * (count - 1)
+            first, last = '  1. SCW132 압력 -0.2 MPa 확인.', '\t2. 씰 교체 후 30분 관찰. 재발 없음.'
+            original = first + gap + last
+            expected = first + newline * 2 + last if count >= 3 else original
+            source = {'id': 'BLANK-LINES/작업1', 'kind': '작업1', 'cells': {
+                '조치내용(1)': original, 'MTTR': '', '금액': '0', '메모': r'문자 그대로 \n\n\n'}}
+            snapshot = json.dumps(source, ensure_ascii=False)
+            context, compact_messages = llm.case_answer_messages(newline_question, [{'evidence': [source]}])
+            assert json.loads(context) == [source | {'cells': source['cells'] | {'조치내용(1)': expected}}]
+            assert compact_messages[1]['content'].endswith(context)
+            assert json.dumps(source, ensure_ascii=False) == snapshot, '전송 정리가 원문을 수정했습니다.'
+            claim = {'text': '씰 교체 후 30분 관찰했으며 재발은 없었습니다.',
+                     'evidence': [{'id': source['id'], 'column': '조치내용(1)'}]}
+            llm.validate_claims({'claims': [claim]}, [{'evidence': [source]}])
+            assert claim['evidence'][0]['quote'] == original
+            if count >= 3:
+                try:
+                    llm.validate_claims({'claims': [claim | {'evidence': [claim['evidence'][0] | {'quote': expected}]}]},
+                                        [{'evidence': [source]}])
+                except llm.ClaimValidationError as error:
+                    assert error.category == 'quote'
+                else:
+                    raise AssertionError('전송본으로 바뀐 직접 인용을 원문으로 허용했습니다.')
+    compact_chars = sum(len(message['content']) for message in compact_messages)
+    details = {}
+    selected, _ = llm.select_answer_cases({'model': 'mock', 'max_context_chars': compact_chars},
+        newline_question, [{'evidence': [source]}], details=details)
+    assert selected == [{'evidence': [source]}] and details['references']['input_chars'] == compact_chars
     # 자동 선택은 순위·셀 전체를 보존하며 경계 밖의 사례나 모델 응답은 잘라 넣지 않습니다.
     candidates = [{'id': str(i), 'evidence': [{'id': f'{i}/접수', 'kind': '접수',
         'cells': {'현상': '압력 11.8 STEP <|endoftext|> ' * 50, 'MTTR': ''}}]} for i in range(6)]
@@ -65,7 +97,7 @@ def main(root):
         raise AssertionError('최상위 사례가 한도를 넘는데 일부 셀만 사용했습니다.')
     # 실패 응답이 길어도 원문을 자르거나 출력 여유를 줄이지 않고 두 번째 호출까지 진행합니다.
     retry_hits = [{'evidence': [{'id': 'RETRY/접수', 'kind': '접수',
-                               'cells': {'조치': '배선을 재체결했습니다.'}}]}]
+                               'cells': {'조치': '배선을 재체결했습니다.\n\n\n\n재발 없음.'}}]}]
     retry_question = '스핀 조치는?'
     good_retry = json.dumps({'claims': [{'text': '배선을 재체결했습니다.',
         'evidence': [{'id': 'RETRY/접수', 'column': '조치'}]}]}, ensure_ascii=False)
@@ -381,7 +413,7 @@ def main(root):
                                'evidence': [{'id': source['id'], 'column': '조치내용(1)'}]}]}
         assert '45분' in llm.validate_claims(addressed, [{'evidence': [source]}])
         assert addressed['claims'][0]['evidence'][0]['quote'] == source['cells']['조치내용(1)']
-        # 구조용 공백 때문에 원문이 분량 제한에 걸리지 않아야 합니다. 셀 내부 공백은 보존합니다.
+        # 구조용 공백 때문에 분량 제한에 걸리지 않아야 합니다. 반복 빈 줄 외의 셀 공백은 보존합니다.
         compact_source = source | {'kind': '작업1', 'cells': source['cells'] | {
             'MTTR': '', '수리비': '0', '메모': '  "쉼표, 콜론: 공백"\\\t\n'}}
         compact_question = '조치내용(1), MTTR, 수리비와 메모는?'
