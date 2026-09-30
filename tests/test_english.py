@@ -80,13 +80,13 @@ def translation_repairs(root):
     assert all(len(json.dumps({'현상': p}, ensure_ascii=False)) <= 150 for p in parts)
     assert [item for p in parts for item in llm.measured(p)] == llm.measured(source)
     with patch.object(english, 'request_json', side_effect=lambda c, cfg, prompt, payload:
-                      {key: value + ' inspection' for key, value in payload.items()}) as request:
+                      {key: re.sub('[가-힣]+', ' inspection ', value) for key, value in payload.items()}) as request:
         translated = english.translate_cells(object(), config | {'max_context_chars': 150}, {'현상': source})
         assert request.call_count == len(parts) and llm.measured(translated['현상']) == llm.measured(source)
     # 짧은 숫자들이 표시자로 길어져도 실제 전송 셀의 문자 한도를 지킵니다.
     def bounded(_client, _config, _prompt, payload):
         assert len(json.dumps(payload, ensure_ascii=False)) <= 80
-        return {key: value + ' inspection' for key, value in payload.items()}
+        return {key: value.replace('점검', 'inspection') for key, value in payload.items()}
     with patch.object(english, 'request_json', side_effect=bounded) as request:
         dense = english.translate_cells(object(), config | {'max_context_chars': 80}, {'현상': '1 2 3 4 5 점검'})
         assert re.findall(r'\d+', dense['현상']) == ['1', '2', '3', '4', '5'] and request.call_count > 1
@@ -107,7 +107,7 @@ def translation_repairs(root):
         calls[source] = calls.get(source, 0) + 1
         if source == '센서 압력' or (source == '펌프 누수' and calls[source] == 1):
             raise APITimeoutError(request=Mock())
-        return {'현상': source + ' maintenance'}
+        return {'현상': {'펌프 누수': 'Pump leak', '팬 진동': 'Fan vibration'}[source]}
     with closing(sqlite3.connect(':memory:')) as db:
         storage.ingest(db, rows, rules, schema=schema)
         with patch.object(english, 'request_json', side_effect=timeout), patch.object(english.time, 'sleep'):
@@ -140,7 +140,7 @@ def parallel_translation(root):
             assert release.wait(5), '먼저 완료한 번역이 저장되지 않았습니다.'
         if cells['현상'] == '팬 진동':
             raise ValueError('모의 번역 실패')
-        return {'현상': cells['현상'] + ' maintenance'}
+        return {'현상': {'센서 압력': 'Sensor pressure', '펌프 누수': 'Pump leak'}[cells['현상']]}
     config = {'model': 'test', 'normalization_workers': 2}
     with closing(sqlite3.connect(':memory:')) as db:
         storage.ingest(db, rows, rules, schema=schema)
@@ -155,7 +155,7 @@ def parallel_translation(root):
         assert len(calls) == 6 and calls.count('팬 진동') == 4
         assert result['generated'] == 2 and result['reused'] == 1
         assert result['workers'] == 2 and [f['id'] for f in result['failures']] == ['EN-PAR-3']
-        with patch.object(english, 'request_json', return_value={'현상': '팬 진동 maintenance'}) as request:
+        with patch.object(english, 'request_json', return_value={'현상': 'Fan vibration'}) as request:
             result = english.build_english(db, object(), config, schema, limit=0, failed_only=True)
         assert request.call_count == 1 and result['generated'] == 1 and result['indexed'] == 4
         assert 'An earlier run failed' in request.call_args.args[2]
@@ -270,6 +270,7 @@ def bilingual_questions(root):
 
 
 def main(root):
+    check_record_meaning(root)
     check_bilingual_normalization()
     bilingual_questions(root)
     translation_repairs(root)
@@ -368,7 +369,8 @@ def main(root):
         def reply(**kwargs):
             prompt, user = [message['content'] for message in kwargs['messages']]
             if prompt.startswith(english.TRANSLATE_PROMPT):
-                return response({key: value + ' maintenance' for key, value in json.loads(user).items()})
+                return response({key: re.sub('[가-힣]+', ' maintenance ', value.replace('재발 미확인', 'recurrence unconfirmed'))
+                                 for key, value in json.loads(user).items()})
             if prompt == english.QUERY_PROMPT:
                 return response({'query': 'maintenance'})
             sources = json.loads(user.split('원문 자료:\n')[1])
@@ -387,6 +389,89 @@ def main(root):
     print('PASS: 영어 검색 2000건·내용 재사용·한국어 인용·잘림/숫자 검사·실패 후 계속·검토 후 무효화')
 
 
+def check_record_meaning(root):
+    """실제 비교에서 놓친 관찰/지시·재발 미확인·미번역 문장을 다시 통과시키지 않습니다."""
+    invalid = [
+        ('배선 접촉 불량 확인', 'Check for poor wiring contact'),
+        ('배선 재체결. +0.5 V 측정.', 'Re-tighten wiring. Measure +0.5 V.'),
+        ('재발 미확인', 'No recurrence confirmed.'),
+        ('재발 미확인', 'No recurrence confirmed yet.'),
+        ('원인 미확인. 재발 미확인', 'Cause unknown. No recurrence confirmed.'),
+        ('원인 미확인. 재발 미확인', 'Cause unknown. Recurrence confirmed.'),
+        ('원인 미확인. 재발 미확인', 'Cause unknown and recurrence confirmed.'),
+        ('압력 -0.1 MPa. 흡착 부족', '압력 -0.1 MPa. 흡착 부족'),
+        ('누수. 2小时 운전', '漏水. Operated for 2小时'),
+    ]
+    for original, result in invalid:
+        try:
+            english.validate_translation({'현상': result}, {'현상': original})
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f'의미 변경·미번역을 통과시켰습니다: {original} → {result}')
+    valid = [
+        ('배선 접촉 불량 확인', 'Poor wiring contact was confirmed.'),
+        ('배선 재체결. +0.5 V 측정.', 'Wiring re-tightened. +0.5 V measured.'),
+        ('재발 미확인', 'Whether the fault recurred has not been confirmed.'),
+        ('재발 미확인', 'Recurrence is unconfirmed.'),
+        ('재발 미확인', 'Recurrence could not be verified.'),
+        ('배선 접촉 불량 확인. 추가 점검 필요', 'Poor wiring contact confirmed. Check the other contacts.'),
+        ('필터 확인 필요', 'Check the filter.'),
+        ('관찰 10분. 운전 2小时.', 'Observed for 10분 (minutes). Operated for 2小时 (hours).'),
+        ('AX-12V에서 F202 발생', 'AX-12V reported F202.'),
+    ]
+    for original, result in valid:
+        english.validate_translation({'현상': result}, {'현상': original})
+    english.validate_translation({'질문': 'Check the wiring contacts.'}, {'질문': '배선 접촉 상태를 확인해줘.'})
+    for rewritten in ('재발이 없었습니다.', '재발을 확인했습니다.'):
+        try:
+            llm.validate_normalized({'id': 'MEANING-1', '조치': rewritten},
+                                    {'id': 'MEANING-1', '조치': '재발 미확인'}, {'조치': 'rewrite'})
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('한국어 다듬기에서 미확인을 확정으로 바꿨습니다.')
+    llm.validate_normalized({'id': 'MEANING-1', '조치': '재발 여부는 아직 확인되지 않았습니다.'},
+                           {'id': 'MEANING-1', '조치': '재발 미확인'}, {'조치': 'rewrite'})
+    config = {'model': 'test', 'reasoning_effort': 'low'}
+    with patch.object(english, 'request_json', side_effect=[
+            {'원인': 'Check for poor wiring contact', '현상': 'Pump leak.'},
+            {'원인': 'Poor wiring contact was confirmed.'}]) as request:
+        result = english.translate_cells(object(), config, {'원인': '배선 접촉 불량 확인', '현상': '펌프 누수'})
+        assert result['현상'] == 'Pump leak.' and request.call_count == 2
+        assert request.call_args.args[3] == {'원인': '배선 접촉 불량 확인'}
+        assert 'recorded observation' in request.call_args.args[2]
+    response = lambda values: SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop',
+        message=SimpleNamespace(content=json.dumps(values, ensure_ascii=False)))])
+    create = Mock(side_effect=[response({'조치': '재발이 없었습니다.'}),
+                               response({'조치': '재발 여부는 아직 확인되지 않았습니다.'})])
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+    row = {'id': 'MEANING-1', '조치': '재발 미확인'}
+    result = llm.normalize(client, config, row, {'조치': 'rewrite'})
+    assert create.call_count == 2 and '확인되지 않았' in result['조치'] and not getattr(result, 'fallbacks', {})
+    assert row['조치'] == '재발 미확인' and '재발 미확인' in create.call_args.kwargs['messages'][-1]['content']
+    # 현재 프로필의 잘못된 캐시도 색인·재사용에서 제외하고 기존 처리로 다시 만듭니다.
+    schema, rules = cslist.load_schema(root / 'cslist_schema.json')
+    record = dict.fromkeys(schema['columns'], '') | {schema['id_column']: 'MEANING-CACHE',
+              '_id_column': schema['id_column'], '조치내용(1)': '재발 미확인'}
+    create.side_effect = None
+    create.return_value = response({'조치내용(1)': 'Recurrence is unconfirmed.'})
+    with closing(sqlite3.connect(':memory:')) as db:
+        storage.ingest(db, [record], rules, schema=schema)
+        before = db.execute('SELECT * FROM normalized_records').fetchall()
+        assert english.build_english(db, client, config, schema, limit=0)['indexed'] == 1
+        with db:
+            db.execute('UPDATE english_translations SET translated_json=?',
+                       (json.dumps({'조치내용(1)': 'No recurrence confirmed.'}),))
+            english.rebuild_english(db, schema)
+        assert english.english_count(db) == 0
+        create.reset_mock()
+        result = english.build_english(db, client, config, schema, limit=0)
+        assert result['generated'] == result['indexed'] == 1 and create.call_count == 1
+        assert db.execute('SELECT * FROM normalized_records').fetchall() == before
+    print('PASS: 관찰/지시 구분·재발 미확인 범위·한국어/중국어 잔존·수치 단위 예외·셀별 의미 보정')
+
+
 def check_bilingual_normalization():
     """한 요청의 두 결과를 따로 검사하고 잘못된 번역이 한국어 성공을 취소하지 않습니다."""
     from ragkit import llm
@@ -401,7 +486,10 @@ def check_bilingual_normalization():
         payload = json.loads(request['messages'][1]['content']); calls.append(payload)
         if '영어로 번역할 열' in payload:
             ko = {key: payload['원본 셀'][key] for key in payload['수정할 열']}
-            en = {key: payload['원본 셀'][key] + ' maintenance' for key in payload['영어로 번역할 열']}
+            targets = {'현상': '__CS_NUMBER_0__. Wafer picked from __CS_NUMBER_1__ using iur low arm.',
+                       '조치': 'Not replaced. Observed for __CS_NUMBER_0__.', '제목': 'Wafer check',
+                       '조치내용(1)': 'Seal replaced', '조치내용(2)': 'Not performed'}
+            en = {key: targets[key] for key in payload['영어로 번역할 열']}
             if 'english' in bad:
                 en['조치'] = ''
             if 'korean' in bad:
@@ -418,8 +506,8 @@ def check_bilingual_normalization():
     result = english.normalize_bilingual(client, config, row, rules)
     assert len(calls) == 1 and result['normalized'] == row and row == original
     assert set(calls[0]['수정할 열']) == {'현상', '조치'} and '원인' not in calls[0]['영어로 번역할 열']
-    assert result['english']['현상'] == row['현상'] + ' maintenance'
-    assert result['english']['제목'] == row['제목'] + ' maintenance'
+    assert result['english']['현상'] == '1. Wafer picked from ifep2 using iur low arm.'
+    assert result['english']['제목'] == 'Wafer check'
     assert not result['english_failures'] and '__CS_NUMBER_' not in json.dumps(result)
     bad.add('english'); calls.clear()
     result = english.normalize_bilingual(client, config, row, rules)

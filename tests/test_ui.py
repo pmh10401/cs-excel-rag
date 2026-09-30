@@ -2,6 +2,7 @@
 import hashlib
 import http.client
 import json
+import re
 import sqlite3
 import tempfile
 import threading
@@ -75,7 +76,8 @@ def main(root):
             if '원문 자료:\n' in user:
                 answer_questions.append(user.split('원문 자료:\n')[0])
             if kwargs['messages'][0]['content'].startswith(english.TRANSLATE_PROMPT):
-                data = {key: value + ' maintenance' for key, value in json.loads(user).items()}
+                data = {key: re.sub('[가-힣]+', ' maintenance ', value.replace('재발 미확인', 'recurrence unconfirmed'))
+                        for key, value in json.loads(user).items()}
             elif kwargs['messages'][0]['content'] == english.QUERY_PROMPT:
                 data = {'query': 'maintenance'}
             elif user.startswith('{'):

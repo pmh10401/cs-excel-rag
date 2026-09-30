@@ -1,6 +1,7 @@
 """야간 실행을 실제 SQLite·다듬기·검토·검색 경로로 검증합니다. 모델 통신만 대체합니다."""
 from contextlib import closing
 import json
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import time
@@ -40,7 +41,7 @@ def main(root):
         if first_english is None:
             first_english = key
             raise APIConnectionError(request=SimpleNamespace())
-        return response({k:v+' maintenance' for k,v in cells.items()})
+        return response({k:re.sub('[가-힣]+', ' maintenance ', v.replace('재발 미확인', 'recurrence unconfirmed')) for k,v in cells.items()})
     client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)),close=lambda:None)
     vector_calls = []
     def embed(**request):
@@ -178,7 +179,7 @@ def check_cancellation(root):
         stop.set()
         cells=json.loads(request['messages'][1]['content'])
         value=({k:cells['원본 셀'][k] for k in cells['수정할 열']} if '원본 셀' in cells else
-               {k:v+' maintenance' for k,v in cells.items()})
+               {k:re.sub('[가-힣]+', ' maintenance ', v.replace('재발 미확인', 'recurrence unconfirmed')) for k,v in cells.items()})
         return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop',message=SimpleNamespace(content=json.dumps(value,ensure_ascii=False)))])
     client=SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     def cancelled(operation):

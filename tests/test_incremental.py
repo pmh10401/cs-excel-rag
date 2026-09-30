@@ -2,6 +2,7 @@
 from contextlib import closing
 import copy
 import json
+import re
 from pathlib import Path
 import sqlite3
 from tempfile import TemporaryDirectory
@@ -29,7 +30,7 @@ def main(root):
         return records.public_cells(row)
 
     def translated(_client, _config, cells, previous=''):
-        return {key: value + ' maintenance' for key, value in cells.items()}
+        return {key: re.sub('[가-힣]+', ' maintenance ', value) for key, value in cells.items()}
 
     def finished(app, status='done'):
         deadline = time.monotonic() + 10

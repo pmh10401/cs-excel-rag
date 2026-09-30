@@ -1,6 +1,7 @@
 """검토→영어 갱신, 실패분 재시도와 접수별 상태를 실제 SQLite로 확인합니다."""
 from contextlib import closing
 import json
+import re
 import time
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -64,7 +65,8 @@ def main(root):
         cells=json.loads(kwargs['messages'][1]['content']);calls.append(cells)
         if any(v in failing or v in {english.protect_numbers(text)[0] for text in failing} for v in cells.values()):
             return SimpleNamespace(choices=[SimpleNamespace(finish_reason='length',message=SimpleNamespace(content=''))])
-        return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop',message=SimpleNamespace(content=json.dumps({k:v+' maintenance' for k,v in cells.items()},ensure_ascii=False)))])
+        values = {k:re.sub('[가-힣]+', ' maintenance ', v.replace('재발 미확인', 'recurrence unconfirmed')) for k,v in cells.items()}
+        return SimpleNamespace(choices=[SimpleNamespace(finish_reason='stop',message=SimpleNamespace(content=json.dumps(values,ensure_ascii=False)))])
     client=SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)),close=lambda:None)
     with TemporaryDirectory() as folder:
         folder=Path(folder); cfg=folder/'config.json';cfg.write_text(json.dumps(config))
@@ -126,7 +128,7 @@ def main(root):
         with closing(app.connect()) as db:
             assert db.execute('SELECT value FROM cell_reviews WHERE record_id=? AND column_name=?',(ids[0],'현상')).fetchone()[0]==entry['value']
             translated = json.loads(db.execute('SELECT translated_json FROM english_translations WHERE record_id=?', (ids[0],)).fetchone()[0])
-            assert translated['현상'] == entry['value'] + ' maintenance'
+            assert translated['현상'] == re.sub('[가-힣]+', ' maintenance ', entry['value'])
         # 후속 연결 실패도 저장된 원문과 검토를 취소하지 않습니다.
         with patch.object(web,'OpenAI',side_effect=RuntimeError('LOCAL-SECRET connection')):
             assert app.update_search([ids[0]])['english_warning']=='*** connection'
