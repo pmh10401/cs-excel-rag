@@ -1,2 +1,2 @@
 *.bat text eol=crlf whitespace=cr-at-eol
-ragkit/assets/tokenizer/* -diff linguist-vendored
+ragkit/assets/tokenizer/* -text -diff linguist-vendored
