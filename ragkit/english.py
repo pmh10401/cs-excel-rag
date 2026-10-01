@@ -267,13 +267,14 @@ def check_identifiers(original, translated):
         raise ValueError('영어 변환에서 숫자 또는 식별자가 변경되었습니다.')
 
 
-def request_json(client, config, prompt, payload):
+def request_json(client, config, prompt, payload, *, timeout=None):
     messages = [{'role': 'system', 'content': prompt},
                 {'role': 'user', 'content': json.dumps(payload, ensure_ascii=False)}]
     response = client.chat.completions.create(
         model=config['model'], messages=messages,
         extra_body={'reasoning_effort': config['reasoning_effort']},
-        **generation_options(config, messages=messages))
+        **generation_options(config, messages=messages),
+        **({'timeout': timeout} if timeout is not None else {}))
     if not response.choices or response.choices[0].finish_reason != 'stop':
         reason = response.choices[0].finish_reason if response.choices else 'no_choices'
         raise ValueError(f'영어 변환 응답이 정상 종료되지 않았습니다. 종료 사유: {reason}')

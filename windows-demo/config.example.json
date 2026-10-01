@@ -9,6 +9,8 @@
   "timeout_seconds": 600,
   "temperature": 1,
   "top_p": 1,
+  "claim_guard_mode": "off",
+  "claim_guard_timeout_seconds": 120,
   "embedding": {
     "base_url": "http://127.0.0.1:1234/v1",
     "api_key": "EMPTY",

@@ -10,6 +10,9 @@ const ASK_TITLE = {
   ok: '답변', aggregate: '집계 결과', no_match: '없는 기록',
   insufficient_evidence: '근거 부족',
   clarification: '질문 대상 확인',
+  verification_unavailable: '검사 모델 준비 필요', verification_translation: '근거 번역 검사 실패',
+  verification_overlength: '검사 입력 한도 초과', verification_timeout: '근거 검사 시간 초과',
+  verification_empty: '의미를 검사할 근거 부족',
   validation_failed: '근거 검사 실패', source_changed: '원문 변경', error: '답변을 만들지 못했습니다'
 };
 
@@ -109,7 +112,7 @@ function updateLocks() {
   $('reference-mode').disabled = ui.busy || reqLock;
   $('reference-manual-fields').hidden = $('reference-mode').value === 'auto';
   $('reference-limit').disabled = ui.busy || reqLock || $('reference-mode').value === 'auto';
-  ['inspect-btn', 'import-btn', 'normalize-btn', 'header-mapping-save', 'save-settings', 'normalization-workers', 'auto-english', 'vectors-btn', 'vectors-limit', 'review-important', 'review-changed', 'review-grouped'].forEach(function (id) {
+  ['inspect-btn', 'import-btn', 'normalize-btn', 'header-mapping-save', 'save-settings', 'normalization-workers', 'auto-english', 'claim-guard-mode', 'prepare-claim-guard', 'vectors-btn', 'vectors-limit', 'review-important', 'review-changed', 'review-grouped'].forEach(function (id) {
     if ($(id)) $(id).disabled = jobLock || reqLock;
   });
   ['ask-btn', 'search-mode', 'instruction-language', 'new-conversation-btn'].forEach(id => { $(id).disabled = ui.busy || reqLock; });
@@ -171,6 +174,9 @@ function stopPoll() {
 
 function applyState(s) {
   ui.last = s;
+  const guard = s.claim_guard || {};
+  setText($('claim-guard-ready'), guard.message || guard.error ||
+    (guard.loaded ? '검사 모델이 준비되어 있습니다.' : guard.model_cached ? '모델 파일 준비됨 · 첫 검사에서 실행 모델을 적재합니다.' : '선택 라이브러리 설치 후 검사 모델을 준비하세요.'));
   const path = $('excel-path');
   if (path && document.activeElement !== path && !path.disabled) {
     if (s.excel) path.value = s.excel;
@@ -250,7 +256,10 @@ function renderJob(job) {
   banner.hidden = false;
   const partialImport = job.kind === 'import_many' && job.result && job.result.failed;
   banner.className = 'job-banner' + (job.status === 'error' || partialImport ? ' is-error' : job.status === 'done' ? ' is-done' : '');
-  const kind = job.kind === 'import_many' ? '여러 파일 DB 등록' : job.kind === 'import' ? 'DB 등록' : job.kind === 'normalize' ? '문장 다듬기' : job.kind === 'ask' ? '질문' : job.kind === 'bulk_review' ? '전체 제안 채택' : job.kind === 'english' ? '영어 변환' : job.kind === 'convert' ? '입력 파일 변환' : job.kind === 'vectors' ? '벡터 생성' : job.kind === 'auto_vectors' ? '임베딩 자동 준비·갱신' : job.kind === 'auto_search' ? '영어·벡터 자동 갱신' : job.kind;
+  const kind = job.kind === 'claim_guard_prepare' ? '영어 근거 검사 모델 준비' : job.kind === 'import_many' ? '여러 파일 DB 등록' : job.kind === 'import' ? 'DB 등록' : job.kind === 'normalize' ? '문장 다듬기' : job.kind === 'ask' ? '질문' : job.kind === 'bulk_review' ? '전체 제안 채택' : job.kind === 'english' ? '영어 변환' : job.kind === 'convert' ? '입력 파일 변환' : job.kind === 'vectors' ? '벡터 생성' : job.kind === 'auto_vectors' ? '임베딩 자동 준비·갱신' : job.kind === 'auto_search' ? '영어·벡터 자동 갱신' : job.kind;
+  if (job.kind === 'claim_guard_prepare') setText($('settings-status'),
+    running ? '영어 근거 검사 모델 준비 중 · ' + (job.elapsed_seconds || 0) + '초' :
+    job.status === 'done' ? '검사 모델 준비를 마쳤습니다. 검사 모드를 선택하고 저장하세요.' : '검사 모델 준비를 완료하지 못했습니다.');
   let msg = kind + ' · ' + (job.stage || job.status) + ' · ' + (job.elapsed_seconds || 0) + '초';
   if (job.status === 'queued') msg = '질문 대기 중 · 대기 순서 ' + job.queue_position + '번째';
   else if (job.status === 'running') msg = '진행 중 · ' + msg;
@@ -360,6 +369,10 @@ async function refreshJob() {
     const key = job.status + ':' + job.kind + ':' + (job.error || '') + ':' + JSON.stringify(job.result || null);
     if (!job.kind || job.status === 'idle' || ui.handled === key) return;
     ui.handled = key;
+    if (job.kind === 'claim_guard_prepare') {
+      applyState(await api('/api/state'));
+      showAlert('settings-error', job.status === 'error' ? job.error || '검사 모델 준비 실패' : '');
+    }
     if (job.kind === 'overnight') applyState(await api('/api/state'));
     if (job.kind === 'import_many') {
       applyState(await api('/api/state'));
@@ -1370,7 +1383,9 @@ function renderAsk(job) {
   setText($('ask-result-title'), result.comparison ? '검색 비교' : ASK_TITLE[code] || '답변');
   renderAnswer(result, code === 'ok' && !result.comparison);
   setText($('ask-status'), [code === 'ok' && (result.claims || []).length ? '인용·수치 검사 통과' : '',
+    result.claim_verification ? {passed: '영어 근거 검사 통과', unsupported: '영어 근거 지지 부족', error: '영어 근거 검사 불가'}[result.claim_verification.status] : '',
     result.elapsed_seconds != null ? result.elapsed_seconds + '초' : ''].filter(Boolean).join(' · '));
+  renderClaimVerification(result.claim_verification);
   $('ask-details').open = failed;
   const refs = result.references;
   let referenceText = '';
@@ -1440,6 +1455,35 @@ function renderAsk(job) {
   }
   if (['no_match', 'aggregate', 'insufficient_evidence', 'clarification'].includes(code)) showAlert('ask-error', '');
   if (failed && result.error) showAlert('ask-error', result.error);
+}
+
+function renderClaimVerification(result) {
+  $('ask-claim-verification').hidden = !result || result.mode === 'off';
+  const box = $('ask-claim-verification-items');
+  box.replaceChildren();
+  if (!result || result.mode === 'off') return;
+  const status = {passed: '검사 통과', unsupported: '미지지 주장 있음', error: '검사 불가'};
+  setText($('ask-claim-verification-status'), [result.mode === 'observe' ? '결과 기록 모드' : '답변 차단 모드',
+    status[result.status] || result.status, '확인 ' + (result.checked || 0) + '/' + (result.total || 0) + '개 주장',
+    result.seconds != null ? result.seconds + '초' : '', result.message || ''].filter(Boolean).join(' · '));
+  (result.claims || []).forEach(item => {
+    const detail = document.createElement('details');
+    const title = document.createElement('summary');
+    const state = {passed: '지지', unsupported: '지지 부족', error: '검사 불가', source_blank: '원문 미기재 확인'};
+    title.textContent = '주장 ' + item.index + ' · ' + (state[item.status] || '검사 미완료') +
+      (Number.isFinite(item.support_probability) ? ' · 모델 점수 ' + item.support_probability.toFixed(3) : '');
+    detail.append(title);
+    const texts = [['검사한 영어 주장', item.english_claim], ['실제 인용 셀의 영어 대응문', item.english_evidence],
+      ['검사 안내', item.note]];
+    texts.forEach(([label, value]) => {
+      if (!value) return;
+      const p = document.createElement('p');
+      p.className = 'quote';
+      p.textContent = label + ': ' + value;
+      detail.append(p);
+    });
+    box.append(detail);
+  });
 }
 
 async function startAsk(comparison = false) {
@@ -1512,6 +1556,7 @@ function openSettings() {
   const s = ui.last || {};
   $('normalization-workers').value = String((s.settings && s.settings.normalization_workers) || s.normalization_workers || 200);
   $('auto-english').checked = !s.settings || s.settings.auto_english !== false;
+  $('claim-guard-mode').value = (s.settings && s.settings.claim_guard_mode) || 'off';
   setText($('settings-status'), '');
   showAlert('settings-error', '');
   updateLocks();
@@ -1537,7 +1582,8 @@ async function saveSettings() {
   try {
     const result = await api('/api/settings', {method: 'POST', body: {
       normalization_workers: Number($('normalization-workers').value),
-      auto_english: $('auto-english').checked
+      auto_english: $('auto-english').checked,
+      claim_guard_mode: $('claim-guard-mode').value
     }});
     const settings = result.settings || result;
     if (ui.last) {
@@ -1545,7 +1591,24 @@ async function saveSettings() {
       ui.last.settings = Object.assign({}, ui.last.settings, settings);
     }
     setText($('settings-status'), '동시 처리 ' + settings.normalization_workers + '건 · 검토 저장 후 영어 자동 갱신 ' +
-      (settings.auto_english === false ? '꺼짐' : '켜짐') + '으로 저장했습니다.');
+      (settings.auto_english === false ? '꺼짐' : '켜짐') + ' · 영어 근거 검사 ' +
+      {off: '꺼짐', observe: '결과 기록', enforce: '답변 차단'}[settings.claim_guard_mode] + '으로 저장했습니다.');
+  } catch (err) {
+    showAlert('settings-error', err.message);
+  } finally {
+    setPending(false);
+  }
+}
+
+async function prepareClaimGuard() {
+  if (ui.busy || ui.serverBusy || ui.pending) return;
+  setPending(true);
+  showAlert('settings-error', '');
+  try {
+    await api('/api/claim-guard/prepare', {method: 'POST', body: {download: true}});
+    setText($('settings-status'), '검사 모델을 준비하고 있습니다.');
+    startPoll();
+    await refreshJob();
   } catch (err) {
     showAlert('settings-error', err.message);
   } finally {
@@ -1567,6 +1630,7 @@ document.querySelectorAll('.nav-btn').forEach(function (btn) {
 });
 $('open-settings').addEventListener('click', openSettings);
 $('save-settings').addEventListener('click', saveSettings);
+$('prepare-claim-guard').addEventListener('click', prepareClaimGuard);
 $('source-form').addEventListener('submit', function (ev) { ev.preventDefault(); inspectSource(); });
 $('normalize-btn').addEventListener('click', () => startDataJob('normalize'));
 $('import-btn').addEventListener('click', () => startDataJob('import'));

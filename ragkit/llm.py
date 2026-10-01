@@ -1008,14 +1008,24 @@ def _answer_completion(client, diagnostics, details, **request):
 
 
 def answer(client, config, question, hits, *, details=None):
+    from .claim_verification import validate_mode, timeout_seconds, verify_claims, VerificationError
+    guard_mode = validate_mode(config.get('claim_guard_mode', 'off'))
+    if guard_mode != 'off':
+        timeout_seconds(config)
+    guard_cache = {}
     # 한 답변에서 최대 두 호출만 저장하며, 같은 dict를 다시 사용해도 이전 응답이 쌓이지 않습니다.
     diagnostics = []
     language = config.get('answer_instruction_language', 'ko')
     answer_prompt(language)
     if details is not None:
+        details.pop('claim_verification', None)
+        details.pop('verification_attempts', None)
         details.update(validation_events=diagnostics, attempts=0, retried_length=False, instruction_language=language)
     if not hits:
         return '해당 질문에 맞는 기록이 없어 확인할 수 없습니다.', ''
+    if guard_mode == 'enforce' and not all('evidence' in hit for hit in hits):
+        raise VerificationError({'code': 'verification_unavailable',
+            'message': '영어 근거 검사에는 상세 ID와 원문 셀이 필요합니다. 원문 없는 답변은 검사할 수 없습니다.'})
     if all('evidence' in hit for hit in hits):
         # 관계없는 빈 열 수십 개가 서술 셀의 사실을 가리지 않도록, 빈 셀은 질문에서
         # 직접 언급한 열만 보냅니다. 전체 128열과 원문 검증용 셀은 DB와 hits에 그대로 남습니다.
@@ -1054,6 +1064,18 @@ def answer(client, config, question, hits, *, details=None):
                 reply = ('검색된 후보만으로는 질문에 답할 근거가 부족합니다. '
                          '설비명·부품명·발생 조건을 보완해 다시 검색해 주세요.'
                          if insufficient else validate_claims(payload, hits))
+                if not insufficient and guard_mode != 'off':
+                    verification = verify_claims(client, config, payload['claims'], cache=guard_cache)
+                    if details is not None:
+                        details['claim_verification'] = verification
+                        details.setdefault('verification_attempts', []).append(verification)
+                    if guard_mode == 'enforce' and verification['status'] == 'unsupported':
+                        failed = [str(item['index']) for item in verification['claims'] if item['status'] == 'unsupported']
+                        raise ClaimValidationError('영어 근거 검사에서 주장 ' + ', '.join(failed)
+                            + '의 지지가 부족합니다. 실제 인용한 원문에서 확인할 수 있는 내용만 설명하세요.', 'semantic')
+                    if guard_mode == 'enforce' and verification['status'] == 'error':
+                        diagnostic.update(category=verification['code'], error=verification['message'])
+                        raise VerificationError(verification)
             except ValueError as error:
                 diagnostic.update(validation_summary(error))
                 if attempt:
@@ -1075,6 +1097,10 @@ def answer(client, config, question, hits, *, details=None):
                                   if insufficient else '원문 구절·열·작업·숫자 검사 통과. 문장의 의미와 질문 항목 누락은 추가 대조가 필요합니다.'))
                 if any(item.get('retry_context') in ('without_response', 'regenerate') for item in diagnostics):
                     details['note'] += ' 보정 요청 한도에 맞춰 실패 응답을 제외하고 동일한 원문으로 재생성했습니다.'
+                verification = details.get('claim_verification')
+                if verification:
+                    state = {'passed': '추가 검사 통과', 'unsupported': '미지지 주장 있음', 'error': '추가 검사 불가'}[verification['status']]
+                    details['note'] += ' 영어 근거 검사: ' + state + (' · 결과 기록 모드로 답변을 유지했습니다.' if guard_mode == 'observe' else '.')
             if not insufficient:
                 # 검사가 끝난 요약과 프로그램이 붙인 원문을 구분합니다. 실패한 모델 응답은 보완으로 숨기지 않습니다.
                 supplements = case_source_supplements(payload['claims'], hits, question)
@@ -1085,6 +1111,9 @@ def answer(client, config, question, hits, *, details=None):
                         details['note'] += ' 추가 참고 원문은 선택된 접수의 조치·결과를 확인하는 자료이며, 모델이 직접 인용한 근거와 구분합니다.'
             return reply, context
     # 찾은 기록만 답변 모델에 참고자료로 전달합니다. 파일 전체를 업로드하지 않습니다.
+    if guard_mode == 'observe' and details is not None:
+        details['claim_verification'] = {'mode': 'observe', 'status': 'error', 'claims': [],
+            'code': 'verification_unavailable', 'message': '상세 ID와 원문 셀이 없어 추가 근거 검사를 실행하지 못했습니다.'}
     context = '\n\n'.join(hit['content'] for hit in hits)
     # high는 사용자의 Windows 테스트 결과에 따라 지정한 서버 옵션입니다. 지원하지 않으면 오류를 그대로 표시합니다.
     # extra_body는 호환 서버용 값을 JSON 요청에 그대로 넣는 SDK 기능입니다.

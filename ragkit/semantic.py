@@ -7,7 +7,6 @@ from contextlib import closing
 from urllib.parse import urlparse
 
 import numpy as np
-import faiss
 from openai import OpenAI, APIError
 
 from .english import document_cells, fingerprint
@@ -186,6 +185,8 @@ def build_vectors(db, client, config, *, limit=0, progress=None, cancelled=None)
 
 
 def load_index(db, config):
+    # FAISS는 벡터 검색 프로세스에서만 적재합니다. NLI 자식에서 두 OpenMP 런타임이 충돌하지 않게 합니다.
+    import faiss
     key = profile(config)
     if not vector_count(db, config):
         raise ValueError('현재 모델로 생성한 벡터가 없습니다. 자료 화면에서 벡터 색인을 생성하세요.')

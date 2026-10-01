@@ -460,6 +460,7 @@ def code_paths():
         'ragkit/records.py': ragkit / 'records.py',
         'ragkit/input_formats.py': ragkit / 'input_formats.py',
         'ragkit/retrieval_evaluation.py': Path(atomic_report.__code__.co_filename).resolve(),
+        'ragkit/nli.py': ragkit / 'nli.py',
     }
 
 
@@ -536,25 +537,15 @@ def encode_length(tokenizer, *texts, pair=False):
 
 
 def score_mdeberta(premise, hypothesis, *, tokenizer, model, device, limit):
-    import torch
-    import torch.nn.functional as F
-    mapping = nli_label_map(model.config.id2label)
-    token_count = encode_length(tokenizer, premise, hypothesis, pair=True)
-    reject_if_overlong(token_count, limit)
-    encoded = tokenizer(premise, hypothesis, truncation=False, return_tensors='pt')
-    if encoded['input_ids'].shape[-1] != token_count:
-        raise ClassifierError('토크나이저가 입력을 잘랐습니다.')
-    encoded = {key: value.to(device) for key, value in encoded.items()}
-    with torch.inference_mode():
-        logits = model(**encoded).logits
-    if logits.ndim != 2 or logits.shape[0] != 1 or logits.shape[1] != len(mapping):
-        raise ClassifierError(f'NLI 로짓 모양이 올바르지 않습니다: {tuple(logits.shape)}')
-    if not torch.isfinite(logits).all():
-        raise ClassifierError('NLI 로짓이 유한하지 않습니다.')
-    probs = F.softmax(logits.float(), dim=-1)[0]
-    values = {name: float(probs[index].item()) for name, index in mapping.items()}
-    return {'nli_label': max(values, key=values.get), 'probabilities': values,
-            'support_probability': values['entailment']}
+    from ragkit.nli import NLIError, score_pair
+    try:
+        scored = score_pair(premise, hypothesis, tokenizer=tokenizer, model=model, device=device, limit=limit)
+    except NLIError as error:
+        if error.code == 'overlength':
+            raise OverlengthError(str(error)) from error
+        raise ClassifierError(str(error)) from error
+    return {'nli_label': scored['label'], 'probabilities': scored['probabilities'],
+            'support_probability': scored['support_probability']}
 
 
 def score_minicheck(premise, hypothesis, *, tokenizer, model, device, limit):

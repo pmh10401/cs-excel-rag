@@ -8,6 +8,8 @@
   "max_context_chars": 24000,
   "answer_max_tokens": 8192,
   "answer_temperature": 1,
+  "claim_guard_mode": "off",
+  "claim_guard_timeout_seconds": 120,
   "embedding": {
     "base_url": "http://127.0.0.1:1234/v1",
     "api_key": "EMPTY",

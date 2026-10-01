@@ -1,0 +1,5 @@
+# 선택 기능: 영어 mDeBERTa 답변 근거 검사. 기본 설치와 분리합니다.
+# 실제 비교에 사용한 버전을 고정하고 모델 revision은 ragkit/nli.py에서 고정합니다.
+torch==2.14.1
+transformers==4.57.6
+sentencepiece==0.2.1

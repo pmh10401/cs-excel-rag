@@ -22,6 +22,7 @@ from openai import APIError, APITimeoutError, OpenAI
 from .cslist import column_group, load_schema, ensure_search_index
 from .input_formats import row_schema, row_rules, is_history, HISTORY_SCHEMAS, HISTORY_DETAIL_COLUMNS
 from .llm import answer, editable, select_answer_cases, resolve_follow_up
+from .claim_verification import validate_mode, VerificationError
 from .records import (public_cells, read_excel,
                       HeaderMappingError, load_header_aliases, save_header_aliases,
                       validate_header_aliases)
@@ -29,7 +30,7 @@ from .search import count_records, retrieve
 from .english import (build_english, bilingual_retrieve, english_count,
                       translation_documents, translation_status, translation_profile)
 from .source_cache import convert_excel, SUFFIX
-from . import semantic
+from . import semantic, nli
 from .llm_trace import LLMTrace
 from .storage import apply_reviews, accept_pending_reviews, ingest, import_summary, prepared_record, validate_workers, NormalizationBatchError
 
@@ -41,7 +42,7 @@ STATIC = {
     '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
 }
 GET_API = {'/api/state', '/api/job', '/api/records', '/api/record', '/api/llm-messages'}
-POST_API = {'/api/inspect', '/api/import', '/api/import-many', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/conversation/reset', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop'}
+POST_API = {'/api/inspect', '/api/import', '/api/import-many', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/conversation/reset', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop', '/api/claim-guard/prepare'}
 PUBLIC_CONFIG = ('model', 'base_url', 'reasoning_effort', 'timeout_seconds',
                  'max_context_chars', 'max_tokens', 'context_window', 'temperature', 'top_p',
                  'answer_max_tokens', 'answer_temperature', 'answer_top_p')
@@ -142,6 +143,7 @@ class App:
         self.normalization_workers = validate_workers(self.config.get('normalization_workers', 200))
         self.auto_english = True
         self.reference_limit = 3
+        self.claim_guard_mode = validate_mode(self.config.get('claim_guard_mode', 'off'))
         self._load_settings()
         self.sessions = {self.token: {'seen': time.monotonic(), 'job': self._idle_job(), 'reference_limit': self.reference_limit}}
         self.questions = deque()
@@ -183,6 +185,8 @@ class App:
         return text[:500]
 
     def public_error(self, error):
+        if isinstance(error, VerificationError):
+            return self.redact(error), error.code
         if isinstance(error, NormalizationBatchError):
             return self.redact(str(error).split('\n', 1)[0]), 'normalization_partial'
         if isinstance(error, ApiError):
@@ -199,7 +203,20 @@ class App:
         result = {key: self.config[key] for key in PUBLIC_CONFIG if key in self.config}
         result['embedding_model'] = (self.config.get('embedding') or {}).get('model', '')
         result['embedding_auto_index'] = self.auto_index_enabled()
+        result['claim_guard_mode'] = self.claim_guard_mode
         return result
+
+    def prepare_claim_guard(self, body):
+        if not isinstance(body, dict) or set(body) != {'download'} or type(body['download']) is not bool:
+            raise ApiError(400, '검사 모델 준비에는 download(참/거짓)만 지정하세요.')
+        def work():
+            self.set_stage('영어 근거 검사 모델 다운로드·준비 중' if body['download'] else '영어 근거 검사 모델 확인 중')
+            try:
+                return nli.prepare_model(download=body['download'])
+            except nli.NLIError as error:
+                raise ApiError(503, self.redact(error), 'verification_unavailable') from error
+        self.start_job('claim_guard_prepare', work)
+        return {'accepted': True, 'kind': 'claim_guard_prepare'}
 
     def auto_index_enabled(self):
         cfg = self.config.get('embedding') or {}
@@ -284,6 +301,8 @@ class App:
                    'resolved_question': details.get('resolved_question', question),
                    'candidate_ids': [hit.get('record_id', hit['id']) for hit in hits],
                    'validation_events': details.get('validation_events', []),
+                   'claim_verification': details.get('claim_verification'),
+                   'verification_attempts': details.get('verification_attempts', []),
                    'attempts': details.get('attempts', 0)}
         text = json.dumps(payload, ensure_ascii=False)
         for secret in (self.config.get('api_key'), (self.config.get('embedding') or {}).get('api_key')):
@@ -328,6 +347,8 @@ class App:
             self.reference_limit = saved['reference_limit']
         if 'normalization_workers' in saved:
             self.normalization_workers = validate_workers(saved['normalization_workers'])
+        if 'claim_guard_mode' in saved:
+            self.claim_guard_mode = validate_mode(saved['claim_guard_mode'])
         excel = saved.get('excel')
         reader = saved.get('reader')
         if saved.get('sheet') in (SHEET, *HISTORY_SCHEMAS):
@@ -342,12 +363,13 @@ class App:
             except ApiError:
                 self.excel = None
 
-    def save_settings(self, workers=None, auto_english=None, reference_limit=None):
+    def save_settings(self, workers=None, auto_english=None, reference_limit=None, claim_guard_mode=None):
         payload = {'excel': self.excel_text or (str(self.excel) if self.excel else ''),
                    'sheet': self.input_sheet, 'reader': self.reader,
                    'normalization_workers': self.normalization_workers if workers is None else workers,
                    'auto_english': self.auto_english if auto_english is None else auto_english,
-                   'reference_limit': self.reference_limit if reference_limit is None else reference_limit}
+                   'reference_limit': self.reference_limit if reference_limit is None else reference_limit,
+                   'claim_guard_mode': self.claim_guard_mode if claim_guard_mode is None else claim_guard_mode}
         temporary = self.settings_path.with_suffix('.tmp')
         try:
             temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
@@ -358,8 +380,8 @@ class App:
     def update_settings(self, body):
         self._begin_sync()
         try:
-            if not isinstance(body, dict) or not body or set(body) - {'normalization_workers', 'auto_english', 'reference_limit'}:
-                raise ApiError(400, '동시 처리 수·영어 자동 갱신·참고 사례 수만 설정할 수 있습니다.')
+            if not isinstance(body, dict) or not body or set(body) - {'normalization_workers', 'auto_english', 'reference_limit', 'claim_guard_mode'}:
+                raise ApiError(400, '동시 처리 수·영어 자동 갱신·참고 사례 수·영어 근거 검사 모드만 설정할 수 있습니다.')
             reference_limit = body.get('reference_limit', self.reference_limit)
             if type(reference_limit) is not int or not 0 <= reference_limit <= 100:
                 raise ApiError(400, '참고 사례 수는 0(자동) 또는 1~100 사이 정수여야 합니다.')
@@ -368,13 +390,16 @@ class App:
                 raise ApiError(400, '영어 자동 갱신 여부는 참 또는 거짓이어야 합니다.')
             try:
                 workers = validate_workers(body.get('normalization_workers', self.normalization_workers))
+                guard_mode = validate_mode(body.get('claim_guard_mode', self.claim_guard_mode))
             except ValueError as error:
                 raise ApiError(400, str(error)) from error
-            self.save_settings(workers=workers, auto_english=auto_english, reference_limit=reference_limit)
+            self.save_settings(workers=workers, auto_english=auto_english, reference_limit=reference_limit, claim_guard_mode=guard_mode)
             self.normalization_workers = workers
             self.auto_english = auto_english
             self.reference_limit = reference_limit
-            return {'normalization_workers': workers, 'auto_english': auto_english, 'reference_limit': reference_limit}
+            self.claim_guard_mode = guard_mode
+            return {'normalization_workers': workers, 'auto_english': auto_english, 'reference_limit': reference_limit,
+                    'claim_guard_mode': guard_mode}
         finally:
             self._end_sync()
 
@@ -614,7 +639,11 @@ class App:
             'schema_columns': list(schema['columns']),
             'header_aliases': dict(self.header_aliases),
             'normalization_workers': self.normalization_workers,
-            'settings': {'auto_english': self.auto_english, 'reference_limit': self.sessions[owner]['reference_limit'] if owner else self.reference_limit},
+            'settings': {'auto_english': self.auto_english, 'reference_limit': self.sessions[owner]['reference_limit'] if owner else self.reference_limit,
+                         'claim_guard_mode': self.claim_guard_mode},
+            'claim_guard': {key: self.redact(value) if isinstance(value, str) else value
+                            for key, value in nli.status().items() if key in
+                            ('ready', 'loaded', 'dependencies_ready', 'model_cached', 'message', 'error', 'code')},
             'db': summary,
             'config': self.public_config(),
             'embedding_status': dict(self.embedding_status),
@@ -915,7 +944,7 @@ class App:
             history = list(self.sessions[owner or self.token].get('conversation', [])) if follow_up else []
         if follow_up and not history:
             raise ApiError(400, '이어서 질문할 이전 답변이 없습니다. 먼저 새 질문을 입력하세요.')
-        answer_settings = self.config | {'answer_instruction_language': language}
+        answer_settings = self.config | {'answer_instruction_language': language, 'claim_guard_mode': self.claim_guard_mode}
         bilingual = body.get('bilingual', False)
         if type(bilingual) is not bool:
             raise ApiError(400, '영어 검색 사용 여부는 참 또는 거짓이어야 합니다.')
@@ -1001,7 +1030,7 @@ class App:
                             if reference_limit == 0:
                                 self.set_stage('답변 모델의 문맥 한도·참고 사례 분량 확인 중')
                                 hits, answer_config = select_answer_cases(answer_settings, resolved_question, hits, details=details)
-                            self.set_stage('답변 생성 중')
+                            self.set_stage('답변 생성·영어 근거 검사 중' if answer_settings['claim_guard_mode'] != 'off' else '답변 생성 중')
                             reply, _context = answer(client, answer_config, resolved_question, hits, details=details)
                             code = details.get('answer_status', 'ok')
                         except Exception as error:
@@ -1013,7 +1042,10 @@ class App:
                                     for k, v in event.items() if k != 'response'}
                                     for event in details.get('validation_events', [])]}
                             result = pack_answer(question, text, hits, None, summary, time.monotonic()-started, code=failure_code)
-                            raise ApiError(422 if failure_code == 'validation_failed' else 500, text, failure_code,
+                            http_status = (422 if failure_code in ('validation_failed', 'verification_overlength', 'verification_empty') else
+                                           504 if failure_code == 'verification_timeout' else
+                                           503 if failure_code == 'verification_unavailable' else 500)
+                            raise ApiError(http_status, text, failure_code,
                                            extra={'answer_result': result}) from error
                         finally:
                             self.save_answer_diagnostics(question, hits, details, details.get('answer_status', 'error'))
@@ -1326,6 +1358,8 @@ class App:
                         send_json(handler, 200, {'reference_limit': limit})
                     else:
                         send_json(handler, 200, self.update_settings(body))
+                elif path == '/api/claim-guard/prepare':
+                    send_json(handler, 202, self.prepare_claim_guard(body))
                 else:
                     send_json(handler, 200, self.header_mappings(body))
             else:
@@ -1426,6 +1460,7 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
         'note': (details or {}).get('note'),
         'validation_events': [{k: v for k, v in event.items() if k not in ('response', 'response_text')}
                               for event in (details or {}).get('validation_events', [])],
+        'claim_verification': (details or {}).get('claim_verification'),
         'search': (details or {}).get('search'),
         'vector_search': (details or {}).get('vector_search'),
         'references': (details or {}).get('references'),
