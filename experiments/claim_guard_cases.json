@@ -1,0 +1,647 @@
+{
+  "format": "claim-guard-synthetic-v1",
+  "date": "2026-10-01",
+  "scope": "손수 작성한 합성 개발 탐침입니다. 보이는 개발 라벨이며 숨긴 평가 라벨이 아닙니다. 원문 셀과 상세 출처 ID가 근거입니다.",
+  "segmentation_note": "각 사례의 답변 항목(한두 문장)을 하나의 비교 쌍으로 평가합니다. 전체 LLM 답변의 문장·사실 분할은 포함하지 않습니다.",
+  "english_note": "영어 문장은 손으로 쓴 대응 표현이며 번역 파이프라인이나 번역 품질의 증거가 아닙니다.",
+  "ground_truth_note": "질문과 검색된 전체 문서는 증거가 아닙니다. 선택한 상세에서 실제로 인용한 원문 셀만 사용합니다. 같은 CS의 다른 상세는 근거가 아닙니다.",
+  "probe_note": "고정 합성 개발 탐침이며 생산 게이트나 편향 없는 정확도 추정이 아닙니다. 모델을 채택하거나 임계값을 라벨에 맞춰 조정하지 않습니다.",
+  "cases": [
+    {
+      "id": "CG-PLAN-01",
+      "category": "planned_vs_completed",
+      "question": {"ko": "펌프 누수 조치는?", "en": "What action was taken for the pump leak?"},
+      "sources": [
+        {
+          "id": "누적28상세:plan01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PLAN-01", "현상": "펌프 누수", "조치": "씰 교체 예정"},
+          "cells_en": {"현상": "Pump leak", "조치": "Seal replacement is planned"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:plan01/접수", "column": "조치"}],
+      "claim": {"ko": "씰 교체가 예정되어 있습니다.", "en": "Seal replacement is planned."},
+      "expected_semantic": "supported",
+      "rationale": "인용한 조치 셀의 예정 사실을 같은 의미로 옮겼습니다."
+    },
+    {
+      "id": "CG-PLAN-02",
+      "category": "planned_vs_completed",
+      "question": {"ko": "펌프 누수 조치는?", "en": "What action was taken for the pump leak?"},
+      "sources": [
+        {
+          "id": "누적28상세:plan02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PLAN-02", "현상": "펌프 누수", "조치": "씰 교체 예정"},
+          "cells_en": {"현상": "Pump leak", "조치": "Seal replacement is planned"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:plan02/접수", "column": "조치"}],
+      "claim": {"ko": "씰 교체를 완료했습니다.", "en": "The seal replacement was completed."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "예정만으로는 완료 여부가 정해지지 않습니다. 인용 근거에는 완료가 없습니다."
+    },
+    {
+      "id": "CG-PLAN-03",
+      "category": "planned_vs_completed",
+      "question": {"ko": "필터 청소는 끝났나요?", "en": "Was the filter cleaning finished?"},
+      "sources": [
+        {
+          "id": "누적28상세:plan03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PLAN-03", "현상": "유량 저하", "조치": "필터 청소 계획만 기록됨"},
+          "cells_en": {"현상": "Flow drop", "조치": "Only a filter cleaning plan is recorded"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:plan03/접수", "column": "조치"}],
+      "claim": {"ko": "필터 청소는 계획으로만 기록되어 있습니다.", "en": "Filter cleaning is recorded only as a plan."},
+      "expected_semantic": "supported",
+      "rationale": "계획만 있다는 원문 범위를 유지했습니다."
+    },
+    {
+      "id": "CG-PLAN-04",
+      "category": "planned_vs_completed",
+      "question": {"ko": "필터 청소는 끝났나요?", "en": "Was the filter cleaning finished?"},
+      "sources": [
+        {
+          "id": "누적28상세:plan04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PLAN-04", "현상": "유량 저하", "조치": "필터 청소 예정"},
+          "cells_en": {"현상": "Flow drop", "조치": "Filter cleaning is scheduled"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:plan04/접수", "column": "조치"}],
+      "claim": {"ko": "현재 필터 청소가 아직 미완료입니다.", "en": "The filter cleaning is still incomplete now."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "계획만으로는 현재 미완료 상태가 확인되지 않습니다."
+    },
+    {
+      "id": "CG-REC-01",
+      "category": "recurrence_unconfirmed",
+      "question": {"ko": "교체 후 재발은?", "en": "Did the issue recur after replacement?"},
+      "sources": [
+        {
+          "id": "누적28상세:rec01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-REC-01", "현상": "펌프 누수", "조치": "씰 교체 후 30분 관찰 중 재발 없음. 장기 재발 미확인."},
+          "cells_en": {"현상": "Pump leak", "조치": "After seal replacement, no recurrence during a 30-minute watch. Long-term recurrence is unconfirmed."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:rec01/접수", "column": "조치"}],
+      "claim": {"ko": "30분 관찰 중 재발은 없었고 장기 재발은 미확인입니다.", "en": "There was no recurrence during the 30-minute watch, and long-term recurrence is unconfirmed."},
+      "expected_semantic": "supported",
+      "rationale": "단기 관찰과 장기 미확인을 함께 보존했습니다."
+    },
+    {
+      "id": "CG-REC-02",
+      "category": "recurrence_unconfirmed",
+      "question": {"ko": "교체 후 재발은?", "en": "Did the issue recur after replacement?"},
+      "sources": [
+        {
+          "id": "누적28상세:rec02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-REC-02", "현상": "펌프 누수", "조치": "씰 교체 후 30분 관찰 중 재발 없음. 장기 재발 미확인."},
+          "cells_en": {"현상": "Pump leak", "조치": "After seal replacement, no recurrence during a 30-minute watch. Long-term recurrence is unconfirmed."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:rec02/접수", "column": "조치"}],
+      "claim": {"ko": "재발이 없어 영구적으로 해결되었습니다.", "en": "It was permanently resolved because there was no recurrence."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "짧은 관찰과 장기 미확인만으로는 영구 해결이 성립하지 않습니다."
+    },
+    {
+      "id": "CG-REC-03",
+      "category": "recurrence_unconfirmed",
+      "question": {"ko": "재기동 후 상태는?", "en": "What was the status after restart?"},
+      "sources": [
+        {
+          "id": "누적28상세:rec03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-REC-03", "현상": "간헐 알람", "조치": "10분 관찰 중 이상 없음. 장기 미확인."},
+          "cells_en": {"현상": "Intermittent alarm", "조치": "No abnormality during a 10-minute watch. Long-term status is unconfirmed."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:rec03/접수", "column": "조치"}],
+      "claim": {"ko": "10분 관찰 중 이상은 없었으며 장기 여부는 미확인입니다.", "en": "There was no abnormality during the 10-minute watch, and the long-term status is unconfirmed."},
+      "expected_semantic": "supported",
+      "rationale": "짧은 관찰과 미확인 한계를 그대로 적었습니다."
+    },
+    {
+      "id": "CG-REC-04",
+      "category": "recurrence_unconfirmed",
+      "question": {"ko": "재기동 후 상태는?", "en": "What was the status after restart?"},
+      "sources": [
+        {
+          "id": "누적28상세:rec04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-REC-04", "현상": "간헐 알람", "조치": "10분 관찰 중 이상 없음. 장기 미확인."},
+          "cells_en": {"현상": "Intermittent alarm", "조치": "No abnormality during a 10-minute watch. Long-term status is unconfirmed."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:rec04/접수", "column": "조치"}],
+      "claim": {"ko": "이상이 없어 해결이 확정되었습니다.", "en": "Resolution was confirmed because there was no abnormality."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "제한된 관찰과 장기 미확인만으로는 해결 확정이 성립하지 않습니다."
+    },
+    {
+      "id": "CG-FAIL-01",
+      "category": "failed_vs_successful",
+      "question": {"ko": "센서 교체 결과는?", "en": "What was the result of sensor replacement?"},
+      "sources": [
+        {
+          "id": "누적28상세:fail01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-FAIL-01", "현상": "신호 끊김", "조치": "센서 교체 후에도 동일 증상 발생."},
+          "cells_en": {"현상": "Signal drop", "조치": "The same symptom continued after sensor replacement."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:fail01/접수", "column": "조치"}],
+      "claim": {"ko": "센서 교체 후에도 동일 증상이 발생했습니다.", "en": "The same symptom occurred even after sensor replacement."},
+      "expected_semantic": "supported",
+      "rationale": "실패한 조치 결과를 원문 그대로 옮겼습니다."
+    },
+    {
+      "id": "CG-FAIL-02",
+      "category": "failed_vs_successful",
+      "question": {"ko": "센서 교체 결과는?", "en": "What was the result of sensor replacement?"},
+      "sources": [
+        {
+          "id": "누적28상세:fail02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-FAIL-02", "현상": "신호 끊김", "조치": "센서 교체 후에도 동일 증상 발생."},
+          "cells_en": {"현상": "Signal drop", "조치": "The same symptom continued after sensor replacement."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:fail02/접수", "column": "조치"}],
+      "claim": {"ko": "센서 교체 후 정상화되었습니다.", "en": "Normal operation was restored after sensor replacement."},
+      "expected_semantic": "contradicted",
+      "rationale": "실패한 조치에 원문에 없는 정상화를 붙였습니다."
+    },
+    {
+      "id": "CG-FAIL-03",
+      "category": "failed_vs_successful",
+      "question": {"ko": "재기동 효과는?", "en": "Did restarting help?"},
+      "sources": [
+        {
+          "id": "누적28상세:fail03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-FAIL-03", "현상": "운전 중 알람", "조치": "재기동 후에도 알람이 지속됨."},
+          "cells_en": {"현상": "Alarm during operation", "조치": "The alarm continued after restart."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:fail03/접수", "column": "조치"}],
+      "claim": {"ko": "재기동 후에도 알람이 지속되었습니다.", "en": "The alarm continued after the restart."},
+      "expected_semantic": "supported",
+      "rationale": "효과가 없었던 재기동을 그대로 설명했습니다."
+    },
+    {
+      "id": "CG-FAIL-04",
+      "category": "failed_vs_successful",
+      "question": {"ko": "재기동 효과는?", "en": "Did restarting help?"},
+      "sources": [
+        {
+          "id": "누적28상세:fail04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-FAIL-04", "현상": "운전 중 알람", "조치": "재기동 후에도 알람이 지속됨."},
+          "cells_en": {"현상": "Alarm during operation", "조치": "The alarm continued after restart."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:fail04/접수", "column": "조치"}],
+      "claim": {"ko": "재기동으로 알람이 해소되었습니다.", "en": "Restarting cleared the alarm."},
+      "expected_semantic": "contradicted",
+      "rationale": "지속된 알람을 해소로 뒤집었습니다."
+    },
+    {
+      "id": "CG-LINK-01",
+      "category": "action_outcome_linkage",
+      "question": {"ko": "신호 끊김 조치는?", "en": "What action was taken for the signal drop?"},
+      "sources": [
+        {
+          "id": "누적28상세:link01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-LINK-01", "현상": "신호 끊김", "조치": "센서 교체 후에도 동일 증상 발생. 배선 수정 후 정상화."},
+          "cells_en": {"현상": "Signal drop", "조치": "The same symptom continued after sensor replacement. Wiring repair restored normal operation."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:link01/접수", "column": "조치"}],
+      "claim": {"ko": "센서 교체 후에도 동일 증상이 발생했습니다. 배선 수정 후 정상화되었습니다.", "en": "The same symptom continued after sensor replacement. Wiring repair restored normal operation."},
+      "expected_semantic": "supported",
+      "rationale": "앞선 실패와 후속 정상화를 조치별로 연결했습니다."
+    },
+    {
+      "id": "CG-LINK-02",
+      "category": "action_outcome_linkage",
+      "question": {"ko": "신호 끊김 조치는?", "en": "What action was taken for the signal drop?"},
+      "sources": [
+        {
+          "id": "누적28상세:link02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-LINK-02", "현상": "신호 끊김", "조치": "센서 교체 후에도 동일 증상 발생. 배선 수정 후 정상화."},
+          "cells_en": {"현상": "Signal drop", "조치": "The same symptom continued after sensor replacement. Wiring repair restored normal operation."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:link02/접수", "column": "조치"}],
+      "claim": {"ko": "센서 교체 후 정상화되었습니다.", "en": "Sensor replacement restored normal operation."},
+      "expected_semantic": "contradicted",
+      "rationale": "후속 조치의 정상화를 앞선 실패 조치에 붙였습니다."
+    },
+    {
+      "id": "CG-LINK-03",
+      "category": "action_outcome_linkage",
+      "question": {"ko": "포토센서 조치는?", "en": "What action was taken for the photo sensor?"},
+      "sources": [
+        {
+          "id": "누적28상세:link03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-LINK-03", "현상": "포토센서 신호 끊김", "조치": "렌즈 세척 후에도 동일 증상 발생. 커넥터 압착 후 정상화."},
+          "cells_en": {"현상": "Photo sensor signal drop", "조치": "The same symptom continued after lens cleaning. Connector crimping restored normal operation."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:link03/접수", "column": "조치"}],
+      "claim": {"ko": "렌즈 세척 후에도 동일 증상이 발생했고, 커넥터 압착 후 정상화되었습니다.", "en": "Lens cleaning did not stop the symptom, and connector crimping restored normal operation."},
+      "expected_semantic": "supported",
+      "rationale": "세척 실패와 압착 성공을 구분했습니다."
+    },
+    {
+      "id": "CG-LINK-04",
+      "category": "action_outcome_linkage",
+      "question": {"ko": "포토센서 조치는?", "en": "What action was taken for the photo sensor?"},
+      "sources": [
+        {
+          "id": "누적28상세:link04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-LINK-04", "현상": "포토센서 신호 끊김", "조치": "렌즈 세척 후에도 동일 증상 발생. 커넥터 압착 후 정상화."},
+          "cells_en": {"현상": "Photo sensor signal drop", "조치": "The same symptom continued after lens cleaning. Connector crimping restored normal operation."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:link04/접수", "column": "조치"}],
+      "claim": {"ko": "렌즈 세척 후 정상화되었습니다.", "en": "Lens cleaning restored normal operation."},
+      "expected_semantic": "contradicted",
+      "rationale": "실패한 세척에 정상화를 연결했습니다."
+    },
+    {
+      "id": "CG-NUM-01",
+      "category": "numbers_signs_units",
+      "question": {"ko": "흡착 압력은?", "en": "What was the vacuum pressure?"},
+      "sources": [
+        {
+          "id": "누적28상세:num01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-NUM-01", "현상": "흡착 부족. 압력 -0.2 MPa.", "조치": "호스 점검"},
+          "cells_en": {"현상": "Poor vacuum. Pressure -0.2 MPa.", "조치": "Hose inspection"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:num01/접수", "column": "현상"}],
+      "claim": {"ko": "압력은 -0.2 MPa입니다.", "en": "The pressure is -0.2 MPa."},
+      "expected_semantic": "supported",
+      "rationale": "부호와 단위를 원문과 같게 옮겼습니다."
+    },
+    {
+      "id": "CG-NUM-02",
+      "category": "numbers_signs_units",
+      "question": {"ko": "흡착 압력은?", "en": "What was the vacuum pressure?"},
+      "sources": [
+        {
+          "id": "누적28상세:num02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-NUM-02", "현상": "흡착 부족. 압력 -0.2 MPa.", "조치": "호스 점검"},
+          "cells_en": {"현상": "Poor vacuum. Pressure -0.2 MPa.", "조치": "Hose inspection"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:num02/접수", "column": "현상"}],
+      "claim": {"ko": "압력은 0.2 MPa입니다.", "en": "The pressure is 0.2 MPa."},
+      "expected_semantic": "contradicted",
+      "rationale": "음수 부호를 뺐습니다."
+    },
+    {
+      "id": "CG-NUM-03",
+      "category": "numbers_signs_units",
+      "question": {"ko": "흡착 압력은?", "en": "What was the vacuum pressure?"},
+      "sources": [
+        {
+          "id": "누적28상세:num03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-NUM-03", "현상": "흡착 부족. 압력 -0.2 MPa.", "조치": "호스 점검"},
+          "cells_en": {"현상": "Poor vacuum. Pressure -0.2 MPa.", "조치": "Hose inspection"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:num03/접수", "column": "현상"}],
+      "claim": {"ko": "압력은 -0.2 kPa입니다.", "en": "The pressure is -0.2 kPa."},
+      "expected_semantic": "contradicted",
+      "rationale": "같은 숫자에 다른 단위를 붙였습니다."
+    },
+    {
+      "id": "CG-NUM-04",
+      "category": "numbers_signs_units",
+      "question": {"ko": "유량은?", "en": "What was the flow rate?"},
+      "sources": [
+        {
+          "id": "누적28상세:num04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-NUM-04", "현상": "유량 1.5 L/min", "조치": "밸브 점검"},
+          "cells_en": {"현상": "Flow 1.5 L/min", "조치": "Valve check"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:num04/접수", "column": "현상"}],
+      "claim": {"ko": "유량은 15 L/min입니다.", "en": "The flow is 15 L/min."},
+      "expected_semantic": "contradicted",
+      "rationale": "원문 숫자 1.5를 15로 바꿨습니다."
+    },
+    {
+      "id": "CG-PART-01",
+      "category": "part_swap_same_cs",
+      "question": {"ko": "이 상세의 교체 부품은?", "en": "Which part was replaced in this detail?"},
+      "sources": [
+        {
+          "id": "누적28상세:part01a/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-01", "현상": "펌프 누수", "조치": "펌프 씰을 교체함", "기인 Unit(부품)": "펌프 씰"},
+          "cells_en": {"현상": "Pump leak", "조치": "The pump seal was replaced", "기인 Unit(부품)": "Pump seal"}
+        },
+        {
+          "id": "누적28상세:part01b/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-01", "현상": "펌프 누수", "조치": "바이패스 배관 밸브를 전면 교체 완료함", "기인 Unit(부품)": "배관 밸브"},
+          "cells_en": {"현상": "Pump leak", "조치": "The bypass pipe valve was fully replaced", "기인 Unit(부품)": "Pipe valve"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:part01a/접수", "column": "조치"}, {"id": "누적28상세:part01a/접수", "column": "기인 Unit(부품)"}],
+      "claim": {"ko": "펌프 씰을 교체했습니다.", "en": "The pump seal was replaced."},
+      "expected_semantic": "supported",
+      "rationale": "같은 CS라도 선택한 상세의 부품만 사용했습니다."
+    },
+    {
+      "id": "CG-PART-02",
+      "category": "part_swap_same_cs",
+      "question": {"ko": "이 상세의 교체 부품은?", "en": "Which part was replaced in this detail?"},
+      "sources": [
+        {
+          "id": "누적28상세:part02a/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-02", "현상": "펌프 누수", "조치": "펌프 씰을 교체함", "기인 Unit(부품)": "펌프 씰"},
+          "cells_en": {"현상": "Pump leak", "조치": "The pump seal was replaced", "기인 Unit(부품)": "Pump seal"}
+        },
+        {
+          "id": "누적28상세:part02b/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-02", "현상": "펌프 누수", "조치": "바이패스 배관 밸브를 전면 교체 완료함", "기인 Unit(부품)": "배관 밸브"},
+          "cells_en": {"현상": "Pump leak", "조치": "The bypass pipe valve was fully replaced", "기인 Unit(부품)": "Pipe valve"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:part02a/접수", "column": "조치"}, {"id": "누적28상세:part02a/접수", "column": "기인 Unit(부품)"}],
+      "claim": {"ko": "배관 밸브를 교체했습니다.", "en": "The pipe valve was replaced."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "씰 조치는 다른 상세의 밸브 교체를 부정하지 않습니다. 인용한 상세에는 밸브 교체가 없습니다."
+    },
+    {
+      "id": "CG-PART-03",
+      "category": "part_swap_same_cs",
+      "question": {"ko": "이 상세의 조치는?", "en": "What action was taken in this detail?"},
+      "sources": [
+        {
+          "id": "누적28상세:part03a/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-03", "현상": "펌프 누수", "조치": "펌프 씰을 교체함", "기인 Unit(부품)": "펌프 씰"},
+          "cells_en": {"현상": "Pump leak", "조치": "The pump seal was replaced", "기인 Unit(부품)": "Pump seal"}
+        },
+        {
+          "id": "누적28상세:part03b/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-03", "현상": "펌프 누수", "조치": "바이패스 배관 밸브를 전면 교체 완료함", "기인 Unit(부품)": "배관 밸브"},
+          "cells_en": {"현상": "Pump leak", "조치": "The bypass pipe valve was fully replaced", "기인 Unit(부품)": "Pipe valve"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:part03a/접수", "column": "조치"}],
+      "claim": {"ko": "바이패스 배관 밸브를 전면 교체 완료함 기록이 있습니다.", "en": "The record says the bypass pipe valve was fully replaced."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "인용하지 않은 다른 상세 문장을 옮겼습니다."
+    },
+    {
+      "id": "CG-PART-04",
+      "category": "part_swap_same_cs",
+      "question": {"ko": "이 접수의 조치는?", "en": "What actions exist on this receipt?"},
+      "sources": [
+        {
+          "id": "누적28상세:part04a/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-04", "현상": "펌프 누수", "조치": "펌프 씰을 교체함", "기인 Unit(부품)": "펌프 씰"},
+          "cells_en": {"현상": "Pump leak", "조치": "The pump seal was replaced", "기인 Unit(부품)": "Pump seal"}
+        },
+        {
+          "id": "누적28상세:part04b/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PART-04", "현상": "펌프 누수", "조치": "바이패스 배관 밸브를 전면 교체 완료함", "기인 Unit(부품)": "배관 밸브"},
+          "cells_en": {"현상": "Pump leak", "조치": "The bypass pipe valve was fully replaced", "기인 Unit(부품)": "Pipe valve"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:part04a/접수", "column": "조치"}],
+      "claim": {"ko": "펌프 씰과 배관 밸브를 모두 교체했습니다.", "en": "Both the pump seal and the pipe valve were replaced."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "선택한 상세의 씰 교체만 인용했습니다. 같은 CS의 밸브 상세는 규칙 검사용 검색 자료로만 두고 모델 전제에는 넣지 않습니다."
+    },
+    {
+      "id": "CG-MISS-01",
+      "category": "missing_support",
+      "question": {"ko": "현상은?", "en": "What was the symptom?"},
+      "sources": [
+        {
+          "id": "누적28상세:miss01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-MISS-01", "현상": "펌프에서 누수가 발생함", "조치": "씰 교체함"},
+          "cells_en": {"현상": "A leak occurred at the pump", "조치": "The seal was replaced"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:miss01/접수", "column": "현상"}],
+      "claim": {"ko": "펌프에서 누수가 발생했습니다.", "en": "A leak occurred at the pump."},
+      "expected_semantic": "supported",
+      "rationale": "인용한 현상 셀만 설명했습니다."
+    },
+    {
+      "id": "CG-MISS-02",
+      "category": "missing_support",
+      "question": {"ko": "조치는?", "en": "What action was taken?"},
+      "sources": [
+        {
+          "id": "누적28상세:miss02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-MISS-02", "현상": "펌프에서 누수가 발생함", "조치": "씰 교체함"},
+          "cells_en": {"현상": "A leak occurred at the pump", "조치": "The seal was replaced"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:miss02/접수", "column": "현상"}],
+      "claim": {"ko": "씰을 교체했습니다.", "en": "The seal was replaced."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "조치는 같은 행에 있으나 인용하지 않았으므로 근거가 아닙니다."
+    },
+    {
+      "id": "CG-MISS-03",
+      "category": "missing_support",
+      "question": {"ko": "조치는?", "en": "What action was taken?"},
+      "sources": [
+        {
+          "id": "누적28상세:miss03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-MISS-03", "현상": "펌프 누수", "조치": "씰 교체함"},
+          "cells_en": {"현상": "Pump leak", "조치": "The seal was replaced"}
+        }
+      ],
+      "citations": [],
+      "claim": {"ko": "씰을 교체했습니다.", "en": "The seal was replaced."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "인용이 비어 있으면 모델에 통과시키기 전에 거절해야 합니다."
+    },
+    {
+      "id": "CG-MISS-04",
+      "category": "missing_support",
+      "question": {"ko": "조치는?", "en": "What action was taken?"},
+      "sources": [
+        {
+          "id": "누적28상세:miss04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-MISS-04", "현상": "펌프 누수", "조치": "오링 하우징을 전면 재가공함"},
+          "cells_en": {"현상": "Pump leak", "조치": "The O-ring housing was fully remachined"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:miss04/접수", "column": "현상"}],
+      "claim": {"ko": "오링 하우징을 전면 재가공함 기록이 있습니다.", "en": "The record says the O-ring housing was fully remachined."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "인용하지 않은 조치 문장을 그대로 옮겼습니다."
+    },
+    {
+      "id": "CG-PARA-01",
+      "category": "paraphrase_list_numbering",
+      "question": {"ko": "필터 조치는?", "en": "What was done to the filter?"},
+      "sources": [
+        {
+          "id": "누적28상세:para01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PARA-01", "현상": "유량 저하", "조치": "1. 필터를 교환함"},
+          "cells_en": {"현상": "Flow drop", "조치": "1. The filter was exchanged"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:para01/접수", "column": "조치"}],
+      "claim": {"ko": "필터를 교체했습니다.", "en": "The filter was replaced."},
+      "expected_semantic": "supported",
+      "rationale": "앞 목록 번호를 빼고 교환을 교체로 바꿔도 같은 사실입니다."
+    },
+    {
+      "id": "CG-PARA-02",
+      "category": "paraphrase_list_numbering",
+      "question": {"ko": "필터 조치는?", "en": "What was done to the filter?"},
+      "sources": [
+        {
+          "id": "누적28상세:para02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PARA-02", "현상": "유량 저하", "조치": "1. 필터를 교환함"},
+          "cells_en": {"현상": "Flow drop", "조치": "1. The filter was exchanged"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:para02/접수", "column": "조치"}],
+      "claim": {"ko": "필터를 두 개 교환했습니다.", "en": "Two filters were exchanged."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "원문은 수량을 말하지 않는데 두 개라고 적었습니다."
+    },
+    {
+      "id": "CG-PARA-03",
+      "category": "paraphrase_list_numbering",
+      "question": {"ko": "배선 조치는?", "en": "What was done to the wiring?"},
+      "sources": [
+        {
+          "id": "누적28상세:para03/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PARA-03", "현상": "접촉 불량", "조치": "배선을 재체결함"},
+          "cells_en": {"현상": "Poor contact", "조치": "The wiring was refastened"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:para03/접수", "column": "조치"}],
+      "claim": {"ko": "배선을 다시 체결했습니다.", "en": "The wiring was fastened again."},
+      "expected_semantic": "supported",
+      "rationale": "재체결의 어휘 의역이며 새 사실이 없습니다."
+    },
+    {
+      "id": "CG-PARA-04",
+      "category": "paraphrase_list_numbering",
+      "question": {"ko": "발주와 교체는?", "en": "What about ordering and replacement?"},
+      "sources": [
+        {
+          "id": "누적28상세:para04/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-PARA-04", "현상": "씰 누설", "조치": "씰 발주 완료. 교체 안함."},
+          "cells_en": {"현상": "Seal leak", "조치": "The seal was ordered. It was not replaced."}
+        }
+      ],
+      "citations": [{"id": "누적28상세:para04/접수", "column": "조치"}],
+      "claim": {"ko": "씰 발주는 완료했고 교체는 하지 않았습니다.", "en": "The seal was ordered, and it was not replaced."},
+      "expected_semantic": "supported",
+      "rationale": "발주와 미교체를 한 문장으로 함께 보존했습니다."
+    },
+    {
+      "id": "CG-QCOND-01",
+      "category": "question_conditions",
+      "question": {"ko": "야간 고속 운전 중 펌프 소음 조치는?", "en": "What action was taken for pump noise during night high-speed operation?"},
+      "sources": [
+        {
+          "id": "누적28상세:qcond01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-QCOND-01", "현상": "펌프에서 이상음이 발생했습니다.", "조치": "볼트를 재체결함"},
+          "cells_en": {"현상": "Abnormal pump noise occurred.", "조치": "The bolts were refastened"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:qcond01/접수", "column": "현상"}, {"id": "누적28상세:qcond01/접수", "column": "조치"}],
+      "claim": {"ko": "펌프에서 이상음이 발생했습니다. 볼트를 재체결했습니다.", "en": "Abnormal pump noise occurred. The bolts were refastened."},
+      "expected_semantic": "supported",
+      "rationale": "질문에만 있는 야간 고속 조건을 넣지 않았고, 이상음 관찰과 볼트 재체결을 인과 없이 각각 적었습니다."
+    },
+    {
+      "id": "CG-QCOND-02",
+      "category": "question_conditions",
+      "question": {"ko": "야간 고속 운전 중 펌프 소음 조치는?", "en": "What action was taken for pump noise during night high-speed operation?"},
+      "sources": [
+        {
+          "id": "누적28상세:qcond02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-QCOND-02", "현상": "펌프에서 이상음이 발생했습니다.", "조치": "볼트를 재체결함"},
+          "cells_en": {"현상": "Abnormal pump noise occurred.", "조치": "The bolts were refastened"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:qcond02/접수", "column": "현상"}, {"id": "누적28상세:qcond02/접수", "column": "조치"}],
+      "claim": {"ko": "야간 고속 운전 중 펌프 이상음이 발생해 볼트를 재체결했습니다.", "en": "Pump noise occurred during night high-speed operation, and the bolts were refastened."},
+      "expected_semantic": "not_mentioned",
+      "rationale": "질문의 야간 고속 조건을 원문 근거처럼 사용했습니다."
+    },
+    {
+      "id": "CG-ZH-01",
+      "category": "mixed_chinese",
+      "question": {"ko": "누수 원인과 운전 시간은?", "en": "What are the leak cause and operating time?"},
+      "sources": [
+        {
+          "id": "누적28상세:zh01/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-ZH-01", "현상": "运行2小时后漏水，原因待确认. 필터 점검만 실시", "조치": "교체 안함"},
+          "cells_en": {"현상": "Leak after 2 hours of operation, cause pending confirmation. Only a filter check was done", "조치": "Not replaced"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:zh01/접수", "column": "현상"}],
+      "claim": {"ko": "2小时 운전 후 누수가 발생했으며 원인은 확인 대기 중이고 필터 점검만 실시했습니다.", "en": "A leak occurred after 2 hours of operation, the cause is pending confirmation, and only a filter check was done."},
+      "expected_semantic": "supported",
+      "rationale": "원문 2小时와 미확인 원인, 필터 점검만 실시한 사실을 보존했습니다. 영어 대응은 2 hours입니다."
+    },
+    {
+      "id": "CG-ZH-02",
+      "category": "mixed_chinese",
+      "question": {"ko": "누수 전 운전 시간은?", "en": "How long did it run before the leak?"},
+      "sources": [
+        {
+          "id": "누적28상세:zh02/접수",
+          "kind": "접수",
+          "cells": {"CS NO": "CS-CG-ZH-02", "현상": "运行2小时后漏水，原因待确认", "조치": "미실시"},
+          "cells_en": {"현상": "Leak after 2 hours of operation, cause pending confirmation", "조치": "Not performed"}
+        }
+      ],
+      "citations": [{"id": "누적28상세:zh02/접수", "column": "현상"}],
+      "claim": {"ko": "2시간 운전 후 누수가 발생했습니다.", "en": "A leak occurred after 2 hours of operation."},
+      "expected_semantic": "supported",
+      "rationale": "2小时와 2시간은 같은 지속 시간입니다. 원문 단위 표기 정책과 의미 참은 별개입니다."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Isolated extras for experiments/claim_guard.py model backends.
+# Production ragkit and windows-demo requirements stay unchanged.
+# Model revisions are pinned in claim_guard.py, not here.
+torch>=2.6,<3
+transformers>=4.48,<5
+sentencepiece
+openpyxl>=3.1,<4
