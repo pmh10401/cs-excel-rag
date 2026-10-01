@@ -18,11 +18,18 @@ def fake_args(output, **overrides):
     values = dict(backend='baseline', dataset=DATASET, output=Path(output), device='cpu',
                   threshold=0.8, local_files_only=False)
     values.update(overrides)
+    if 'language' not in overrides:
+        values['language'] = probe.resolve_language(values['backend'])
     return Namespace(**values)
 
 
 def unsupported_scores(premise, hypothesis):
     return {'nli_label': 'unsupported', 'probabilities': {'unsupported': 0.9, 'supported': 0.1}}
+
+
+def nli_scores(premise, hypothesis):
+    return {'nli_label': 'neutral',
+            'probabilities': {'entailment': 0.1, 'neutral': 0.8, 'contradiction': 0.1}}
 
 
 class ClaimGuardTests(unittest.TestCase):
@@ -322,6 +329,103 @@ class ClaimGuardTests(unittest.TestCase):
             self.assertTrue(report['complete'])
             self.assertTrue(report['complete_with_errors'])
             self.assertGreaterEqual(report['errors'], 1)
+
+    def test_mdeberta_english_uses_cited_english_and_keeps_korean_baseline(self):
+        case = next(item for item in self.data['cases'] if item['id'] == 'CG-PART-02')
+        calls = []
+
+        def model_fn(premise, hypothesis):
+            calls.append((premise, hypothesis))
+            return nli_scores(premise, hypothesis)
+
+        korean = probe.evaluate_case(case, backend='mdeberta', threshold=0.8, model_fn=model_fn)
+        english = probe.evaluate_case(case, backend='mdeberta', threshold=0.8, model_fn=model_fn,
+                                      language='en')
+        self.assertEqual(len(calls), 2)
+        ko_premise, ko_claim = calls[0]
+        en_premise, en_claim = calls[1]
+        self.assertEqual((ko_premise, ko_claim), probe.cited_pair(case, language='ko'))
+        self.assertEqual((en_premise, en_claim), probe.cited_pair(case, language='en'))
+        self.assertEqual(ko_claim, case['claim']['ko'])
+        self.assertEqual(en_claim, case['claim']['en'])
+        self.assertIn('펌프 씰을 교체함', ko_premise)
+        self.assertIn('The pump seal was replaced', en_premise)
+        self.assertIn('Pump seal', en_premise)
+        self.assertNotIn('bypass', en_premise.lower())
+        self.assertNotIn('pipe valve', en_premise.lower())
+        self.assertNotIn(case['question']['en'], en_premise)
+        self.assertNotIn(case['question']['ko'], en_premise)
+        self.assertNotIn('바이패스', en_premise)
+        self.assertNotIn('조치:', en_premise)
+        self.assertEqual(english['compared_pair']['language'], 'en')
+        self.assertEqual(english['compared_pair']['premise'], en_premise)
+        self.assertEqual(english['compared_pair']['hypothesis'], en_claim)
+        self.assertEqual(korean['compared_pair']['language'], 'ko')
+        self.assertEqual(korean['compared_pair']['hypothesis'], case['claim']['ko'])
+        original_baseline = probe.rule_check(case)
+        for key in ('status', 'passed', 'error', 'category'):
+            self.assertEqual(korean['baseline'][key], english['baseline'][key])
+            self.assertEqual(korean['baseline'][key], original_baseline[key])
+
+    def test_language_defaults_invalid_combinations_and_distinct_output(self):
+        baseline = probe.parse_args([])
+        self.assertEqual((baseline.backend, baseline.language, baseline.output),
+                         ('baseline', 'ko', probe.DEFAULT_OUTPUT_ROOT / 'baseline'))
+        mdeberta = probe.parse_args(['--backend', 'mdeberta'])
+        self.assertEqual((mdeberta.language, mdeberta.output),
+                         ('ko', probe.DEFAULT_OUTPUT_ROOT / 'mdeberta'))
+        mdeberta_en = probe.parse_args(['--backend', 'mdeberta', '--language', 'en'])
+        self.assertEqual((mdeberta_en.language, mdeberta_en.output),
+                         ('en', probe.DEFAULT_OUTPUT_ROOT / 'mdeberta-en'))
+        minicheck = probe.parse_args(['--backend', 'minicheck'])
+        self.assertEqual((minicheck.language, minicheck.output),
+                         ('en', probe.DEFAULT_OUTPUT_ROOT / 'minicheck'))
+        with self.assertRaises(ValueError):
+            probe.parse_args(['--backend', 'baseline', '--language', 'en'])
+        with self.assertRaises(ValueError):
+            probe.parse_args(['--backend', 'minicheck', '--language', 'ko'])
+        case = self.data['cases'][0]
+        self.assertEqual(probe.compared_pair(case, 'mdeberta')['language'], 'ko')
+        self.assertEqual(probe.compared_pair(case, 'minicheck')['language'], 'en')
+        with self.assertRaises(ValueError):
+            probe.evaluate_case(case, backend='baseline', threshold=0.8, language='en')
+        with self.assertRaises(ValueError):
+            probe.compared_pair(case, 'minicheck', language='ko')
+        missing = Namespace(backend='mdeberta', dataset=DATASET, device='cpu', threshold=0.8,
+                            local_files_only=False)
+        self.assertEqual(probe.freeze_conditions(missing, self.data)['language'], 'ko')
+        english_args = Namespace(**vars(missing), language='en')
+        self.assertEqual(probe.freeze_conditions(english_args, self.data)['language'], 'en')
+        self.assertNotEqual(mdeberta.output, mdeberta_en.output)
+
+    def test_rejects_english_reuse_of_korean_output_before_model_load(self):
+        case = self.data['cases'][0]
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder)
+            args = fake_args(output, backend='mdeberta', language='ko')
+            probe.ensure_protocol(output, probe.freeze_conditions(args, self.data))
+            first = probe.evaluate_case(case, backend='mdeberta', threshold=0.8, model_fn=nli_scores,
+                                        language='ko')
+            path = output / 'checkpoints' / f'{case["id"]}.json'
+            atomic_report(path, {
+                'protocol_sha256': probe.digest(output / 'protocol.json'),
+                'case_sha256': probe.case_digest(case),
+                'case_id': case['id'],
+                'result': first,
+            })
+            protocol_before = (output / 'protocol.json').read_bytes()
+            checkpoint_before = path.read_bytes()
+            atomic_report(output / 'results.json', {'language': 'ko', 'complete': False, 'results': [first]})
+            results_before = (output / 'results.json').read_bytes()
+            with patch.object(probe, 'load_backend', side_effect=AssertionError('다른 언어에서 모델 적재')) as loader:
+                with self.assertRaises(ValueError):
+                    probe.run(fake_args(output, backend='mdeberta', language='en'))
+            loader.assert_not_called()
+            self.assertEqual((output / 'protocol.json').read_bytes(), protocol_before)
+            self.assertEqual(path.read_bytes(), checkpoint_before)
+            self.assertEqual((output / 'results.json').read_bytes(), results_before)
+            self.assertEqual(sorted(p.name for p in (output / 'checkpoints').glob('*.json')),
+                             [f'{case["id"]}.json'])
 
 
 if __name__ == '__main__':

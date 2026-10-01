@@ -248,6 +248,18 @@ def empty_model_evidence(case, language):
     return not premise.strip()
 
 
+def resolve_language(backend, language=None):
+    if language is None:
+        return 'en' if backend == 'minicheck' else 'ko'
+    if language not in ('ko', 'en'):
+        raise ValueError(f'language는 ko 또는 en이어야 합니다: {language}')
+    if backend == 'baseline' and language != 'ko':
+        raise ValueError('baseline/en은 사용할 수 없습니다. 규칙 검사는 한국어 주장과 원문 셀을 봅니다.')
+    if backend == 'minicheck' and language != 'en':
+        raise ValueError('minicheck/ko는 사용할 수 없습니다. MiniCheck는 영어 입력만 사용합니다.')
+    return language
+
+
 def rule_check(case):
     started = time.perf_counter()
     payload = {'claims': [{'text': case['claim']['ko'],
@@ -266,8 +278,8 @@ def rule_check(case):
     return result
 
 
-def compared_pair(case, backend):
-    language = 'en' if backend == 'minicheck' else 'ko'
+def compared_pair(case, backend, language=None):
+    language = resolve_language(backend, language)
     premise, hypothesis = cited_pair(case, language=language)
     return {
         'language': language,
@@ -278,9 +290,9 @@ def compared_pair(case, backend):
     }
 
 
-def run_model(case, backend, model_fn, threshold):
+def run_model(case, backend, model_fn, threshold, language=None):
     started = time.perf_counter()
-    language = 'en' if backend == 'minicheck' else 'ko'
+    language = resolve_language(backend, language)
     if empty_model_evidence(case, language):
         return {'status': 'empty_evidence', 'passed': False, 'error': '빈 근거는 모델에 통과시키지 않습니다.',
                 'seconds': time.perf_counter() - started, 'review': True}
@@ -319,20 +331,21 @@ def combine(baseline, model, backend):
     return {'status': 'error', 'passed': False, 'note': '결합 판단을 만들지 못했습니다.'}
 
 
-def evaluate_case(case, *, backend, threshold, model_fn=None):
+def evaluate_case(case, *, backend, threshold, model_fn=None, language=None):
     started = time.perf_counter()
+    language = resolve_language(backend, language)
     baseline = rule_check(case)
     if backend == 'baseline':
         model = {'status': 'skipped', 'passed': None, 'seconds': 0.0}
     else:
         if model_fn is None:
             raise ClassifierError('모델 추론 함수가 없습니다.')
-        model = run_model(case, backend, model_fn, threshold)
+        model = run_model(case, backend, model_fn, threshold, language=language)
     return {
         'id': case['id'],
         'category': case['category'],
         'expected_semantic': case['expected_semantic'],
-        'compared_pair': compared_pair(case, backend),
+        'compared_pair': compared_pair(case, backend, language=language),
         'baseline': baseline,
         'model': model,
         'combined': combine(baseline, model, backend),
@@ -392,7 +405,8 @@ def nli_class_counts(results):
     return {'pairs': counts, 'note': 'NLI argmax 클래스는 별도 진단입니다. 주 점수는 지지/미지지이며 보정된 3분류 정확도가 아닙니다.'}
 
 
-def aggregate(results, *, backend, total):
+def aggregate(results, *, backend, total, language=None):
+    language = resolve_language(backend, language)
     baseline, model, combined = (arm_metrics(results, arm) for arm in ('baseline', 'model', 'combined'))
     error_ids = [item['id'] for item in results
                  if item['baseline']['status'] in ERROR_STATUSES
@@ -410,6 +424,7 @@ def aggregate(results, *, backend, total):
         'complete_with_errors': bool(error_ids) or missing > 0,
         'summary': {
             'backend': backend,
+            'language': language,
             'baseline': baseline,
             'model': model,
             'combined': combined,
@@ -475,6 +490,7 @@ def freeze_conditions(args, data):
         'code_sha256': code_digests(),
         'case_ids': [case['id'] for case in data['cases']],
         'backend': backend,
+        'language': resolve_language(backend, getattr(args, 'language', None)),
         'model_id': model_id,
         'revision': revision,
         'device': args.device,
@@ -495,7 +511,7 @@ def ensure_protocol(output, conditions):
     if path.exists():
         saved = json.loads(path.read_text(encoding='utf-8'))
         if saved.get('conditions') != conditions:
-            raise ValueError('고정한 입력·코드·모델·장치·임계값이 달라졌습니다. 새 출력 폴더를 사용하세요.')
+            raise ValueError('고정한 입력·코드·모델·언어·장치·임계값이 달라졌습니다. 새 출력 폴더를 사용하세요.')
         return saved, digest(path)
     if any(output.iterdir()):
         raise ValueError('새 실험은 빈 출력 폴더를 사용하세요.')
@@ -611,6 +627,8 @@ def load_backend(backend, device, local_files_only):
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--backend', choices=('baseline', 'mdeberta', 'minicheck'), default='baseline')
+    parser.add_argument('--language', choices=('ko', 'en'), default=None,
+                        help='모델 입력 언어: mDeBERTa 기본 ko, MiniCheck는 en만 지원합니다.')
     parser.add_argument('--dataset', type=Path, default=Path(__file__).with_name('claim_guard_cases.json'))
     parser.add_argument('--output', type=Path, default=None)
     parser.add_argument('--device', choices=('cpu', 'mps'), default='cpu')
@@ -618,17 +636,22 @@ def parse_args(argv=None):
                         help='라벨에 맞춰 조정하지 않는 고정 진단 임계값입니다.')
     parser.add_argument('--local-files-only', action='store_true')
     args = parser.parse_args(argv)
+    args.language = resolve_language(args.backend, args.language)
     if args.output is None:
-        args.output = DEFAULT_OUTPUT_ROOT / args.backend
+        if args.backend == 'mdeberta' and args.language == 'en':
+            args.output = DEFAULT_OUTPUT_ROOT / 'mdeberta-en'
+        else:
+            args.output = DEFAULT_OUTPUT_ROOT / args.backend
     if type(args.threshold) is not float or not math.isfinite(args.threshold) or not 0 < args.threshold < 1:
         raise ValueError('threshold는 0과 1 사이의 고정 진단값이어야 합니다.')
     return args
 
 
-def empty_report(protocol_hash, total, *, status):
+def empty_report(protocol_hash, total, *, status, language=None):
     return {
         'format': 'claim-guard-probe-v1',
         'status': status,
+        'language': language,
         'progress': f'0/{total}',
         'completed': 0,
         'total': total,
@@ -674,16 +697,18 @@ def read_existing_checkpoints(cases, checkpoints, protocol_hash):
 def run(args, model_fn=None):
     data = load_cases(args.dataset)
     cases = data['cases']
+    language = resolve_language(args.backend, getattr(args, 'language', None))
     conditions = freeze_conditions(args, data)
     _, protocol_hash = ensure_protocol(args.output, conditions)
     target = args.output / 'results.json'
     checkpoints = args.output / 'checkpoints'
-    print(f"탐침 시작 backend={args.backend} cases={len(cases)} output={args.output}", flush=True)
+    print(f"탐침 시작 backend={args.backend} language={language} cases={len(cases)} output={args.output}",
+          flush=True)
     completed, pending = read_existing_checkpoints(cases, checkpoints, protocol_hash)
-    report = empty_report(protocol_hash, len(cases), status='starting')
+    report = empty_report(protocol_hash, len(cases), status='starting', language=language)
     report['results'] = [completed[case['id']] for case in cases if case['id'] in completed]
-    persist_progress(target, report, aggregate(report['results'], backend=args.backend, total=len(cases)),
-                     certify=False)
+    persist_progress(target, report, aggregate(report['results'], backend=args.backend, total=len(cases),
+                                               language=language), certify=False)
     loaded_fn = model_fn
     if pending and args.backend != 'baseline' and loaded_fn is None:
         report['status'] = 'loading_model'
@@ -693,7 +718,7 @@ def run(args, model_fn=None):
             device = resolve_device(args.device)
             loaded_fn = load_backend(args.backend, device, args.local_files_only)
         except Exception as error:
-            stats = aggregate(report['results'], backend=args.backend, total=len(cases))
+            stats = aggregate(report['results'], backend=args.backend, total=len(cases), language=language)
             report.update(stats)
             report.update(status='model_load_failed', complete=False, complete_with_errors=True,
                           missing=len(pending),
@@ -708,15 +733,16 @@ def run(args, model_fn=None):
         if case['id'] in completed:
             result = completed[case['id']]
         else:
-            result = evaluate_case(case, backend=args.backend, threshold=args.threshold, model_fn=loaded_fn)
+            result = evaluate_case(case, backend=args.backend, threshold=args.threshold, model_fn=loaded_fn,
+                                  language=language)
             atomic_report(checkpoints / f'{case["id"]}.json', {
                 'protocol_sha256': protocol_hash, 'case_sha256': case_digest(case),
                 'case_id': case['id'], 'result': result})
             completed[case['id']] = result
         report['results'].append(result)
-        persist_progress(target, report, aggregate(report['results'], backend=args.backend, total=len(cases)),
-                         certify=False)
-        print(f"{report['progress']} {case['id']} baseline={result['baseline']['status']} "
+        persist_progress(target, report, aggregate(report['results'], backend=args.backend, total=len(cases),
+                                                   language=language), certify=False)
+        print(f"{report['progress']} {case['id']} language={language} baseline={result['baseline']['status']} "
               f"model={result['model'].get('status')} passed={result['combined'].get('passed')} "
               f"seconds={result['seconds']:.3f}", flush=True)
     try:
@@ -727,10 +753,10 @@ def run(args, model_fn=None):
         atomic_report(target, report)
         print(f"완료 인증 실패: {error}", flush=True)
         return report
-    persist_progress(target, report, aggregate(report['results'], backend=args.backend, total=len(cases)),
-                     certify=True)
+    persist_progress(target, report, aggregate(report['results'], backend=args.backend, total=len(cases),
+                                               language=language), certify=True)
     print(json.dumps({key: report[key] for key in
-                      ('status', 'progress', 'complete', 'complete_with_errors', 'missing', 'errors')},
+                      ('status', 'progress', 'language', 'complete', 'complete_with_errors', 'missing', 'errors')},
                      ensure_ascii=False), flush=True)
     return report
 
