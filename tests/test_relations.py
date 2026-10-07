@@ -33,6 +33,7 @@ def main(root):
         assert {h['record_id'] for h in hits} == {record_id(a), record_id(c)}, info
         assert all('배수밸브' not in h['content'] for h in hits)
         assert len(info['paths']) == 2 and all(len(p['cells']) == 2 for p in info['paths'])
+        assert {p['receipt'] for p in info['paths']} == {'CS-SAME', 'CS-OTHER'}
         assert any(cell['location'] == '샘플!N2' for p in info['paths'] for cell in p['cells'])
         assert relations.candidates(db, '세정장비 회전척 누수')[0] == []
         for q in ('회전척 진동', '펌프 누수', '회전모듈 회전척 11.8 bar 진동',
@@ -76,6 +77,7 @@ def main(root):
         work_hits, work_info = relations.candidates(db, '회전모듈 배수밸브 진동')
         assert [h['record_id'] for h in work_hits] == ['CS-SPLIT'], work_info
         assert [p['evidence_id'] for p in work_info['paths']] == ['CS-SPLIT/작업2']
+        assert work_info['paths'][0]['receipt'] == 'CS-SPLIT'
         assert {c['column'] for c in work_info['paths'][0]['cells']} == {'UNIT명', 'Part명(2)'}
         before = db.execute('SELECT * FROM rag_relations ORDER BY 1,2,3').fetchall()
         prepared = storage.prepared_record(db, split, public_cells(split), rules)

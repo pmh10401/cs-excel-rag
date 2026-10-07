@@ -116,7 +116,9 @@ def candidates(db, question):
         paths = [dict(column=column, name=value, location=location) for column, value, location in db.execute(
             f'SELECT column_name,source_value,location FROM rag_relations WHERE record_id=? AND section_id=? '
             f'AND entity IN ({marks}) ORDER BY column_name', (identity, section_id, *names))]
-        info['paths'].append({'record_id': identity, 'evidence_id': section_id, 'cells': paths})
+        info['paths'].append({'record_id': identity, 'evidence_id': section_id,
+                              'receipt': section['cells'].get('CS NO') or section['cells'].get('CS 접수번호') or identity,
+                              'cells': paths})
         found.append({'id': document_id, 'record_id': identity, 'kind': '문서', 'content': content,
                       'evidence': sections, 'evidence_ids': [s['id'] for s in sections],
                       'score': len(query_words & set(word_tokens(symptom)))})

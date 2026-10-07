@@ -1366,6 +1366,102 @@ function renderConversation(turns) {
   });
 }
 
+function renderRelations(result) {
+  const panel = $('ask-relations');
+  const list = $('relation-paths');
+  const source = $('relation-source');
+  const relations = result.vector_search && result.vector_search.relations;
+  panel.hidden = !relations;
+  panel.open = false;
+  list.replaceChildren();
+  source.replaceChildren();
+  $('relation-layout').hidden = true;
+  if (!relations) return;
+  const cited = new Set(result.status === 'ok' && !result.comparison
+    ? (result.claims || []).flatMap(c => (c.evidence || []).map(e => e.id)) : []);
+  const paths = (relations.paths || []).slice().sort((a, b) => Number(cited.has(b.evidence_id)) - Number(cited.has(a.evidence_id)));
+  setText($('relation-status'), relations.reason + (paths.length ? ' · 경로 ' + Math.min(10, paths.length) + '/' + paths.length + '개 표시 · 인용된 경로를 먼저 표시합니다.' : ''));
+  if (!paths.length) return;
+  $('relation-layout').hidden = false;
+  source.textContent = '사례를 선택하면 해당 상세의 발생일·현상·원인·조치 원문을 확인할 수 있습니다.';
+  const numbers = new Map();
+  let request = 0;
+  // ponytail: 화면은 최대 10개 경로만 표시합니다. 전체 탐색이 필요하면 기존 목록 검색을 사용합니다.
+  paths.slice(0, 10).forEach(path => {
+    if (!numbers.has(path.record_id)) numbers.set(path.record_id, numbers.size + 1);
+    const work = path.evidence_id.slice(path.record_id.length + 1);
+    const label = (path.receipt || path.record_id) + ' · 상세 ' + numbers.get(path.record_id) + ' · ' + work;
+    const row = document.createElement('li');
+    row.className = 'relation-row';
+    const entities = document.createElement('div');
+    entities.className = 'relation-entities';
+    path.cells.forEach(cell => {
+      const entity = document.createElement('span');
+      entity.className = 'relation-entity';
+      const role = document.createElement('small');
+      role.textContent = cell.column;
+      entity.append(role, document.createTextNode(cell.name));
+      entities.append(entity);
+    });
+    const link = document.createElement('span');
+    link.className = 'relation-link';
+    link.textContent = '함께 기록';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'relation-case';
+    button.setAttribute('aria-controls', 'relation-source');
+    button.setAttribute('aria-pressed', 'false');
+    button.textContent = label;
+    const badge = document.createElement('small');
+    badge.textContent = cited.has(path.evidence_id) ? '답변에 인용됨' : '검색 후보 · 답변 인용 아님';
+    button.dataset.cited = String(cited.has(path.evidence_id));
+    button.append(badge);
+    button.addEventListener('click', async () => {
+      const current = ++request;
+      list.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+      source.replaceChildren();
+      const status = document.createElement('p');
+      status.setAttribute('role', 'status');
+      status.textContent = label + ' · 원문을 불러오는 중입니다.';
+      source.append(status);
+      try {
+        const record = await api('/api/record?id=' + encodeURIComponent(path.record_id));
+        if (current !== request || !list.contains(button)) return;
+        const groups = record.groups.filter(g => g.name === '접수' || g.name === work);
+        const cells = groups.flatMap(g => g.cells);
+        if (path.cells.some(p => !cells.some(c => c.column === p.column && String(c.original).trim() === p.name.trim() && (c.location || '') === (p.location || '')))) {
+          status.textContent = '관계 검색 후 원문이 변경되었습니다. 다시 검색해 경로를 확인하세요.';
+          return;
+        }
+        status.textContent = label + ' · DB에 보존한 원문';
+        const title = document.createElement('h4');
+        title.textContent = record.header['제목'] || '상세 원문';
+        source.append(title);
+        const columns = new Set(path.cells.map(c => c.column));
+        cells.filter(c => columns.has(c.column) || /^(?:불량발생일|불량발생년월|불량발생월|접수일시|접수일자|현상|문제현상|Defect 상세|Defect 유형|원인(?:\([12]\))?|조치|조치내용\([12]\))$/.test(c.column))
+          .forEach(cell => {
+            const item = document.createElement('section');
+            item.className = 'evidence-cell';
+            const heading = document.createElement('h4');
+            heading.textContent = cell.column;
+            const location = document.createElement('p');
+            location.className = 'muted';
+            location.textContent = cell.location || '셀 위치 없음';
+            const quote = document.createElement('pre');
+            quote.className = 'quote';
+            quote.textContent = cell.original == null || String(cell.original).trim() === '' ? '(원문 셀이 비어 있음)' : String(cell.original);
+            item.append(heading, location, quote);
+            source.append(item);
+          });
+      } catch (error) {
+        if (current === request && list.contains(button)) status.textContent = '원문을 불러오지 못했습니다. ' + error.message + ' 사례를 다시 선택하면 재시도합니다.';
+      }
+    });
+    row.append(entities, link, button);
+    list.append(row);
+  });
+}
+
 function renderAsk(job) {
   const result = job.result;
   const failed = job.status === 'error' || (result && result.status && !['ok', 'aggregate', 'no_match', 'insufficient_evidence', 'clarification'].includes(result.status));
@@ -1382,6 +1478,7 @@ function renderAsk(job) {
   $('ask-result').className = 'kind-' + code;
   setText($('ask-result-title'), result.comparison ? '검색 비교' : ASK_TITLE[code] || '답변');
   renderAnswer(result, code === 'ok' && !result.comparison);
+  renderRelations(result);
   setText($('ask-status'), [code === 'ok' && (result.claims || []).length ? '인용·수치 검사 통과' : '',
     result.claim_verification ? {passed: '영어 근거 검사 통과', unsupported: '영어 근거 지지 부족', error: '영어 근거 검사 불가'}[result.claim_verification.status] : '',
     result.elapsed_seconds != null ? result.elapsed_seconds + '초' : ''].filter(Boolean).join(' · '));

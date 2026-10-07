@@ -128,7 +128,9 @@ def main(root):
 
         try:
             with patch.object(web, 'OpenAI', return_value=client):
-                assert 'CS' in request('/')
+                page = request('/')
+                assert 'CS' in page
+                assert all(f'id="{name}"' in page for name in ('ask-relations', 'relation-paths', 'relation-source'))
                 assert request('/api/state')['db']['records'] == 0
                 request('/api/state', auth=False, status=403)
                 request('/api/state', extra={'Host': 'attacker.example'}, status=403)

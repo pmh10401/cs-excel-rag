@@ -82,6 +82,24 @@ button[disabled]{opacity:.5;cursor:not-allowed}
 .evidence-cell .muted{font-size:12px;margin:4px 0}
 .evidence-cell .quote{font-size:14px;line-height:1.7;max-height:360px;overflow:auto}
 #ask-supplements-panel,#ask-details{margin-top:20px;border-top:1px solid #e8e8ed;padding-top:14px;font-size:13px}
+#ask-relations{margin:20px 0;border:1px solid #d8e4f2;border-radius:16px;padding:16px;background:#fafcff}
+#ask-relations>summary{font-weight:600}
+#relation-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+#relation-paths{list-style:none;padding:0;margin:0}
+.relation-row{display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);align-items:center;margin:12px 0}
+.relation-entities{display:grid;gap:6px}
+.relation-entity{display:block;border:1px solid #d2d2d7;border-radius:10px;padding:8px 10px;background:white;overflow-wrap:anywhere;font-size:13px}
+.relation-entity small,.relation-case small{display:block;color:var(--muted);font-size:11px;margin:0 0 3px}
+.relation-link{border-top:1px solid #a4b6ce;color:var(--muted);font-size:10px;text-align:center;padding-top:3px}
+button.relation-case{background:white;border:1px solid #d2d2d7;color:var(--text);text-align:left;font-size:13px;padding:10px;overflow-wrap:anywhere;min-width:0}
+.relation-case[data-cited=true]{border-color:#0071e3;background:#edf4ff}
+.relation-case[data-cited=true] small{color:#0053a6}
+.relation-case[aria-pressed=true]{box-shadow:0 0 0 2px var(--accent)}
+#relation-source{border:1px solid #e8e8ed;border-radius:12px;padding:14px;background:white;min-width:0;max-height:560px;overflow:auto;overflow-wrap:anywhere}
+#relation-source>p{margin-top:0;font-size:13px}
+#relation-source>h4{margin:8px 0}
+#relation-source .quote{font-size:14px;line-height:1.7}
+@media(max-width:1100px){#relation-layout{grid-template-columns:1fr}}
 summary{cursor:pointer}
 summary:focus-visible{outline:3px solid #80baff;outline-offset:3px;border-radius:4px}
 .quote{margin:8px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
@@ -130,6 +148,6 @@ dialog::backdrop{background:rgba(0,0,0,.28)}
 #llm-messages{width:min(1000px,92vw);max-height:85vh;overflow:auto}
 #llm-messages details{margin:12px 0;overflow-wrap:anywhere}
 #llm-messages pre{max-height:45vh;overflow:auto;font-size:13px}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #80baff;outline-offset:3px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,#relation-source:focus-visible{outline:3px solid #80baff;outline-offset:3px}
 @media(max-width:800px){.app{grid-template-columns:1fr}nav{border-right:0;border-bottom:1px solid var(--line);padding:16px}.nav-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.nav-list li{margin:0}.nav-btn{width:auto}#main{padding:20px 16px 48px}.job-banner{margin:12px 16px 0}.review-layout,.cell-compare,.meta,.mapping-row{grid-template-columns:1fr}.output-label{margin-top:12px}}
 @media(prefers-reduced-motion:reduce){button:active{transform:none}}
