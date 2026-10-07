@@ -175,6 +175,30 @@ def main(root):
         assert result['indexed'] == 0 and len(result['failures']) == 2
         assert semantic.build_vectors(db, client, changed, limit=2)['generated'] == 2
         assert semantic.build_vectors(db, client, changed)['indexed'] == len(rows)
+        # 모의 768차원 응답으로 모델 교체·서로 다른 접두사·이전 벡터 보존을 확인합니다.
+        gemma = {'embedding': config['embedding'] | {
+            'model': 'text-embedding-embeddinggemma-2',
+            'document_prefix': 'title: none | text: ',
+            'query_prefix': 'task: search result | query: ',
+            'revision': 'embeddinggemma-2-q8_0-2188ac1d'}}
+        old_vectors = db.execute('SELECT * FROM vector_embeddings ORDER BY source_hash,profile').fetchall()
+        requests = []
+        def gemma_create(**kwargs):
+            requests.append(kwargs)
+            return SimpleNamespace(data=[SimpleNamespace(index=i, embedding=[1.] + [0.]*767)
+                for i in range(len(kwargs['input']))])
+        gemma_client = SimpleNamespace(embeddings=SimpleNamespace(create=gemma_create))
+        assert semantic.vector_count(db, gemma) == 0
+        result = semantic.build_vectors(db, gemma_client, gemma)
+        assert result['dimensions'] == 768 and result['indexed'] == len(rows)
+        assert all(t.startswith('title: none | text: ') for r in requests for t in r['input'])
+        semantic.embed(gemma_client, ['펌프 누수'], semantic.settings(gemma), query=True)
+        assert requests[-1]['input'] == ['task: search result | query: 펌프 누수']
+        for row in old_vectors:
+            assert db.execute('SELECT * FROM vector_embeddings WHERE source_hash=? AND profile=?', row[:2]).fetchone() == row
+        assert semantic.load_index(db, gemma)[1].d == 768
+        for key in ('document_prefix', 'query_prefix', 'revision'):
+            assert semantic.vector_count(db, {'embedding': gemma['embedding'] | {key: 'changed'}}) == 0
         # 원문 삭제 이후 캐시에서도 이전 접수가 사라져야 합니다.
         storage.ingest(db, rows[1:], rules, schema=schema)
         assert 'CS-DEMO-001' not in semantic.load_index(db, config)[0]

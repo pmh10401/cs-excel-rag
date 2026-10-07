@@ -14,8 +14,10 @@
   "embedding": {
     "base_url": "http://127.0.0.1:1234/v1",
     "api_key": "EMPTY",
-    "model": "text-embedding-qwen3-embedding-0.6b",
-    "query_prefix": "Instruct: Given a maintenance symptom, retrieve past equipment failure cases with similar symptoms.\nQuery: ",
+    "model": "text-embedding-embeddinggemma-2",
+    "document_prefix": "title: none | text: ",
+    "query_prefix": "task: search result | query: ",
+    "revision": "embeddinggemma-2-q8_0-2188ac1d",
     "batch_size": 16,
     "min_score": 0.3
   },

@@ -71,6 +71,15 @@ def main(root):
             embedding_runtime.prepare(client, cfg)
         assert all(c.args[0][0].endswith('lms.exe') for c in run.call_args_list)
         assert all(c.kwargs['creationflags'] == 0x08000000 for c in run.call_args_list)
+        # 새 모델은 명시한 ID로 로드하며 구형 cs-embedding의 Qwen 매핑과 섞지 않습니다.
+        gemma = 'text-embedding-embeddinggemma-2'
+        run.reset_mock()
+        run.return_value = NS(returncode=0, stdout=json.dumps(catalog + [
+            {'type': 'embedding', 'modelKey': gemma}]), stderr='')
+        client.models.list.side_effect = [missing, NS(data=[NS(id=gemma)])]
+        embedding_runtime.prepare(client, cfg | {'model': gemma})
+        assert run.call_args_list[-1].args[0][1:] == [
+            'load', gemma, '--identifier', gemma, '--context-length', '8192']
     print('PASS: 임베딩 실행 재사용·로컬 서버/모델 자동 시작·원격/인증 보호·잘못된 모델/CLI 실패')
 
 

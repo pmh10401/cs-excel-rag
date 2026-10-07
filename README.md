@@ -322,7 +322,46 @@ Windows에서는 앞부분을 `.\.venv\Scripts\python.exe demo.py --schema cslis
 
 ## 벡터 검색 추가하기
 
-기존 SQLite 키워드 검색을 유지하며 FAISS FlatIP로 의미가 비슷한 현상을 찾습니다. Mac과 Windows 기본 임베딩은 LM Studio의 `Qwen3-Embedding-0.6B Q8_0`입니다. Mac 모델 ID는 `cs-embedding`, Windows 기본값은 `text-embedding-qwen3-embedding-0.6b`입니다. 답변 모델과 임베딩 모델은 별도입니다.
+2026-10-07 기준: 기존 SQLite 키워드 검색과 FAISS FlatIP를 유지하며 새 예제·Windows 배포 설정의 기본 임베딩을 **EmbeddingGemma 2 Q8_0**으로 바꿨습니다. Mac과 Windows 모델 ID는 `text-embedding-embeddinggemma-2`입니다. 답변 모델은 별도이며 답변 서버·추론 옵션은 바꾸지 않습니다. 기존 설정 파일은 업데이트만으로 덮어쓰지 않으므로 아래 전환 절차를 따르세요.
+
+[Google 공식 모델 카드](https://huggingface.co/google/embeddinggemma-2)에 맞춰 768차원과 8,192토큰 문맥을 사용합니다. 현재 프로그램은 텍스트만 임베딩합니다. 문서 제목은 기존 본문에 보존하고 공통 문서 접두사는 `title: none | text: `, 질문 접두사는 `task: search result | query: `를 사용합니다. Qwen의 질문 접두사를 그대로 사용하지 않습니다. [공식 GGUF](https://huggingface.co/ggml-org/embeddinggemma-2-GGUF)의 텍스트 Q8_0 파일은 309,855,456바이트이며, LM Studio가 보조 파일까지 받으면 다운로드는 약 1.29GB입니다.
+
+### 기존 Qwen 설정에서 전환하기
+
+1. 실행 중인 RAG 앱을 종료하고 기존 `config.json`(Mac은 `mac_config.json`)을 백업합니다. DB와 검토 결과는 유지합니다.
+2. LM Studio의 llama.cpp 런타임을 업데이트하고 `ggml-org/embeddinggemma-2-GGUF`의 `embeddinggemma-2-Q8_0.gguf`를 내려받습니다. Mac에서는 LM Studio 0.4.25+1·런타임 2.53.0에서 실제 응답을 확인했습니다. Windows 런타임은 별도 실기기 확인이 필요합니다.
+
+```sh
+lms runtime update llama.cpp
+lms get https://huggingface.co/ggml-org/embeddinggemma-2-GGUF/blob/main/embeddinggemma-2-Q8_0.gguf --gguf
+lms ls --embedding --json
+lms load text-embedding-embeddinggemma-2 --identifier text-embedding-embeddinggemma-2 --context-length 8192
+```
+
+3. 기존 설정의 **embedding 부분만** 아래 값으로 바꿉니다. 서버 주소·인증키가 다른 환경에서는 기존 임베딩 서버의 값을 유지합니다.
+
+```json
+"embedding": {
+  "base_url": "http://127.0.0.1:1234/v1",
+  "api_key": "EMPTY",
+  "model": "text-embedding-embeddinggemma-2",
+  "document_prefix": "title: none | text: ",
+  "query_prefix": "task: search result | query: ",
+  "revision": "embeddinggemma-2-q8_0-2188ac1d",
+  "batch_size": 16,
+  "min_score": 0.3
+}
+```
+
+4. 앱을 다시 실행하면 새 프로필에 없는 벡터만 자동 생성합니다. **자료 → 벡터 검색 자료**에서 완료 건수를 확인한 뒤 결합 검색을 사용하세요. 새 벡터가 없거나 생성이 실패하면 결합 검색은 키워드 검색으로 진행합니다. 수동 실행은 같은 화면의 **남은 문서 전체 → 벡터 생성 / 이어서 실행**을 사용합니다.
+
+기존 Qwen 벡터는 삭제하지 않고 별도 프로필로 남깁니다. 새 문서·질문 벡터는 같은 모델·접두사·revision으로 생성하므로 1,024차원 Qwen 벡터와 섞이지 않습니다. 되돌리려면 백업한 설정의 embedding 부분을 복원하고 앱을 재시작합니다. 다른 양자화·가중치를 사용하면 revision도 바꾸세요. `min_score: 0.3`은 기존 설정을 유지한 값이며 새 모델의 업무 자료로 보정한 기준은 아닙니다.
+
+Mac 실모델의 한국어·중국어·영어 합성 8문서·8질문 연결 시험에서 기대 사례를 모두 첫 번째로 찾았습니다. 작은 동작 확인이며 Qwen 대비 정확도 향상이나 실제 업무 품질을 증명하는 결과는 아닙니다.
+
+현재 Mac의 10만 가상 기록을 새 프로필로 모두 색인했습니다. 중복 내용을 재사용해 고유 14,542개 벡터를 생성했으며 실패는 0건입니다. 원문·제안·검토의 전후 저장 내용 해시가 일치했고 기존 Qwen 벡터 14,542개도 남아 있습니다. 웹 UI를 다시 실행해 새 모델·검색 가능한 100,000건·추가 생성 0개를 확인했습니다. 전체 오프라인 검사와 Windows 배포본의 독립 압축 해제 검사도 Mac에서 통과했습니다.
+
+설정 백업과 실행 결과는 Git에 올리지 않는 `outputs/embeddinggemma2-20261007/`에 보관합니다. 현재 Mac 설정을 되돌릴 때는 앱 종료 후 해당 폴더의 `mac_config.before.json`에서 embedding 부분을 복원하세요. 동일한 DB에 수동으로 누락분을 생성하는 명령은 `.venv/bin/python cs_rag.py --output outputs/mac-cslist-ui --saved --build-vectors --vector-limit 0`입니다.
 
 **LM Studio 설치·모델 다운로드·설정을 마쳤다면 다음부터 `start.bat`만 실행합니다.** 웹 UI가 로컬 임베딩 서버를 확인하고 필요할 때 시작·모델 로드를 수행합니다. 이미 실행 중인 서버는 재사용합니다. 저장된 DB의 누락 벡터를 이어서 만들며, 파일 변환·검토 저장 후에도 새 자료나 변경된 내용만 자동 생성합니다. 처음에는 키워드 + 벡터 검색이 선택됩니다. 자료 화면에서 자동 준비 상태와 실패 이유를 확인할 수 있습니다.
 
@@ -346,7 +385,7 @@ Windows에서는 앞부분을 `.\.venv\Scripts\python.exe demo.py --schema cslis
 .venv/bin/python cs_rag.py --excel "자료.rag.jsonl.gz" --saved --search-mode hybrid --question "압력이 목표까지 내려가지 않습니다"
 ```
 
-Windows 배포본에는 로컬 LM Studio 주소 `http://127.0.0.1:1234/v1`와 Qwen 임베딩 설정이 들어 있습니다. 기존에 준비한 `config.json`은 유지해도 됩니다. 기존 `gpt-4` 답변 서버는 문장 다듬기·답변에 사용합니다. 다른 임베딩 서버를 쓴다면 `embedding.base_url`, `model`, `api_key`와 모델에 맞는 `query_prefix`를 한 번 지정하세요. 임베딩 키는 답변용 키에서 복사하지 않습니다. 기존 키워드 검색은 그대로 사용할 수 있습니다.
+Windows 배포본에는 로컬 LM Studio 주소 `http://127.0.0.1:1234/v1`와 EmbeddingGemma 2 설정이 들어 있습니다. 기존 `config.json`을 유지하면 기존 모델도 유지됩니다. 새 모델로 바꾸려면 위 전환 절차를 사용하세요. 기존 `gpt-4` 답변 서버는 문장 다듬기·답변에 사용합니다. 다른 임베딩 서버를 쓴다면 `embedding.base_url`, `model`, `api_key`, `document_prefix`, `query_prefix`, `revision`을 해당 모델에 맞춰 지정하세요. 임베딩 키는 답변용 키에서 복사하지 않습니다. 기존 키워드 검색은 그대로 사용할 수 있습니다.
 
 ## 문장 다듬기의 숫자 오류 보정
 

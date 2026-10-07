@@ -442,15 +442,22 @@ Windows 영어 변환도 공통 출력 상한 131,072와 문맥 한도에서 입
 
 벡터 검색 (별도 임베딩 서버 필요)
 --------------------------------
-LM Studio 설치·Qwen3-Embedding-0.6B 다운로드·설정을 마쳤으면 다음부터 start.bat만 실행합니다.
+2026-10-07: 기본 임베딩은 EmbeddingGemma 2 Q8_0(text-embedding-embeddinggemma-2)입니다.
+LM Studio 런타임 업데이트·모델 다운로드·설정을 마쳤으면 다음부터 start.bat만 실행합니다.
 웹 UI 시작 시 임베딩 서버·모델을 확인하고 필요한 경우 자동 시작·로드합니다.
 저장된 DB의 누락 벡터를 생성하고, 변환·검토 저장 후에도 변경분만 자동 갱신합니다.
 임베딩 실패가 이미 저장한 파일·문장·검토를 취소하지는 않습니다. 다음 시작 때 남은 벡터를 재시도합니다.
 자료 화면에 자동 준비 상태·실패 이유가 표시되고, 질문은 키워드 + 벡터 검색으로 시작합니다.
-기존 config.json 설정은 유지해도 됩니다. 새 배포본은 로컬 LM Studio와 Qwen 0.6B를 기본으로 사용합니다.
+기존 config.json을 유지하면 이전 모델도 유지됩니다. 새 배포본은 로컬 LM Studio와 EmbeddingGemma 2를 사용합니다.
+교체 전 config.json을 백업하고 embedding 부분만 새 배포본과 맞춘 뒤 재시작하세요.
+기존 DB·Qwen 벡터는 삭제하지 않습니다. 새 프로필을 생성하고 실패분은 이어서 실행합니다.
+모델 로드 문맥은 8192토큰이며 새 벡터는 768차원입니다. Windows 실기기 검증은 별도입니다.
 embedding.auto_start를 false로 지정하면 자동 서버 시작을, auto_index를 false로 지정하면 자동 벡터 생성을 끕니다.
 base_url: 임베딩 서버의 /v1 주소, model: 실제 임베딩 모델 ID, api_key: 임베딩용 키.
-query_prefix: 해당 모델이 요구하는 질문 접두사. 다른 모델의 접두사를 그대로 쓰지 마세요.
+document_prefix: title: none | text: (마지막 공백 포함)
+query_prefix: task: search result | query: (마지막 공백 포함)
+revision: embeddinggemma-2-q8_0-2188ac1d (다른 가중치이면 변경)
+다른 모델의 접두사를 그대로 쓰지 마세요.
 batch_size: 한 요청의 문서 수(기본 16), min_score: 최소 유사도(기본 0.3).
 같은 모델 ID의 가중치가 바뀌었다면 revision 값을 바꾸고 벡터를 다시 생성하세요.
 gpt-4 답변 서버는 그대로 유지합니다. 이 서버의 임베딩 지원은 확인되지 않았습니다.
