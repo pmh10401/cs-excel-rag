@@ -252,6 +252,8 @@ def rebuild_search(db, prepared, schema, *, rules=None, incremental=False):
         rebuild_english(db, schema, record_ids=changed_ids if incremental else None)
         from .semantic import sync_sources
         sync_sources(db, record_ids=changed_ids if incremental else None)
+        from .relations import sync
+        sync(db, record_ids=changed_ids if incremental else None)
         db.execute('CREATE TABLE IF NOT EXISTS rag_search_meta (id INTEGER PRIMARY KEY CHECK(id=1), signature TEXT NOT NULL)')
         db.execute('INSERT OR REPLACE INTO rag_search_meta VALUES (1,?)', (search_signature(schema, rules),))
     except BaseException:

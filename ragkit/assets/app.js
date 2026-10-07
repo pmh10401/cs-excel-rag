@@ -1438,11 +1438,20 @@ function renderAsk(job) {
       '키워드 후보: ' + vector.keyword_ids.join(', '), '벡터 후보: ' + vector.vector_ids.join(', '),
       '결합 후보: ' + vector.hybrid_ids.join(', '), vector.warning].filter(Boolean).join('\n');
     setText($('ask-search-detail'), (search ? $('ask-search-detail').textContent + '\n\n' : '') + text);
+    if (vector.relations) {
+      const relations = vector.relations;
+      setText($('ask-search-detail'), $('ask-search-detail').textContent + '\n관계 보완: ' + relations.reason +
+        '\n확인한 이름: ' + relations.matches.map(m => m.name).join(', ') +
+        '\n관계 후보: ' + relations.candidate_ids.join(', ') +
+        '\n관계 경로의 원문 셀: ' + relations.paths.map(p => p.evidence_id + ' [' +
+          p.cells.map(c => c.column + ': ' + c.name + (c.location ? ' (' + c.location + ')' : '')).join(' → ') + ']').join('\n'));
+    }
     if (vector.warning) setText($('ask-note'), $('ask-note').textContent + ' · ' + vector.warning);
   }
   const timingLabels = {follow_up: '후속 질문 문맥 확인', source_check: 'DB 원문 확인', index_prepare: '검색 자료 준비',
     keyword: '키워드 검색', bilingual: '한국어·영어 검색', index_load: '벡터 자료 준비',
     embedding: '질문 임베딩', vector_search: '벡터 검색', source_lookup: '근거 원문 조회',
+    relations_prepare: '관계 자료 준비', relations: '관계 후보 조회',
     fusion: '검색 순위 결합', retrieval_total: '검색 전체', answer: '답변 생성·검사', total: '전체'};
   const times = Object.entries(result.timings || {}).filter(([key]) => timingLabels[key])
     .map(([key, value]) => timingLabels[key] + ': ' + Number(value).toFixed(3) + '초');

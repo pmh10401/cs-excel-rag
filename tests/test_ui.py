@@ -472,6 +472,12 @@ def main(root):
                             result = finished()['result']
                         assert retrieve.call_count == 1
                     assert result['vector_search']['vector_ids'] and result['vector_search']['hybrid_ids']
+                    with patch.object(web, 'OpenAI', side_effect=AssertionError('관계 검색 비교에서 답변 모델 호출')):
+                        request('/api/compare-search', {'question': '펌프 물기', 'search_mode': 'graph'}, status=202)
+                        graph_result = finished()['result']
+                    assert graph_result['vector_search']['mode'] == 'graph'
+                    assert graph_result['vector_search']['relations']['status'] == 'skipped'
+                    assert graph_result['timings']['relations_prepare'] >= 0
                 with closing(sqlite3.connect(app.db_path)) as db:
                     assert db.execute('SELECT * FROM normalized_records').fetchall() == saved
                     assert db.execute('SELECT * FROM cell_reviews').fetchall() == reviews

@@ -177,8 +177,9 @@
             <label for="question">문제 현상 또는 질문</label>
             <textarea id="question" name="question" rows="4" required maxlength="2000" placeholder="예: 진공 알람이 반복되고 목표 압력에 늦게 도달합니다. 과거 유사 사례에서 어떤 조치를 했고 결과는 어땠나요?"></textarea>
             <label for="search-mode">검색 방식</label>
-            <select id="search-mode"><option value="keyword">키워드 검색</option><option value="hybrid">키워드 + 벡터 검색</option><option value="vector">벡터 검색</option></select>
+            <select id="search-mode"><option value="keyword">키워드 검색</option><option value="hybrid">키워드 + 벡터 검색</option><option value="vector">벡터 검색</option><option value="graph">키워드 + 벡터 + 관계 보완 (실험)</option></select>
             <p class="muted">접수번호·코드·날짜는 정확 검색을 사용합니다. 결합 검색은 벡터를 사용할 수 없으면 키워드 검색으로 진행하고 이유를 표시합니다.</p>
+            <p class="muted">관계 보완은 원문에 함께 적힌 설비·모듈·부품 이름이 두 종류 이상일 때 사용합니다. 첫 사용 시 관계 자료를 한 번 준비하며, 숫자·부정·정상 조건은 기존 검색을 유지합니다. 연결만으로 원인·조치 성공을 판단하지 않습니다.</p>
             <label for="reference-mode">답변에 전달할 참고 사례 수</label>
             <select id="reference-mode"><option value="manual">직접 지정</option><option value="auto">문맥 길이에 맞춰 자동</option></select>
             <div id="reference-manual-fields">

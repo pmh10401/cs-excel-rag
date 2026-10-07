@@ -948,9 +948,11 @@ class App:
         bilingual = body.get('bilingual', False)
         if type(bilingual) is not bool:
             raise ApiError(400, '영어 검색 사용 여부는 참 또는 거짓이어야 합니다.')
-        search_mode = 'hybrid' if comparison else body.get('search_mode', 'keyword')
-        if search_mode not in ('keyword', 'vector', 'hybrid'):
-            raise ApiError(400, '검색 방식은 keyword, vector, hybrid 중 하나여야 합니다.')
+        search_mode = body.get('search_mode', 'keyword')
+        if search_mode not in ('keyword', 'vector', 'hybrid', 'graph'):
+            raise ApiError(400, '검색 방식은 keyword, vector, hybrid, graph 중 하나여야 합니다.')
+        if comparison and search_mode != 'graph':
+            search_mode = 'hybrid'
         reference_limit = body.get('reference_limit', self.sessions[owner]['reference_limit'] if owner else self.reference_limit)
         if type(reference_limit) is not int or not 0 <= reference_limit <= 100:
             raise ApiError(400, '참고 사례 수는 0(자동) 또는 1~100 사이 정수여야 합니다.')
@@ -994,13 +996,19 @@ class App:
                 stage_started = time.monotonic()
                 aggregate = None if record_ids is not None else count_records(db, resolved_question)
                 timings['aggregate_check'] = round(time.monotonic() - stage_started, 4)
+                if search_mode == 'graph' and not aggregate and record_ids is None:
+                    from .relations import ensure
+                    self.set_stage('관계 검색 자료 확인 중 · 첫 사용은 원문 셀을 한 번 읽습니다')
+                    stage_started = time.monotonic()
+                    ensure(db)
+                    timings['relations_prepare'] = round(time.monotonic() - stage_started, 4)
                 search_started = time.monotonic()
                 hits = []
                 if bilingual and not aggregate:
                     self.set_stage('한국어·영어로 검색 중')
                     with self.llm_client() as client:
                         hits = bilingual_retrieve(db, resolved_question, client, self.config, details=details,
-                                                  limit=max(20, retrieval_limit) if search_mode == 'hybrid' else retrieval_limit,
+                                                  limit=max(20, retrieval_limit) if search_mode in ('hybrid', 'graph') else retrieval_limit,
                                                   search_english=search_mode != 'vector', **scope)
                     timings['bilingual'] = round(time.monotonic() - search_started, 4)
                 if not aggregate and (search_mode != 'keyword' or comparison):

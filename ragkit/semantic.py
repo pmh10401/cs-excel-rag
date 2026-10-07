@@ -305,8 +305,8 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
     if type(limit) is not int or not 1 <= limit <= 100:
         raise ValueError('참고 사례 수는 1~100 사이 정수여야 합니다.')
     candidate_limit = max(20, limit)
-    if mode not in ('keyword', 'vector', 'hybrid'):
-        raise ValueError('검색 방식은 keyword, vector, hybrid 중 하나여야 합니다.')
+    if mode not in ('keyword', 'vector', 'hybrid', 'graph'):
+        raise ValueError('검색 방식은 keyword, vector, hybrid, graph 중 하나여야 합니다.')
     details = details if details is not None else {}
     timings = details.setdefault('timings', {})
     started = time.monotonic()
@@ -319,7 +319,7 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
                                    'warning': '이전 답변에서 선택한 상세의 현재 원문을 정확히 조회했습니다.'}
         return hits
     # 보완어는 결합 검색의 후보에만 사용합니다. 키워드 단독 순위는 보존합니다.
-    keyword = retrieve(db, question, limit=candidate_limit, expand_query=mode == 'hybrid') if keyword_hits is None else keyword_hits
+    keyword = retrieve(db, question, limit=candidate_limit, expand_query=mode in ('hybrid', 'graph')) if keyword_hits is None else keyword_hits
     if keyword_hits is None:
         timings['keyword'] = round(time.monotonic() - started, 4)
     info = {'mode': mode, 'query': question, 'focused_query': focused_query(question),
@@ -336,6 +336,7 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
     if mode == 'keyword':
         return keyword[:limit]
     started = time.monotonic()
+    vector_failed = False
     try:
         options = {'embedding_client': embedding_client} if embedding_client is not None else {}
         vectors = vector_hits(db, question, config, limit=candidate_limit, timings=timings, **options)
@@ -347,12 +348,23 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
             keyword = retrieve(db, question, limit=candidate_limit)
             info['keyword_ids'] = [h['id'] for h in keyword[:limit]]
             info['candidate_ids']['keyword'] = [h['id'] for h in keyword]
-        return keyword[:limit]
+        if mode != 'graph':
+            return keyword[:limit]
+        vector_failed = True
+        vectors = []
     info.update(vector_ids=[h['id'] for h in vectors[:limit]], vector_seconds=round(time.monotonic() - started, 3))
     info['candidate_ids']['vector'] = [h['id'] for h in vectors]
     started = time.monotonic()
     scores, hits = {}, {}
-    for found in (keyword, vectors):
+    related = []
+    if mode == 'graph':
+        from .relations import candidates
+        related, info['relations'] = candidates(db, question)
+        timings['relations'] = round(time.monotonic() - started, 4)
+        info['candidate_ids']['relations'] = [h['id'] for h in related]
+        if vector_failed and not related:
+            return keyword[:limit]
+    for found in (keyword, vectors, related):
         for rank, hit in enumerate(found, 1):
             hits.setdefault(hit['id'], hit)
             scores[hit['id']] = scores.get(hit['id'], 0) + 1 / (60 + rank)
@@ -365,8 +377,8 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
     info['action_diversity'] = {'candidates': len(before),
                                'changed_positions': sum(a['id'] != b['id'] for a, b in zip(before, selected))}
     timings['fusion'] = round(time.monotonic() - started, 4)
-    info['fusion'] = 'rrf_vector_tiebreak'
-    info['hybrid_ids'] = [h['id'] for h in selected] if mode == 'hybrid' else [h['id'] for h in combined[:limit]]
+    info['fusion'] = 'rrf_relations' if related else 'rrf_vector_tiebreak'
+    info['hybrid_ids'] = [h['id'] for h in selected] if mode in ('hybrid', 'graph') else [h['id'] for h in combined[:limit]]
     if mode == 'vector':
         info['vector_ids'] = [h['id'] for h in selected]
     return selected

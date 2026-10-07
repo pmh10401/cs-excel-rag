@@ -57,7 +57,7 @@ def main(root, argv=None):
     mode.add_argument('--translate-english', action='store_true', help='저장된 CS 자료의 영어 검색 자료 생성 / 이어서 실행')
     mode.add_argument('--build-vectors', action='store_true', help='CS 벡터 자료 생성 / 이어서 실행. 문장 다듬기 호출 없음')
     parser.add_argument('--vector-limit', type=int, default=20, help='새로 임베딩할 고유 문서 수. 기본 20, 0은 전체')
-    parser.add_argument('--search-mode', choices=['keyword', 'vector', 'hybrid'], default='keyword', help='질문 검색 방식')
+    parser.add_argument('--search-mode', choices=['keyword', 'vector', 'hybrid', 'graph'], default='keyword', help='질문 검색 방식 (graph는 관계 보완 실험)')
     parser.add_argument('--translation-limit', type=int, default=20, help='이번에 영어로 변환할 접수 수. 기본 20, 0은 전체')
     parser.add_argument('--bilingual', action='store_true', help='원문·영어 번역 질문을 함께 사용하고 한국어로 답변')
     parser.add_argument('--saved', action='store_true', help='Excel을 읽지 않고 등록된 DB 전체 사용. --normalize-only와 함께 사용 가능')
@@ -211,11 +211,14 @@ def main(root, argv=None):
         for question in questions:
             aggregate = count_records(db, question) if schema else None
             detail = {}
+            if args.search_mode == 'graph' and not aggregate:
+                from .relations import ensure
+                ensure(db)
             if args.bilingual and not aggregate:
                 if client is None:
                     client = make_client()
                 hits = bilingual_retrieve(db, question, client, config, details=detail,
-                                          limit=20 if args.search_mode == 'hybrid' else 3,
+                                          limit=20 if args.search_mode in ('hybrid', 'graph') else 3,
                                           search_english=args.search_mode != 'vector')
             else:
                 hits = retrieve(db, question) if not aggregate and args.search_mode == 'keyword' else []

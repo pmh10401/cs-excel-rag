@@ -25,6 +25,7 @@ from tests.test_bulk_reviews import main as test_bulk_reviews
 from tests.test_english import main as test_english
 from tests.test_source_cache import main as test_source_cache
 from tests.test_semantic import main as test_semantic
+from tests.test_relations import main as test_relations
 from tests.test_embedding_startup import main as test_embedding_startup
 
 from tests.test_workflow_auto import main as test_workflow_auto
@@ -71,6 +72,6 @@ def check_db_lifecycle(test):
 
 if __name__ == "__main__":
     for test in (test_windows, test_cslist, test_excel_app, test_rag, test_action_outcomes, test_headers,
-                 test_ui, test_multiuser, test_resume, test_quality, test_parallel, test_search_focus, test_korean_search, test_bulk_reviews, test_english, test_source_cache, test_semantic, test_embedding_startup, test_workflow_auto, test_retrieval_evaluation, test_overnight, test_incremental, test_history_input, test_import_queue, test_detail_claims, test_claim_verification):
+                 test_ui, test_multiuser, test_resume, test_quality, test_parallel, test_search_focus, test_korean_search, test_bulk_reviews, test_english, test_source_cache, test_semantic, test_relations, test_embedding_startup, test_workflow_auto, test_retrieval_evaluation, test_overnight, test_incremental, test_history_input, test_import_queue, test_detail_claims, test_claim_verification):
         check_db_lifecycle(test)
     print('PASS: 모든 파일 DB 연결을 명시적으로 닫았습니다.')
