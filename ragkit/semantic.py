@@ -330,16 +330,38 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
         info['warning'] = f"벡터 검색 범위는 전체 {total}건 중 {info['vector_records']}건입니다. 남은 벡터를 생성하세요."
     info['candidate_ids'] = {'keyword': [h['id'] for h in keyword], 'vector': []}
     details['vector_search'] = info
-    if any(exact_terms(question)) or receipt_number(db, question):
+    codes, dates = exact_terms(question)
+    receipt = receipt_number(db, question)
+    exact = bool(codes or dates or receipt)
+    related = []
+    if mode == 'graph' and not dates and not receipt:
+        from .relations import candidates
+        started = time.monotonic()
+        related, info['relations'] = candidates(db, question)
+        if exact and related:
+            # 정확 검색이 이미 허용한 후보 안에서만 보완합니다. CS·코드 조건을 관계로 넓히지 않습니다.
+            allowed = {h['id'] for h in keyword}
+            related = [h for h in related if h['id'] in allowed]
+            parents = {h['record_id'] for h in related}
+            relation = info['relations']
+            relation['paths'] = [p for p in relation['paths'] if p['record_id'] in parents]
+            relation.update(status='used' if related else 'no_match', candidate_ids=[h['id'] for h in related])
+            if not related:
+                relation['reason'] = '정확 검색 조건에 맞는 후보 안에서 관계 경로를 찾지 못했습니다.'
+        timings['relations'] = round(time.monotonic() - started, 4)
+        info['candidate_ids']['relations'] = [h['id'] for h in related]
+    if exact:
         info.update(mode='exact', warning='접수번호·코드·날짜 조건은 기존 정확 검색을 사용했습니다.')
-        return keyword[:limit]
+        if not related:
+            return keyword[:limit]
+        info['warning'] = '코드 조건의 정확 검색 후보 안에서 관계로 순위를 보완했습니다. 벡터 검색은 생략했습니다.'
     if mode == 'keyword':
         return keyword[:limit]
     started = time.monotonic()
     vector_failed = False
     try:
         options = {'embedding_client': embedding_client} if embedding_client is not None else {}
-        vectors = vector_hits(db, question, config, limit=candidate_limit, timings=timings, **options)
+        vectors = [] if exact else vector_hits(db, question, config, limit=candidate_limit, timings=timings, **options)
     except (ValueError, RuntimeError, APIError) as error:
         if mode == 'vector':
             raise ValueError('벡터 검색을 완료하지 못했습니다. 임베딩 설정과 색인을 확인하세요.') from error
@@ -356,14 +378,8 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
     info['candidate_ids']['vector'] = [h['id'] for h in vectors]
     started = time.monotonic()
     scores, hits = {}, {}
-    related = []
-    if mode == 'graph':
-        from .relations import candidates
-        related, info['relations'] = candidates(db, question)
-        timings['relations'] = round(time.monotonic() - started, 4)
-        info['candidate_ids']['relations'] = [h['id'] for h in related]
-        if vector_failed and not related:
-            return keyword[:limit]
+    if vector_failed and not related:
+        return keyword[:limit]
     for found in (keyword, vectors, related):
         for rank, hit in enumerate(found, 1):
             hits.setdefault(hit['id'], hit)

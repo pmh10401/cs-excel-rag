@@ -66,13 +66,13 @@ def candidates(db, question):
     if not exists(db):
         info['reason'] = '관계 자료가 없어 기존 결합 검색을 유지했습니다.'
         return [], info
-    if re.search(r'\d|아니|않|없|못\s|\b안\s|안됨|정상|제외|미발생|미확인|미실시|미수행|미교체|'
+    if re.search(r'아니|않|없|못\s|\b안\s|안됨|정상|제외|미발생|미확인|미실시|미수행|미교체|'
                  r'예정|계획|보류|가정|의심|또는|혹은|\b(?:not|without|normal|or)\b', question, re.I):
-        info['reason'] = '숫자·부정·정상·불확실·선택 조건은 기존 검색으로 확인합니다.'
+        info['reason'] = '부정·정상·불확실·선택 조건은 기존 검색으로 확인합니다.'
         return [], info
     # 조사만 제거하고 원래 단어 경계와 연속 구절을 유지합니다. 저장 이름을 임의로 번역하지 않습니다.
-    parts = [re.sub(r'(?:에서|으로|에서의|의|은|는|이|가|을|를)$', '', p)
-             for p in re.findall(r'[\w-]+', question)]
+    tokens = re.findall(r'[\w-]+', question)
+    parts = [re.sub(r'(?:에서의|에서|으로|의|은|는|이|가|을|를)$', '', p) for p in tokens]
     names = {key(word) for word in word_tokens(question)}
     names.update(key(''.join(parts[i:i+n])) for n in (1, 2, 3) for i in range(len(parts)-n+1))
     names = sorted(n for n in names if 2 <= len(n) <= 80 and n not in GENERIC)
@@ -90,6 +90,13 @@ def candidates(db, question):
         info['reason'] = '서로 다른 역할의 이름이 두 개 이상 명확할 때만 관계를 보완합니다.'
         return [], info
     names = [entity for _, entity in matched]
+    # 등록된 영문+숫자 코드의 완전한 단어만 제외합니다. 0010·IFEP20 등 부분 일치는 허용하지 않습니다.
+    code_tokens = {token for token, part in zip(tokens, parts)
+                   if key(part) in names and re.fullmatch(r'[a-z][a-z0-9_-]*', key(part))}
+    remaining = re.sub(r'[\w-]+', lambda m: '' if m[0] in code_tokens else m[0], question)
+    if re.search(r'\d', remaining):
+        info['reason'] = '측정값·날짜·수량 또는 등록되지 않은 숫자 코드는 기존 검색으로 확인합니다.'
+        return [], info
     marks = ','.join('?' for _ in names)
     pairs = db.execute(f'SELECT record_id,section_id FROM rag_relations WHERE entity IN ({marks}) '
                        'GROUP BY record_id,section_id HAVING COUNT(DISTINCT kind)=? '

@@ -118,4 +118,39 @@ def main(root):
         assert len(examples) == 4 and len(hits) == len(info['paths']) == 3
         same_cs = [h for h in hits if h['evidence'][0]['cells']['CS NO'] == 'CS-DEMO-001']
         assert len(same_cs) == 2 and {h['evidence'][0]['cells']['기인 Unit(부품)'] for h in same_cs} == {'구동벨트', '회전척'}
-    print('PASS: 관계 조회·같은 CS 상세/작업 분리·셀 위치·숫자/부정/범용명 우회·원자적 갱신·광범위 후보 제한·배포 예제 질문')
+    # 등록된 코드의 숫자만 허용하며 측정값·다른 코드나 정확한 CS 조건을 넓히지 않습니다.
+    coded = [history(f'CS-CODE-{i}', **{'설비': code, '기인 모듈': module,
+             '기인 Unit(부품)': '회전척', '현상': '진동 발생', '조치': '축 정렬'})
+             for i, (code, module) in enumerate((('SIM-ETCH-001', 'IFEP2'),
+                 ('SIM-ETCH-010', 'IFEP2'), ('SIM-ETCH-001', '다른모듈')), 1)]
+    with closing(sqlite3.connect(':memory:')) as db:
+        storage.ingest(db, coded, rules, schema=schema)
+        relations.ensure(db)
+        q = 'sim-etch-001에서 IFEP2의 진동 과거 조치'
+        related, info = relations.candidates(db, q)
+        assert [h['record_id'] for h in related] == [record_id(coded[0])], info
+        assert len(relations.candidates(db, 'IFEP2 회전척 진동')[0]) == 2
+        for bad in ('SIM-ETCH-0010 IFEP2 진동', 'XSIM-ETCH-001 IFEP2 진동',
+                    'SIM-ETCH-001_2 IFEP2 진동', 'SIM-ETCH-001 IFEP20 진동',
+                    'SIM-ETCH-001 IFEP2 11.8bar 진동', 'SIM-ETCH-001 IFEP2 -0.5 진동',
+                    'SIM-ETCH-001 IFEP2 2026-09 진동', 'SIM-ETCH-001 IFEP2 1건 진동',
+                    'SIM-ETCH-001 IFEP2 진동 없음', 'SIM-ETCH-001 IFEP2 정상',
+                    'SIM-ETCH-001 IFEP2 교체 예정'):
+            assert not relations.candidates(db, bad)[0], bad
+        with patch.object(semantic, 'vector_hits', side_effect=AssertionError('코드 정확 조회에 임베딩 호출')):
+            detail = {}
+            chosen = semantic.search_cases(db, q, {}, mode='graph', details=detail)
+            assert chosen[0]['record_id'] == record_id(coded[0])
+            assert detail['vector_search']['relations']['status'] == 'used'
+            assert {h['record_id'] for h in chosen} <= {record_id(coded[0]), record_id(coded[2])}
+            # 정확 검색이 허용한 후보 범위 밖의 관계 경로도 표시하거나 추가하지 않습니다.
+            only_other = [h for h in semantic.retrieve(db, q, limit=20) if h['record_id'] == record_id(coded[2])]
+            detail = {}
+            assert semantic.search_cases(db, q, {}, mode='graph', keyword_hits=only_other, details=detail) == only_other
+            assert not detail['vector_search']['relations']['paths']
+            for bad in ('SIM-ETCH-001 IFEP2 11.8bar 진동', 'SIM-ETCH-001 IFEP2 정상'):
+                assert semantic.search_cases(db, bad, {}, mode='graph') == semantic.search_cases(db, bad, {}, mode='hybrid')
+            with patch.object(relations, 'candidates', side_effect=AssertionError('CS·날짜 조회를 확장했습니다.')):
+                for exact in ('CS NO=CS-CODE-1', 'SIM-ETCH-001 IFEP2 2026-09-01 진동'):
+                    assert semantic.search_cases(db, exact, {}, mode='graph') == semantic.search_cases(db, exact, {}, mode='hybrid')
+    print('PASS: 관계 조회·상세/작업 분리·숫자 코드/측정값 구분·정확 후보 보존·안전 조건·원자적 갱신·배포 예제 질문')
