@@ -115,6 +115,7 @@ function updateLocks() {
   ['inspect-btn', 'import-btn', 'normalize-btn', 'header-mapping-save', 'save-settings', 'normalization-workers', 'auto-english', 'claim-guard-mode', 'prepare-claim-guard', 'vectors-btn', 'vectors-limit', 'review-important', 'review-changed', 'review-grouped'].forEach(function (id) {
     if ($(id)) $(id).disabled = jobLock || reqLock;
   });
+  $('clef-enabled').disabled = jobLock || reqLock || !(ui.last && ui.last.config && ui.last.config.clef_configured);
   ['ask-btn', 'search-mode', 'instruction-language', 'new-conversation-btn'].forEach(id => { $(id).disabled = ui.busy || reqLock; });
   $('compare-btn').disabled = ui.busy || reqLock || ui.followUp;
   $('follow-up-btn').disabled = ui.busy || reqLock || !ui.conversation.length;
@@ -203,6 +204,7 @@ function applyState(s) {
   setText($('vectors-count'), '검색 가능한 벡터: ' + (db.vector_records || 0) + '/' + (db.records || 0) + '건 · 모델: ' + (s.config.embedding_model || '미설정'));
   const embedding = s.embedding_status || {};
   setText($('embedding-auto-status'), embedding.message || (s.config.embedding_auto_index ? '임베딩 자동 준비·갱신 사용' : '벡터 자동 갱신 꺼짐'));
+  renderClefSetting(s);
   $('embedding-auto-status').className = embedding.status === 'error' ? 'error' : 'status';
   if (!ui.searchInitialized) {
     $('search-mode').value = s.config.embedding_auto_index ? 'hybrid' : 'keyword';
@@ -1706,6 +1708,7 @@ function openSettings() {
   $('normalization-workers').value = String((s.settings && s.settings.normalization_workers) || s.normalization_workers || 200);
   $('auto-english').checked = !s.settings || s.settings.auto_english !== false;
   $('claim-guard-mode').value = (s.settings && s.settings.claim_guard_mode) || 'off';
+  $('clef-enabled').checked = !!(s.settings && s.settings.clef_enabled);
   setText($('settings-status'), '');
   showAlert('settings-error', '');
   updateLocks();
@@ -1732,6 +1735,7 @@ async function saveSettings() {
     const result = await api('/api/settings', {method: 'POST', body: {
       normalization_workers: Number($('normalization-workers').value),
       auto_english: $('auto-english').checked,
+      clef_enabled: $('clef-enabled').checked,
       claim_guard_mode: $('claim-guard-mode').value
     }});
     const settings = result.settings || result;
@@ -1739,14 +1743,24 @@ async function saveSettings() {
       ui.last.normalization_workers = settings.normalization_workers;
       ui.last.settings = Object.assign({}, ui.last.settings, settings);
     }
+    renderClefSetting(ui.last || {});
     setText($('settings-status'), '동시 처리 ' + settings.normalization_workers + '건 · 검토 저장 후 영어 자동 갱신 ' +
       (settings.auto_english === false ? '꺼짐' : '켜짐') + ' · 영어 근거 검사 ' +
-      {off: '꺼짐', observe: '결과 기록', enforce: '답변 차단'}[settings.claim_guard_mode] + '으로 저장했습니다.');
+      {off: '꺼짐', observe: '결과 기록', enforce: '답변 차단'}[settings.claim_guard_mode] +
+      ' · Clef 재정렬 ' + (settings.clef_enabled ? '켜짐' : '꺼짐') + '으로 저장했습니다.');
   } catch (err) {
     showAlert('settings-error', err.message);
   } finally {
     setPending(false);
   }
+}
+
+function renderClefSetting(s) {
+  const cfg = s.config || {};
+  setText($('clef-status'), !cfg.clef_configured ? 'Clef 서버 미설정 · 기존 검색 사용' :
+    (s.settings && s.settings.clef_enabled ? 'Clef GPU 재정렬 사용 · ' + cfg.clef_model +
+      ' · 상위 최대 ' + cfg.clef_candidates + '건 · 적용 결과는 처리 정보에서 확인하세요.' :
+      'Clef 재정렬 꺼짐 · 설정에서 켤 수 있습니다.'));
 }
 
 async function prepareClaimGuard() {

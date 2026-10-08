@@ -62,6 +62,7 @@ def run(args):
     app.db_path = args.db.absolute()
     app.config['clef'] = options({'base_url': args.clef_url, 'model': args.clef_model,
                                  'candidates': args.candidates, 'timeout_seconds': args.timeout})
+    app.clef_enabled = True
     if args.answer_model:
         app.config['model'] = args.answer_model
     else:

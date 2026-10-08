@@ -179,6 +179,7 @@
             <label for="search-mode">검색 방식</label>
             <select id="search-mode"><option value="keyword">키워드 검색</option><option value="hybrid">키워드 + 벡터 검색</option><option value="vector">벡터 검색</option><option value="graph">키워드 + 벡터 + 관계 보완 (실험)</option></select>
             <p class="muted">접수번호·코드·날짜는 정확 검색을 사용합니다. 결합 검색은 벡터를 사용할 수 없으면 키워드 검색으로 진행하고 이유를 표시합니다.</p>
+            <p id="clef-status" class="muted" role="status"></p>
             <p class="muted">설비코드를 몰라도 문제 현상으로 검색한 뒤 관계 보기를 펼치면, 반환된 사례의 설비·모듈·부품과 원문을 볼 수 있습니다. 모든 검색 방식에서 표시하며 검색 순위와 조건은 바꾸지 않습니다.</p>
             <p class="muted">관계 보완은 같은 상세·작업에 적힌 설비·모듈·부품 이름이 두 종류 이상일 때 사용합니다. 등록된 숫자 포함 코드도 지원하며, 측정값·날짜·수량·부정·정상 조건은 기존 검색을 유지합니다. 연결만으로 원인·조치 성공을 판단하지 않습니다.</p>
             <label for="reference-mode">답변에 전달할 참고 사례 수</label>
@@ -256,6 +257,8 @@
       </p>
       <p class="muted">기본값은 200건입니다. 서버 성능에 따라 늘려도 빨라지지 않을 수 있습니다. 실행 중에는 변경할 수 없습니다.</p>
       <label class="choice"><input type="checkbox" id="auto-english" checked> 검토 저장 후 영어 자동 갱신</label>
+      <label class="choice"><input type="checkbox" id="clef-enabled"> Clef GPU로 검색 후보 재정렬</label>
+      <p class="muted">준비된 Clef 서버를 사용해 상위 후보의 순서만 보완합니다. 기존 원문·숫자·인용 검사를 유지합니다. 실패하면 이유를 표시하고 기존 검색을 사용합니다. 서버 전체에 적용하며, 정확 조회·집계·고정 상세의 후속 질문은 보존합니다.</p>
       <p><label for="claim-guard-mode">영어 답변 근거 검사</label>
         <select id="claim-guard-mode">
           <option value="off">끔 · 기존 원문 검사 사용</option>

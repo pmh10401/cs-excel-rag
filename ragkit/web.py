@@ -147,6 +147,7 @@ class App:
         self.auto_english = True
         self.reference_limit = 3
         self.claim_guard_mode = validate_mode(self.config.get('claim_guard_mode', 'off'))
+        self.clef_enabled = (self.config.get('clef') or {}).get('enabled', False)
         self._load_settings()
         self.sessions = {self.token: {'seen': time.monotonic(), 'job': self._idle_job(), 'reference_limit': self.reference_limit}}
         self.questions = deque()
@@ -165,7 +166,9 @@ class App:
 
     @contextmanager
     def llm_client(self):
-        with closing(OpenAI(base_url=self.config['base_url'], api_key=self.config['api_key'],
+        from .clef import chat_model
+        model_config = self.config if self.clef_enabled else self.config | {'clef': {}}
+        with chat_model(model_config, self.set_stage, self.output / 'clef_server.log'), closing(OpenAI(base_url=self.config['base_url'], api_key=self.config['api_key'],
                             timeout=self.config['timeout_seconds'], max_retries=0)) as client:
             create = client.chat.completions.create
             owner = self.job.get('owner')
@@ -207,6 +210,9 @@ class App:
         result['embedding_model'] = (self.config.get('embedding') or {}).get('model', '')
         result['embedding_auto_index'] = self.auto_index_enabled()
         result['claim_guard_mode'] = self.claim_guard_mode
+        result['clef_configured'] = bool(self.config.get('clef'))
+        result['clef_model'] = (self.config.get('clef') or {}).get('model', '')
+        result['clef_candidates'] = (self.config.get('clef') or {}).get('candidates', 0)
         return result
 
     def prepare_claim_guard(self, body):
@@ -352,6 +358,8 @@ class App:
             self.normalization_workers = validate_workers(saved['normalization_workers'])
         if 'claim_guard_mode' in saved:
             self.claim_guard_mode = validate_mode(saved['claim_guard_mode'])
+        if type(saved.get('clef_enabled')) is bool:
+            self.clef_enabled = saved['clef_enabled'] and bool(self.config.get('clef'))
         excel = saved.get('excel')
         reader = saved.get('reader')
         if saved.get('sheet') in (SHEET, *HISTORY_SCHEMAS):
@@ -366,13 +374,14 @@ class App:
             except ApiError:
                 self.excel = None
 
-    def save_settings(self, workers=None, auto_english=None, reference_limit=None, claim_guard_mode=None):
+    def save_settings(self, workers=None, auto_english=None, reference_limit=None, claim_guard_mode=None, clef_enabled=None):
         payload = {'excel': self.excel_text or (str(self.excel) if self.excel else ''),
                    'sheet': self.input_sheet, 'reader': self.reader,
                    'normalization_workers': self.normalization_workers if workers is None else workers,
                    'auto_english': self.auto_english if auto_english is None else auto_english,
                    'reference_limit': self.reference_limit if reference_limit is None else reference_limit,
-                   'claim_guard_mode': self.claim_guard_mode if claim_guard_mode is None else claim_guard_mode}
+                   'claim_guard_mode': self.claim_guard_mode if claim_guard_mode is None else claim_guard_mode,
+                   'clef_enabled': self.clef_enabled if clef_enabled is None else clef_enabled}
         temporary = self.settings_path.with_suffix('.tmp')
         try:
             temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
@@ -383,26 +392,32 @@ class App:
     def update_settings(self, body):
         self._begin_sync()
         try:
-            if not isinstance(body, dict) or not body or set(body) - {'normalization_workers', 'auto_english', 'reference_limit', 'claim_guard_mode'}:
-                raise ApiError(400, '동시 처리 수·영어 자동 갱신·참고 사례 수·영어 근거 검사 모드만 설정할 수 있습니다.')
+            if not isinstance(body, dict) or not body or set(body) - {'normalization_workers', 'auto_english', 'reference_limit', 'claim_guard_mode', 'clef_enabled'}:
+                raise ApiError(400, '동시 처리 수·영어 자동 갱신·참고 수·영어 근거 검사·Clef 사용 여부만 설정할 수 있습니다.')
             reference_limit = body.get('reference_limit', self.reference_limit)
             if type(reference_limit) is not int or not 0 <= reference_limit <= 100:
                 raise ApiError(400, '참고 사례 수는 0(자동) 또는 1~100 사이 정수여야 합니다.')
             auto_english = body.get('auto_english', self.auto_english)
             if type(auto_english) is not bool:
                 raise ApiError(400, '영어 자동 갱신 여부는 참 또는 거짓이어야 합니다.')
+            clef_enabled = body.get('clef_enabled', self.clef_enabled)
+            if type(clef_enabled) is not bool:
+                raise ApiError(400, 'Clef 사용 여부는 참 또는 거짓이어야 합니다.')
+            if clef_enabled and not self.config.get('clef'):
+                raise ApiError(400, 'Clef 서버 설정을 먼저 준비하세요.')
             try:
                 workers = validate_workers(body.get('normalization_workers', self.normalization_workers))
                 guard_mode = validate_mode(body.get('claim_guard_mode', self.claim_guard_mode))
             except ValueError as error:
                 raise ApiError(400, str(error)) from error
-            self.save_settings(workers=workers, auto_english=auto_english, reference_limit=reference_limit, claim_guard_mode=guard_mode)
+            self.save_settings(workers=workers, auto_english=auto_english, reference_limit=reference_limit, claim_guard_mode=guard_mode, clef_enabled=clef_enabled)
             self.normalization_workers = workers
             self.auto_english = auto_english
             self.reference_limit = reference_limit
             self.claim_guard_mode = guard_mode
+            self.clef_enabled = clef_enabled
             return {'normalization_workers': workers, 'auto_english': auto_english, 'reference_limit': reference_limit,
-                    'claim_guard_mode': guard_mode}
+                    'claim_guard_mode': guard_mode, 'clef_enabled': clef_enabled}
         finally:
             self._end_sync()
 
@@ -643,7 +658,7 @@ class App:
             'header_aliases': dict(self.header_aliases),
             'normalization_workers': self.normalization_workers,
             'settings': {'auto_english': self.auto_english, 'reference_limit': self.sessions[owner]['reference_limit'] if owner else self.reference_limit,
-                         'claim_guard_mode': self.claim_guard_mode},
+                         'claim_guard_mode': self.claim_guard_mode, 'clef_enabled': self.clef_enabled},
             'claim_guard': {key: self.redact(value) if isinstance(value, str) else value
                             for key, value in nli.status().items() if key in
                             ('ready', 'loaded', 'dependencies_ready', 'model_cached', 'message', 'error', 'code')},
@@ -960,7 +975,7 @@ class App:
         if type(reference_limit) is not int or not 0 <= reference_limit <= 100:
             raise ApiError(400, '참고 사례 수는 0(자동) 또는 1~100 사이 정수여야 합니다.')
         retrieval_limit = reference_limit or 100
-        search_limit = max(retrieval_limit, (self.config.get('clef') or {}).get('candidates', 0))
+        search_limit = max(retrieval_limit, (self.config.get('clef') or {}).get('candidates', 0) if self.clef_enabled else 0)
         if comparison:
             bilingual = False
         if not self.db_path.exists():
@@ -1021,9 +1036,10 @@ class App:
                 elif not aggregate and not bilingual:
                     hits = retrieve(db, resolved_question, limit=search_limit, **scope)
                     timings['keyword'] = round(time.monotonic() - search_started, 4)
-                if not aggregate and record_ids is None and self.config.get('clef'):
+                if not aggregate and record_ids is None and self.clef_enabled:
                     from .clef import rerank
-                    hits = rerank(db, resolved_question, hits, self.config['clef'], details=details, progress=self.set_stage)
+                    hits = rerank(db, resolved_question, hits, self.config['clef'], details=details, progress=self.set_stage,
+                                  log_path=self.output / 'clef_server.log', answer_config=self.config)
                 hits = hits[:retrieval_limit]
                 timings['retrieval_total'] = round(time.monotonic() - search_started, 4)
                 details['references'] = {'mode': 'auto' if reference_limit == 0 else 'manual',

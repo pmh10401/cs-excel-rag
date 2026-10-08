@@ -148,6 +148,9 @@ def main(root):
                 request('/api/ask', {'question': ''}, status=400)
                 assert request('/api/state')['normalization_workers'] == 200
                 request('/api/settings', {'normalization_workers': 2}, auth=False, status=403)
+                request('/api/settings', {'clef_enabled': True}, status=400)
+                assert request('/api/settings', {'clef_enabled': False})['clef_enabled'] is False
+                assert request('/api/state')['config']['clef_configured'] is False
                 for invalid in (0, 1001, True, 2.0, '2', None):
                     request('/api/settings', {'normalization_workers': invalid}, status=400)
                 request('/api/settings', {'normalization_workers': 2, 'api_key': 'changed'}, status=400)

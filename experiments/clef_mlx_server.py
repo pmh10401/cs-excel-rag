@@ -69,7 +69,7 @@ def serve(path, port):
             if self.path not in ('/health', '/api/version'):
                 self.send(404, {'error': '지원하지 않는 경로입니다.'})
                 return
-            self.send(200, {'backend': 'mlx', 'device': 'gpu', 'model': MODEL,
+            self.send(200, {'backend': 'mlx', 'device': 'gpu', 'model': MODEL, 'busy': lock.locked(),
                             'repo': REPO, 'revision': REVISION, 'context_length': 16384})
 
         def do_POST(self):

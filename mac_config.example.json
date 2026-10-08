@@ -10,6 +10,14 @@
   "answer_temperature": 1,
   "claim_guard_mode": "off",
   "claim_guard_timeout_seconds": 120,
+  "clef": {
+    "enabled": false,
+    "base_url": "http://127.0.0.1:11436",
+    "model": "clef:flash",
+    "candidates": 5,
+    "timeout_seconds": 300,
+    "manage_lm_studio": false
+  },
   "embedding": {
     "base_url": "http://127.0.0.1:1234/v1",
     "api_key": "EMPTY",

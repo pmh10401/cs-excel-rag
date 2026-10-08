@@ -1,7 +1,12 @@
 """로컬 Clef의 선택적 후보 재정렬. 원문·후보 수·답변 검사는 보존합니다."""
 import json
 import math
+from contextlib import contextmanager
+from pathlib import Path
+import shutil
+import subprocess
 import time
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
@@ -17,7 +22,16 @@ def options(value):
     if not isinstance(value, dict):
         raise ValueError('Clef 설정은 JSON 객체여야 합니다.')
     cfg = {'base_url': 'http://127.0.0.1:11436', 'model': 'clef:flash',
-           'candidates': 5, 'timeout_seconds': 180, **value}
+           'candidates': 5, 'timeout_seconds': 180, 'enabled': True,
+           'manage_lm_studio': False, **value}
+    for flag in ('enabled', 'manage_lm_studio'):
+        if type(cfg[flag]) is not bool:
+            raise ValueError(f'Clef {flag}는 참 또는 거짓이어야 합니다.')
+    if bool(cfg.get('runtime_python')) != bool(cfg.get('model_path')):
+        raise ValueError('Clef 자동 시작에는 runtime_python과 model_path가 모두 필요합니다.')
+    for key in ('runtime_python', 'model_path'):
+        if key in cfg and (not isinstance(cfg[key], str) or not cfg[key].strip()):
+            raise ValueError(f'Clef {key}에는 로컬 파일 경로를 지정하세요.')
     if not isinstance(cfg['base_url'], str):
         raise ValueError('Clef 서버 주소는 문자열이어야 합니다.')
     address = urlparse(cfg['base_url'])
@@ -34,7 +48,118 @@ def options(value):
     return cfg
 
 
-def rerank(db, question, hits, config, *, details, progress=lambda text: None):
+def _health(cfg):
+    with urlopen(cfg['base_url'].rstrip('/') + '/health', timeout=3) as response:
+        info = json.load(response)
+    if not isinstance(info, dict) or (info.get('model'), info.get('backend'), info.get('device')) != (cfg['model'], 'mlx', 'gpu') or type(info.get('busy')) is not bool:
+        raise ValueError('Clef 포트에 기대한 MLX GPU 서버·작업 상태가 없습니다.')
+    return info
+
+
+def prepare(cfg, progress, log_path):
+    """설정한 MLX 환경만 시작합니다. 설치·다운로드와 다른 서버 종료는 하지 않습니다."""
+    if not cfg.get('runtime_python'):
+        return
+
+    try:
+        _health(cfg)
+        return
+    except HTTPError:
+        raise ValueError('Clef 포트의 기존 서버가 GPU 상태 확인을 지원하지 않습니다.')
+    except URLError as error:
+        if not isinstance(error.reason, ConnectionRefusedError):
+            raise
+    python, model = Path(cfg['runtime_python']).absolute(), Path(cfg['model_path']).absolute()
+    if not python.is_file() or not model.is_dir():
+        raise ValueError('준비한 Clef MLX 환경·모델 폴더를 찾지 못했습니다. 자동 다운로드하지 않습니다.')
+    progress('준비된 Clef MLX GPU 서버 자동 시작 중')
+    root = Path(__file__).resolve().parents[1]
+    log_path = Path(log_path) if log_path else root / 'outputs/clef-runtime/server.log'
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open('ab') as stream:
+        process = subprocess.Popen([str(python), '-u', '-m', 'experiments.clef_mlx_server',
+            '--model-path', str(model), '--port', str(urlparse(cfg['base_url']).port or 80)],
+            cwd=root, stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
+        try:
+            _health(cfg)
+            return
+        except URLError:
+            if process.poll() is not None:
+                break
+            time.sleep(.1)
+    raise ValueError(f'Clef GPU 서버 시작을 확인하지 못했습니다. {log_path.name}을 확인하세요.')
+
+
+def wait_gpu(config, progress, log_path=None):
+    cfg = config['clef']
+    prepare(cfg, progress, log_path)
+    deadline = time.monotonic() + 310
+    while _health(cfg)['busy']:
+        if time.monotonic() >= deadline:
+            raise ValueError('Clef GPU 작업 종료를 확인하지 못했습니다. 답변 모델을 적재하지 않습니다.')
+        progress('Clef GPU 작업 종료 대기 중 · 답변 모델 중복 적재 방지')
+        time.sleep(.25)
+
+
+def _lms(config):
+    if not isinstance(config.get('model'), str) or not config['model'].strip() or config['model'].startswith('-'):
+        raise ValueError('관리할 LM Studio 답변 모델 이름이 올바르지 않습니다.')
+    address = urlparse(config['base_url'])
+    if address.scheme != 'http' or address.hostname not in ('127.0.0.1', 'localhost') or (address.port or 80) != 1234 or address.path.rstrip('/') != '/v1':
+        raise ValueError('Clef의 답변 모델 관리는 로컬 LM Studio 1234/v1에서만 지원합니다.')
+    executable = shutil.which('lms')
+    if not executable:
+        raise ValueError('답변 모델 관리에 필요한 lms CLI를 찾지 못했습니다.')
+    return executable
+
+
+def _run(executable, *args):
+    result = subprocess.run([executable, *args], stdin=subprocess.DEVNULL, capture_output=True,
+                            text=True, encoding='utf-8', errors='replace', timeout=180)
+    if result.returncode:
+        raise ValueError(f'LM Studio {args[0]} 실행에 실패했습니다. 모델 실행 상태를 확인하세요.')
+    return result.stdout
+
+
+def release_chat(config, progress):
+    if not (config.get('clef') or {}).get('manage_lm_studio'):
+        return
+    executable = _lms(config)
+    loaded = json.loads(_run(executable, 'ps', '--json'))
+    if not isinstance(loaded, list) or any(not isinstance(item, dict) for item in loaded):
+        raise ValueError('LM Studio의 실행 모델 목록을 확인할 수 없습니다.')
+    matching = [item for item in loaded if item.get('identifier') == config['model']]
+    if matching:
+        if any(item.get('type') != 'llm' or item.get('status') != 'idle' or item.get('queued') != 0 for item in matching):
+            raise ValueError('설정된 답변 모델이 다른 요청을 처리 중입니다. Clef를 적재하지 않습니다.')
+        progress('설정된 답변 모델 해제 중 · Clef GPU 메모리 확보')
+        _run(executable, 'unload', config['model'])
+
+
+@contextmanager
+def chat_model(config, progress, log_path=None):
+    if not (config.get('clef') or {}).get('manage_lm_studio'):
+        yield
+        return
+    executable = _lms(config)
+    # HTTP 시간 초과로 요청이 먼저 끝나도 GPU 자식의 종료를 확인하고 적재합니다.
+    wait_gpu(config, progress, log_path)
+    release_chat(config, progress)
+    progress('설정된 답변 모델 적재 중 · 16K 문맥 · Clef와 순차 실행')
+    try:
+        _run(executable, 'load', config['model'], '--identifier', config['model'],
+             '--context-length', '16384', '--parallel', '1')
+        yield
+    finally:
+        try:
+            release_chat(config, progress)
+        except (OSError, ValueError, subprocess.TimeoutExpired):
+            print('설정된 답변 모델 해제를 확인하지 못했습니다. lms ps로 확인하세요. 다음 Clef 실행 전에 다시 확인합니다.', flush=True)
+
+
+def rerank(db, question, hits, config, *, details, progress=lambda text: None, log_path=None, answer_config=None):
     cfg = options(config)
     info = {'status': 'skipped', 'model': cfg['model'], 'baseline_ids': [h['id'] for h in hits],
             'reranked_ids': [h['id'] for h in hits], 'scores': [], 'reason': '', 'seconds': 0.0}
@@ -58,6 +183,9 @@ def rerank(db, question, hits, config, *, details, progress=lambda text: None):
     body = {'model': cfg['model'], 'state': state, 'questions': questions, 'keep_alive': 0}
     started = time.monotonic()
     try:
+        if answer_config is not None:
+            release_chat(answer_config, progress)
+        prepare(cfg, progress, log_path)
         progress(f'Clef로 원문 후보 {len(selected)}건의 관련성 판단 중 · 첫 호출은 모델 적재가 필요합니다')
         request = Request(cfg['base_url'].rstrip('/') + '/api/decide',
                           data=json.dumps(body, ensure_ascii=False).encode(),
@@ -90,7 +218,7 @@ def rerank(db, question, hits, config, *, details, progress=lambda text: None):
                     peak_memory_bytes=result.get('peak_memory_bytes'),
                     reason='로컬 Clef로 상위 후보의 순서만 보완했습니다. 점수는 이 후보 안의 상대 선택 확률이며 해결 성공을 뜻하지 않습니다.')
         return ranked
-    except (OSError, ValueError, KeyError, TypeError) as error:
+    except (OSError, ValueError, KeyError, TypeError, subprocess.TimeoutExpired) as error:
         info.update(status='error', scores=[], reason=f'Clef를 적용하지 못해 기존 검색 결과를 유지했습니다. {type(error).__name__}: {str(error)[:200]}')
         return hits
     finally:
