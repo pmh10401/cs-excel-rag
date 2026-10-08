@@ -113,8 +113,9 @@ def candidates(db, question):
                             if k in ('현상', '문제현상', 'Defect 상세', 'Defect 유형'))
         if not required.issubset(search_concepts(symptom)):
             continue
-        paths = [dict(column=column, name=value, location=location) for column, value, location in db.execute(
-            f'SELECT column_name,source_value,location FROM rag_relations WHERE record_id=? AND section_id=? '
+        paths = [dict(column=column, kind=kind, entity=entity, name=value, location=location)
+                 for column, kind, entity, value, location in db.execute(
+            f'SELECT column_name,kind,entity,source_value,location FROM rag_relations WHERE record_id=? AND section_id=? '
             f'AND entity IN ({marks}) ORDER BY column_name', (identity, section_id, *names))]
         info['paths'].append({'record_id': identity, 'evidence_id': section_id,
                               'receipt': section['cells'].get('CS NO') or section['cells'].get('CS 접수번호') or identity,

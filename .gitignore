@@ -21,6 +21,7 @@ __pycache__/
 *.xlsm
 *.xlsb
 !/windows-demo/cslist_sample.xlsx
+!/windows-demo/relation_sample.xlsx
 !/windows-demo/realistic_data.xlsx
 !/windows-demo/sample_data.xlsx
 llm_messages.jsonl*

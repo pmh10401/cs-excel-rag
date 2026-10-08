@@ -1366,6 +1366,27 @@ function renderConversation(turns) {
   });
 }
 
+function drawRelationLinks() {
+  const svg = $('relation-links');
+  svg.replaceChildren();
+  if (!$('ask-relations').open || $('relation-layout').hidden) return;
+  const graph = $('relation-graph').getBoundingClientRect();
+  const entities = Array.from($('relation-entities').children, el => el.getBoundingClientRect());
+  $('relation-paths').querySelectorAll('button').forEach(button => {
+    const target = button.getBoundingClientRect();
+    JSON.parse(button.dataset.entities).forEach(index => {
+      const from = entities[index];
+      const x1 = from.right - graph.left, y1 = (from.top + from.bottom) / 2 - graph.top;
+      const x2 = target.left - graph.left, y2 = (target.top + target.bottom) / 2 - graph.top;
+      const middle = (x1 + x2) / 2;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      line.setAttribute('d', `M${x1},${y1} C${middle},${y1} ${middle},${y2} ${x2},${y2}`);
+      line.setAttribute('class', 'relation-edge' + (button.getAttribute('aria-pressed') === 'true' ? ' is-active' : ''));
+      svg.append(line);
+    });
+  });
+}
+
 function renderRelations(result) {
   const panel = $('ask-relations');
   const list = $('relation-paths');
@@ -1374,6 +1395,8 @@ function renderRelations(result) {
   panel.hidden = !relations;
   panel.open = false;
   list.replaceChildren();
+  $('relation-entities').replaceChildren();
+  $('relation-links').replaceChildren();
   source.replaceChildren();
   $('relation-layout').hidden = true;
   if (!relations) return;
@@ -1385,6 +1408,7 @@ function renderRelations(result) {
   $('relation-layout').hidden = false;
   source.textContent = '사례를 선택하면 해당 상세의 발생일·현상·원인·조치 원문을 확인할 수 있습니다.';
   const numbers = new Map();
+  const entities = new Map();
   let request = 0;
   // ponytail: 화면은 최대 10개 경로만 표시합니다. 전체 탐색이 필요하면 기존 목록 검색을 사용합니다.
   paths.slice(0, 10).forEach(path => {
@@ -1392,23 +1416,28 @@ function renderRelations(result) {
     const work = path.evidence_id.slice(path.record_id.length + 1);
     const label = (path.receipt || path.record_id) + ' · 상세 ' + numbers.get(path.record_id) + ' · ' + work;
     const row = document.createElement('li');
-    row.className = 'relation-row';
-    const entities = document.createElement('div');
-    entities.className = 'relation-entities';
+    const connections = new Set();
     path.cells.forEach(cell => {
-      const entity = document.createElement('span');
-      entity.className = 'relation-entity';
-      const role = document.createElement('small');
-      role.textContent = cell.column;
-      entity.append(role, document.createTextNode(cell.name));
-      entities.append(entity);
+      // 구형 응답도 표시합니다. 새 응답은 서버의 역할·정규화 이름을 그대로 재사용합니다.
+      const key = JSON.stringify([cell.kind || cell.column,
+        cell.entity || cell.name.normalize('NFC').toLowerCase().replace(/\s+/g, '')]);
+      if (!entities.has(key)) {
+        entities.set(key, entities.size);
+        const entity = document.createElement('li');
+        entity.className = 'relation-entity';
+        entity.id = 'relation-entity-' + entities.get(key);
+        const role = document.createElement('small');
+        role.textContent = {equipment:'설비', module:'기인 모듈', part:'부품'}[cell.kind] || cell.column;
+        entity.append(role, document.createTextNode(cell.name));
+        $('relation-entities').append(entity);
+      }
+      connections.add(entities.get(key));
     });
-    const link = document.createElement('span');
-    link.className = 'relation-link';
-    link.textContent = '함께 기록';
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'relation-case';
+    button.dataset.entities = JSON.stringify(Array.from(connections));
+    button.setAttribute('aria-describedby', Array.from(connections, index => 'relation-entity-' + index).join(' '));
     button.setAttribute('aria-controls', 'relation-source');
     button.setAttribute('aria-pressed', 'false');
     button.textContent = label;
@@ -1419,6 +1448,7 @@ function renderRelations(result) {
     button.addEventListener('click', async () => {
       const current = ++request;
       list.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+      drawRelationLinks();
       source.replaceChildren();
       const status = document.createElement('p');
       status.setAttribute('role', 'status');
@@ -1457,10 +1487,13 @@ function renderRelations(result) {
         if (current === request && list.contains(button)) status.textContent = '원문을 불러오지 못했습니다. ' + error.message + ' 사례를 다시 선택하면 재시도합니다.';
       }
     });
-    row.append(entities, link, button);
+    row.append(button);
     list.append(row);
   });
 }
+
+new ResizeObserver(drawRelationLinks).observe($('relation-graph'));
+$('ask-relations').addEventListener('toggle', drawRelationLinks);
 
 function renderAsk(job) {
   const result = job.result;

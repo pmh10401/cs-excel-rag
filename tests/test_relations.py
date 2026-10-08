@@ -6,7 +6,7 @@ from contextlib import closing
 from unittest.mock import patch
 from ragkit import cslist, relations, semantic, storage
 from ragkit.input_formats import HISTORY_COLUMNS, HISTORY_SHEET
-from ragkit.records import public_cells, record_id
+from ragkit.records import public_cells, record_id, read_excel
 
 
 def history(cs, **values):
@@ -34,6 +34,8 @@ def main(root):
         assert all('배수밸브' not in h['content'] for h in hits)
         assert len(info['paths']) == 2 and all(len(p['cells']) == 2 for p in info['paths'])
         assert {p['receipt'] for p in info['paths']} == {'CS-SAME', 'CS-OTHER'}
+        assert all(c['entity'] == relations.key(c['name']) and c['kind'] == relations.COLUMNS[c['column']]
+                   for p in info['paths'] for c in p['cells'])
         assert any(cell['location'] == '샘플!N2' for p in info['paths'] for cell in p['cells'])
         assert relations.candidates(db, '세정장비 회전척 누수')[0] == []
         for q in ('회전척 진동', '펌프 누수', '회전모듈 회전척 11.8 bar 진동',
@@ -107,4 +109,13 @@ def main(root):
             relations.ensure(db)
         with closing(sqlite3.connect(path)) as db:
             assert not relations.ensure(db) and relations.candidates(db, query)[0]
-    print('PASS: 관계 조회·같은 CS 상세/작업 분리·셀 위치·숫자/부정/범용명 우회·원자적 갱신·광범위 후보 제한')
+    # 배포한 가상 Excel과 안내 질문으로 같은 CS의 서로 다른 부품 상세를 실제로 찾습니다.
+    examples = read_excel(root / 'relation_sample.xlsx', HISTORY_SHEET, required_columns=HISTORY_COLUMNS, id_column='CS NO')
+    with closing(sqlite3.connect(':memory:')) as db:
+        storage.ingest(db, examples, rules, schema=schema)
+        relations.ensure(db)
+        hits, info = relations.candidates(db, '세정장비 회전모듈 진동 과거 조치')
+        assert len(examples) == 4 and len(hits) == len(info['paths']) == 3
+        same_cs = [h for h in hits if h['evidence'][0]['cells']['CS NO'] == 'CS-DEMO-001']
+        assert len(same_cs) == 2 and {h['evidence'][0]['cells']['기인 Unit(부품)'] for h in same_cs} == {'구동벨트', '회전척'}
+    print('PASS: 관계 조회·같은 CS 상세/작업 분리·셀 위치·숫자/부정/범용명 우회·원자적 갱신·광범위 후보 제한·배포 예제 질문')

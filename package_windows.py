@@ -14,7 +14,7 @@ def main():
     assets = ['demo.py', 'evaluate.py', 'test_demo.py', 'sample_data.xlsx', 'realistic_data.xlsx',
               'realistic_cases.json', 'evaluation_cases.json', 'column_rules.json', 'config.json',
               'requirements.txt', 'README.txt', 'MANUAL.html', 'setup.bat', 'check.bat', 'start.bat',
-              'cslist_schema.json', 'cslist_sample.xlsx', 'cslist_cases.json', 'evaluate_search.py', 'workflow_cases.json']
+              'cslist_schema.json', 'cslist_sample.xlsx', 'relation_sample.xlsx', 'cslist_cases.json', 'evaluate_search.py', 'workflow_cases.json']
     modules = ['__init__.py', 'records.py', 'llm.py', 'storage.py', 'search.py', 'report.py', 'cli.py',
                'evaluation.py', 'cslist.py', 'input_formats.py', 'menu.py', 'excel_app.py', 'web.py', 'english.py', 'source_cache.py', 'semantic.py', 'embedding_runtime.py',
                'retrieval_evaluation.py', 'relations.py', 'llm_trace.py', 'overnight.py', 'nli.py', 'claim_verification.py', 'assets/review.js', 'assets/theme.css', 'assets/app.html', 'assets/app.css', 'assets/app.js', 'assets/answer_prompt_en.txt', 'assets/tokenizer/fb374d419588a4632f3f557e76b4b70aebbca790']

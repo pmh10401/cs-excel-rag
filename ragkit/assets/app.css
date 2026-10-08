@@ -85,13 +85,14 @@ button[disabled]{opacity:.5;cursor:not-allowed}
 #ask-relations{margin:20px 0;border:1px solid #d8e4f2;border-radius:16px;padding:16px;background:#fafcff}
 #ask-relations>summary{font-weight:600}
 #relation-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-#relation-paths{list-style:none;padding:0;margin:0}
-.relation-row{display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);align-items:center;margin:12px 0}
-.relation-entities{display:grid;gap:6px}
+#relation-graph{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
+#relation-paths,#relation-entities{position:relative;list-style:none;padding:0;margin:0;display:grid;gap:12px;min-width:0}
+#relation-links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.relation-edge{fill:none;stroke:#a4b6ce;stroke-width:1.5}
+.relation-edge.is-active{stroke:var(--accent);stroke-width:2.5}
 .relation-entity{display:block;border:1px solid #d2d2d7;border-radius:10px;padding:8px 10px;background:white;overflow-wrap:anywhere;font-size:13px}
 .relation-entity small,.relation-case small{display:block;color:var(--muted);font-size:11px;margin:0 0 3px}
-.relation-link{border-top:1px solid #a4b6ce;color:var(--muted);font-size:10px;text-align:center;padding-top:3px}
-button.relation-case{background:white;border:1px solid #d2d2d7;color:var(--text);text-align:left;font-size:13px;padding:10px;overflow-wrap:anywhere;min-width:0}
+button.relation-case{width:100%;background:white;border:1px solid #d2d2d7;color:var(--text);text-align:left;font-size:13px;padding:10px;overflow-wrap:anywhere;min-width:0}
 .relation-case[data-cited=true]{border-color:#0071e3;background:#edf4ff}
 .relation-case[data-cited=true] small{color:#0053a6}
 .relation-case[aria-pressed=true]{box-shadow:0 0 0 2px var(--accent)}
@@ -100,6 +101,7 @@ button.relation-case{background:white;border:1px solid #d2d2d7;color:var(--text)
 #relation-source>h4{margin:8px 0}
 #relation-source .quote{font-size:14px;line-height:1.7}
 @media(max-width:1100px){#relation-layout{grid-template-columns:1fr}}
+@media(max-width:500px){#relation-graph{gap:40px}}
 summary{cursor:pointer}
 summary:focus-visible{outline:3px solid #80baff;outline-offset:3px;border-radius:4px}
 .quote{margin:8px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
