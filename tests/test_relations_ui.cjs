@@ -142,6 +142,22 @@ const {chromium} = require('playwright');
     assert.match(await page.locator('#relation-status').textContent(), /원문 이름 없음/);
     await render({...result, relation_view: null});
     assert.equal(await page.locator('#ask-relations').isVisible(), false);
+    // GPU 실험 상태는 사실 검사의 통과 여부와 구별해 보여 줍니다.
+    await render({...result, vector_search: undefined, timings: {total: 20},
+      clef_search: {model: 'clef:flash', seconds: 12.3, status: 'used',
+      backend: 'mlx', device: 'gpu', reason: '후보 안의 상대 선택 확률입니다.',
+      baseline_ids: ['detail-a', 'detail-b'], reranked_ids: ['detail-b', 'detail-a']}});
+    assert.match(await page.locator('#ask-search-detail').textContent(), /used.*mlx\/gpu/);
+    assert.match(await page.locator('#ask-search-detail').textContent(), /기존 순서: detail-a, detail-b.*\n재정렬: detail-b, detail-a/);
+    assert.match(await page.locator('#ask-search-detail').textContent(), /처리 시간/);
+    await render({...result, clef_search: {model: 'clef:flash', seconds: 1, status: 'error',
+      reason: '기존 검색 유지 <img src=x onerror="window.injected=true">',
+      baseline_ids: ['detail-a'], reranked_ids: ['detail-a']}});
+    assert.match(await page.locator('#ask-search-detail').textContent(), /error/);
+    assert.equal(await page.locator('#ask-note img').count(), 0);
+    assert.equal(await page.evaluate(() => window.injected), undefined);
+    await render(result);
+    assert.doesNotMatch(await page.locator('#ask-search-detail').textContent(), /Clef:/);
     assert.deepEqual(errors, []);
     console.log('PASS: 실제 브라우저 · 공유 노드/역할 구분/정규화/구형 응답 · 연결선/선택 강조/리사이즈 · 상세/작업 분리 · 인용 구분 · 날짜/빈 셀 · XSS · 조회 오류/재시도 · 원문 변경 · 응답 경합 · 10개 제한 · 키보드/390px · 예상 오류 외 콘솔 오류 0');
   } finally { await browser.close(); }

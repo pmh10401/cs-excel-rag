@@ -1550,6 +1550,7 @@ function renderAsk(job) {
     '검사 안내: ' + diagnostics.slice(0, 3).map(error => error.slice(0, 180)).join(' / ') +
     (diagnostics.length > 3 ? ' 외 ' + (diagnostics.length - 3) + '건' : '')].filter(Boolean).join(' · '));
   const search = result.search;
+  setText($('ask-search-detail'), '');
   const translatedQuestion = search && search.translation_status === 'translated' ? search.english_query : '';
   $('ask-translation').hidden = !translatedQuestion;
   setText($('ask-translated-question'), translatedQuestion || '');
@@ -1579,6 +1580,14 @@ function renderAsk(job) {
     }
     if (vector.warning) setText($('ask-note'), $('ask-note').textContent + ' · ' + vector.warning);
   }
+  const clef = result.clef_search;
+  if (clef) {
+    $('ask-search').hidden = false;
+    setText($('ask-search-detail'), $('ask-search-detail').textContent + '\n\nClef: ' + clef.model +
+      ' · ' + clef.seconds + '초 · ' + clef.status + (clef.device ? ' · ' + clef.backend + '/' + clef.device : '') + '\n' + clef.reason +
+      '\n기존 순서: ' + clef.baseline_ids.join(', ') + '\n재정렬: ' + clef.reranked_ids.join(', '));
+    setText($('ask-note'), [$('ask-note').textContent, clef.reason].filter(Boolean).join(' · '));
+  }
   const timingLabels = {follow_up: '후속 질문 문맥 확인', source_check: 'DB 원문 확인', index_prepare: '검색 자료 준비',
     keyword: '키워드 검색', bilingual: '한국어·영어 검색', index_load: '벡터 자료 준비',
     embedding: '질문 임베딩', vector_search: '벡터 검색', source_lookup: '근거 원문 조회',
@@ -1588,7 +1597,7 @@ function renderAsk(job) {
     .map(([key, value]) => timingLabels[key] + ': ' + Number(value).toFixed(3) + '초');
   if (times.length) {
     $('ask-search').hidden = false;
-    const previous = search || vector ? $('ask-search-detail').textContent + '\n\n' : '';
+    const previous = search || vector || clef ? $('ask-search-detail').textContent + '\n\n' : '';
     setText($('ask-search-detail'), previous + '처리 시간\n' + times.join('\n') +
       (result.source_db ? '\nDB에 등록된 원문 사용 · Excel 파일 불필요' : '') +
       (result.index_rebuilt ? '\n이전 버전의 검색 자료를 한 번 갱신했습니다.' : ''));

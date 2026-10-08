@@ -17,16 +17,18 @@ def main():
               'cslist_schema.json', 'cslist_sample.xlsx', 'relation_sample.xlsx', 'cslist_cases.json', 'evaluate_search.py', 'workflow_cases.json']
     modules = ['__init__.py', 'records.py', 'llm.py', 'storage.py', 'search.py', 'report.py', 'cli.py',
                'evaluation.py', 'cslist.py', 'input_formats.py', 'menu.py', 'excel_app.py', 'web.py', 'english.py', 'source_cache.py', 'semantic.py', 'embedding_runtime.py',
-               'retrieval_evaluation.py', 'relations.py', 'llm_trace.py', 'overnight.py', 'nli.py', 'claim_verification.py', 'assets/review.js', 'assets/theme.css', 'assets/app.html', 'assets/app.css', 'assets/app.js', 'assets/answer_prompt_en.txt', 'assets/tokenizer/fb374d419588a4632f3f557e76b4b70aebbca790']
+               'retrieval_evaluation.py', 'relations.py', 'clef.py', 'llm_trace.py', 'overnight.py', 'nli.py', 'claim_verification.py', 'assets/review.js', 'assets/theme.css', 'assets/app.html', 'assets/app.css', 'assets/app.js', 'assets/answer_prompt_en.txt', 'assets/tokenizer/fb374d419588a4632f3f557e76b4b70aebbca790']
     # 실제 사용자가 바꾼 서버·인증 설정을 배포 파일에 넣지 않습니다.
     files = [(ROOT / 'windows-demo' / ('config.example.json' if name == 'config.json' else name), name) for name in assets]
     files.append((ROOT / 'requirements-claim-verification.txt', 'requirements-claim-verification.txt'))
     files += [(ROOT / 'ragkit' / name, 'ragkit/' + name) for name in modules]
     files.append((ROOT / 'experiments/bilingual_normalize.py', 'experiments/bilingual_normalize.py'))
+    files.append((ROOT / 'experiments/clef_rag.py', 'experiments/clef_rag.py'))
+    files.append((ROOT / 'experiments/clef_mlx_server.py', 'experiments/clef_mlx_server.py'))
     files += [(ROOT / 'tests' / name, 'tests/' + name) for name in (
         '__init__.py', 'test_windows.py', 'test_cslist.py', 'test_excel_app.py', 'test_rag.py', 'test_headers.py',
         'test_ui.py', 'test_resume.py', 'test_quality.py', 'test_parallel.py', 'test_search_focus.py',
-        'test_korean_search.py', 'test_bulk_reviews.py', 'test_english.py', 'test_semantic.py', 'test_relations.py',
+        'test_korean_search.py', 'test_bulk_reviews.py', 'test_english.py', 'test_semantic.py', 'test_relations.py', 'test_clef.py',
         'test_source_cache.py', 'test_embedding_startup.py', 'test_workflow_auto.py', 'test_retrieval_evaluation.py',
         'test_overnight.py', 'test_multiuser.py', 'test_action_outcomes.py', 'test_incremental.py',
         'test_history_input.py', 'test_import_queue.py', 'test_detail_claims.py', 'test_nli.py', 'test_claim_verification.py', 'test_claim_verification_ui.py', 'test_relations_ui.cjs')]

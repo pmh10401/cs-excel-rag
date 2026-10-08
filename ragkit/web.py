@@ -125,6 +125,9 @@ class App:
                 raise ValueError(f'설정 파일에 {key}가 필요합니다.')
         if self.config.get('embedding') is not None and not isinstance(self.config['embedding'], dict):
             raise ValueError('embedding 설정은 JSON 객체여야 합니다.')
+        if self.config.get('clef') is not None:
+            from .clef import options
+            self.config['clef'] = options(self.config['clef'])
         for flag in ('auto_start', 'auto_index'):
             if type((self.config.get('embedding') or {}).get(flag, True)) is not bool:
                 raise ValueError(f'embedding.{flag}는 참 또는 거짓이어야 합니다.')
@@ -957,6 +960,7 @@ class App:
         if type(reference_limit) is not int or not 0 <= reference_limit <= 100:
             raise ApiError(400, '참고 사례 수는 0(자동) 또는 1~100 사이 정수여야 합니다.')
         retrieval_limit = reference_limit or 100
+        search_limit = max(retrieval_limit, (self.config.get('clef') or {}).get('candidates', 0))
         if comparison:
             bilingual = False
         if not self.db_path.exists():
@@ -1008,15 +1012,19 @@ class App:
                     self.set_stage('한국어·영어로 검색 중')
                     with self.llm_client() as client:
                         hits = bilingual_retrieve(db, resolved_question, client, self.config, details=details,
-                                                  limit=max(20, retrieval_limit) if search_mode in ('hybrid', 'graph') else retrieval_limit,
+                                                  limit=max(20, search_limit) if search_mode in ('hybrid', 'graph') else search_limit,
                                                   search_english=search_mode != 'vector', **scope)
                     timings['bilingual'] = round(time.monotonic() - search_started, 4)
                 if not aggregate and (search_mode != 'keyword' or comparison):
                     hits = semantic.search_cases(db, resolved_question, self.config, mode=search_mode,
-                        keyword_hits=hits if bilingual else None, details=details, limit=retrieval_limit, **scope)
+                        keyword_hits=hits if bilingual else None, details=details, limit=search_limit, **scope)
                 elif not aggregate and not bilingual:
-                    hits = retrieve(db, resolved_question, limit=retrieval_limit, **scope)
+                    hits = retrieve(db, resolved_question, limit=search_limit, **scope)
                     timings['keyword'] = round(time.monotonic() - search_started, 4)
+                if not aggregate and record_ids is None and self.config.get('clef'):
+                    from .clef import rerank
+                    hits = rerank(db, resolved_question, hits, self.config['clef'], details=details, progress=self.set_stage)
+                hits = hits[:retrieval_limit]
                 timings['retrieval_total'] = round(time.monotonic() - search_started, 4)
                 details['references'] = {'mode': 'auto' if reference_limit == 0 else 'manual',
                     'requested_limit': reference_limit, 'candidates': len(hits), 'selected': len(hits),
@@ -1472,6 +1480,7 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
         'claim_verification': (details or {}).get('claim_verification'),
         'search': (details or {}).get('search'),
         'vector_search': (details or {}).get('vector_search'),
+        'clef_search': (details or {}).get('clef_search'),
         'relation_view': view(hits),
         'references': (details or {}).get('references'),
         'timings': (details or {}).get('timings', {}),
