@@ -122,6 +122,26 @@ const {chromium} = require('playwright');
     assert.match(await page.locator('#relation-status').textContent(), /기존 검색/);
     await render({...result, vector_search: undefined});
     assert.equal(await page.locator('#ask-relations').isVisible(), false);
+    // 일반 검색에서도 반환한 사례만 표시하고, 후보 보완의 경로로 화면 범위를 넓히지 않습니다.
+    await render({...result, comparison: true, relation_view: {reason: '반환된 사례의 원문', paths: [paths[1]]}});
+    assert.equal(await page.locator('.relation-case').count(), 1);
+    assert.equal(await page.locator('.relation-case[data-cited="true"]').count(), 0);
+    await render({...result, vector_search: undefined, relation_view: {reason: '코드 없이 반환한 원문', paths: [split]}});
+    await page.locator('#ask-relations > summary').click();
+    await page.locator('.relation-case').click();
+    await page.getByText('작업 2 점검 예정', {exact: true}).waitFor();
+    assert.equal(await page.locator('.relation-entity').count(), 2);
+    assert.doesNotMatch(await page.locator('#relation-source').textContent(), /다른 작업의 조치|흡착척/);
+    await render({...result, vector_search: undefined, relation_view: {reason: '이름 한 종류',
+      paths: [{...paths[1], cells: paths[1].cells.slice(0, 1)}]}});
+    await page.locator('#ask-relations > summary').click();
+    await page.waitForFunction(() => document.querySelectorAll('.relation-edge').length === 1);
+    assert.equal(await page.locator('.relation-entity').count(), 1);
+    await render({...result, relation_view: {reason: '원문 이름 없음', paths: []}});
+    assert.equal(await page.locator('#relation-layout').isVisible(), false);
+    assert.match(await page.locator('#relation-status').textContent(), /원문 이름 없음/);
+    await render({...result, relation_view: null});
+    assert.equal(await page.locator('#ask-relations').isVisible(), false);
     assert.deepEqual(errors, []);
     console.log('PASS: 실제 브라우저 · 공유 노드/역할 구분/정규화/구형 응답 · 연결선/선택 강조/리사이즈 · 상세/작업 분리 · 인용 구분 · 날짜/빈 셀 · XSS · 조회 오류/재시도 · 원문 변경 · 응답 경합 · 10개 제한 · 키보드/390px · 예상 오류 외 콘솔 오류 0');
   } finally { await browser.close(); }

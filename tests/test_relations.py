@@ -4,7 +4,7 @@ import tempfile
 from pathlib import Path
 from contextlib import closing
 from unittest.mock import patch
-from ragkit import cslist, relations, semantic, storage
+from ragkit import cslist, relations, semantic, storage, web
 from ragkit.input_formats import HISTORY_COLUMNS, HISTORY_SHEET
 from ragkit.records import public_cells, record_id, read_excel
 
@@ -27,6 +27,16 @@ def main(root):
     with closing(sqlite3.connect(':memory:')) as db:
         storage.ingest(db, [a, b, c], rules, schema=schema)
         original = db.execute('SELECT * FROM normalized_records').fetchall()
+        # 질문에 관계 이름이 없어도 반환한 상세의 원문으로 표시합니다. 관계 테이블도 필요 없습니다.
+        displayed = semantic.retrieve(db, '진동 과거 조치', limit=3)
+        snapshot = repr(displayed)
+        packed = web.pack_answer('진동 과거 조치', '검색 비교', displayed, None, {'comparison': True}, 0)
+        view = packed['relation_view']
+        assert {p['record_id'] for p in view['paths']} == {h['record_id'] for h in displayed}
+        assert {p['record_id'] for p in view['paths']} == {record_id(a), record_id(c)}
+        assert all(c['name'] != '배수밸브' for p in view['paths'] for c in p['cells'])
+        assert repr(displayed) == snapshot
+        assert web.pack_answer('몇 건?', '집계', [], {}, {}, 0)['relation_view'] is None
         assert relations.candidates(db, query)[0] == []  # 읽기 전용 구형 DB도 기존 경로 유지
         assert relations.ensure(db) and not relations.ensure(db)
         hits, info = relations.candidates(db, query)
@@ -81,6 +91,19 @@ def main(root):
         assert [p['evidence_id'] for p in work_info['paths']] == ['CS-SPLIT/작업2']
         assert work_info['paths'][0]['receipt'] == 'CS-SPLIT'
         assert {c['column'] for c in work_info['paths'][0]['cells']} == {'UNIT명', 'Part명(2)'}
+        displayed = relations.view(semantic.retrieve(db, 'CS-SPLIT', limit=3))
+        assert {c['column'] for p in displayed['paths'] if p['evidence_id'] == 'CS-SPLIT/작업2'
+                for c in p['cells']} == {'UNIT명', '설비코드', 'Part명(2)'}
+        # 코드가 없는 모듈·부품과 이름 한 종류만 있는 사례도 표시하고 미채택·빈 이름은 만들지 않습니다.
+        source = {'id': 'only/접수', 'kind': '접수', 'cells': {'CS NO': '12345', '기인 모듈': '회전모듈',
+                  '기인 Unit(부품)': '회전척', '설비': ''}, 'accepted': {'설비': '가상설비'}, 'locations': {}}
+        view = relations.view([{'evidence': [source]}])
+        assert [c['name'] for c in view['paths'][0]['cells']] == ['회전모듈', '회전척']
+        assert view['paths'][0]['receipt'] == '12345' and view['paths'][0]['record_id'] == 'only'
+        source['cells'] = {'기인 모듈': '회전모듈'}
+        assert len(relations.view([{'evidence': [source]}])['paths'][0]['cells']) == 1
+        source['cells'] = {'설비': '', '기인 모듈': '미기재'}
+        assert not relations.view([{'evidence': [source]}])['paths']
         before = db.execute('SELECT * FROM rag_relations ORDER BY 1,2,3').fetchall()
         prepared = storage.prepared_record(db, split, public_cells(split), rules)
         with patch.object(relations, 'sync', side_effect=RuntimeError('failure')):

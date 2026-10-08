@@ -1404,6 +1404,7 @@ class App:
 
 
 def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
+    from .relations import view
     sources = {section['id']: section for hit in (hits or []) for section in hit.get('evidence', [])}
     subject_columns = set(HISTORY_DETAIL_COLUMNS) | {'설비', '설비코드', '불량발생일', '불량발생년월',
         '불량발생월', '반입일', '반입년월', '접수일시', '접수일자', 'UNIT(CS)'}
@@ -1471,6 +1472,7 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
         'claim_verification': (details or {}).get('claim_verification'),
         'search': (details or {}).get('search'),
         'vector_search': (details or {}).get('vector_search'),
+        'relation_view': view(hits),
         'references': (details or {}).get('references'),
         'timings': (details or {}).get('timings', {}),
         'source_db': (details or {}).get('source_db', False),

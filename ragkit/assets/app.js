@@ -1391,7 +1391,8 @@ function renderRelations(result) {
   const panel = $('ask-relations');
   const list = $('relation-paths');
   const source = $('relation-source');
-  const relations = result.vector_search && result.vector_search.relations;
+  const relations = result.relation_view !== undefined ? result.relation_view
+    : result.vector_search && result.vector_search.relations;
   panel.hidden = !relations;
   panel.open = false;
   list.replaceChildren();

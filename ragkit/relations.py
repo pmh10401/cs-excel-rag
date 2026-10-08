@@ -14,6 +14,35 @@ def key(text):
     return re.sub(r'\s+', '', unicodedata.normalize('NFC', text).casefold())
 
 
+def name_cells(section):
+    """검색·표시 모두 원문의 짧은 이름과 정확한 셀 위치만 사용합니다."""
+    for column, kind in COLUMNS.items():
+        value = section.get('cells', {}).get(column, '').strip()
+        entity = key(value)
+        # ponytail: 한 셀의 짧은 이름만 연결합니다. 복수 부품·긴 설명은 별도 현장 검증 후 확장합니다.
+        if 2 <= len(entity) <= 80 and not re.search(r'[\r\n,;/|]|미상|미기재|불명|예정|의심', value):
+            yield dict(column=column, kind=kind, entity=entity, name=value,
+                       location=section.get('locations', {}).get(column, ''))
+
+
+def view(hits):
+    """반환된 사례의 원문을 그립니다. 검색 범위·순위·답변 근거는 변경하지 않습니다."""
+    if not hits:
+        return None
+    paths = []
+    for hit in hits:
+        for section in hit.get('evidence', []):
+            cells = list(name_cells(section))
+            if cells:
+                identity = hit.get('record_id') or section['id'].rsplit('/', 1)[0]
+                original = section['cells']
+                paths.append(dict(record_id=identity, evidence_id=section['id'],
+                                  receipt=original.get('CS NO') or original.get('CS 접수번호') or identity,
+                                  cells=cells))
+    return {'paths': paths, 'reason': '이번 검색에서 반환한 사례의 원문 이름을 연결했습니다. 검색 순위·조건을 바꾸지 않습니다.'
+            if paths else '검색한 사례의 원문에 표시할 설비·모듈·부품 이름이 없습니다.'}
+
+
 def exists(db):
     return bool(db.execute("SELECT 1 FROM sqlite_master WHERE name='rag_relations'").fetchone())
 
@@ -32,15 +61,12 @@ def sync(db, record_ids=None):
             '(SELECT document_rowid FROM rag_document_ids WHERE record_id=?)', (identity,)))
     for identity, encoded in rows:
         for section in json.loads(encoded):
-            for column, kind in COLUMNS.items():
-                value = section['cells'].get(column, '').strip()
-                entity = key(value)
-                # ponytail: 한 셀의 짧은 이름만 연결합니다. 복수 부품·긴 설명은 별도 현장 검증 후 확장합니다.
-                if (2 <= len(entity) <= 80 and entity not in GENERIC
-                        and not re.search(r'[\r\n,;/|]|미상|미기재|불명|예정|의심', value)):
+            for cell in name_cells(section):
+                # 범용명은 후보 확장에서 제외하지만, 반환된 사례의 원문 표시에는 남깁니다.
+                if cell['entity'] not in GENERIC:
                     db.execute('INSERT INTO rag_relations VALUES (?,?,?,?,?,?,?)',
-                               (identity, section['id'], column, kind, entity, value,
-                                section.get('locations', {}).get(column, '')))
+                               (identity, section['id'], cell['column'], cell['kind'], cell['entity'],
+                                cell['name'], cell['location']))
 
 
 def ensure(db):
