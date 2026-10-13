@@ -112,16 +112,16 @@ function updateLocks() {
   $('import-paths').disabled = jobLock || reqLock;
   $('import-many-btn').disabled = jobLock || reqLock || ui.mappingDirty || !$('import-paths').value.trim();
   $('import-retry-btn').disabled = jobLock || reqLock || ui.mappingDirty || !(ui.importQueue && ui.importQueue.failed);
-  $('reference-mode').disabled = ui.busy || reqLock;
+  $('reference-mode').disabled = ui.questionBusy || reqLock;
   $('reference-manual-fields').hidden = $('reference-mode').value === 'auto';
-  $('reference-limit').disabled = ui.busy || reqLock || $('reference-mode').value === 'auto';
+  $('reference-limit').disabled = ui.questionBusy || reqLock || $('reference-mode').value === 'auto';
   ['inspect-btn', 'import-btn', 'normalize-btn', 'header-mapping-save', 'save-settings', 'normalization-workers', 'auto-english', 'claim-guard-mode', 'prepare-claim-guard', 'vectors-btn', 'vectors-limit', 'review-important', 'review-changed', 'review-grouped'].forEach(function (id) {
     if ($(id)) $(id).disabled = jobLock || reqLock;
   });
   $('clef-enabled').disabled = jobLock || reqLock || !(ui.last && ui.last.config && ui.last.config.clef_configured);
-  ['ask-btn', 'search-mode', 'instruction-language', 'new-conversation-btn'].forEach(id => { $(id).disabled = ui.busy || reqLock; });
-  $('compare-btn').disabled = ui.busy || reqLock || ui.followUp;
-  $('follow-up-btn').disabled = ui.busy || reqLock || !ui.conversation.length;
+  ['ask-btn', 'search-mode', 'instruction-language', 'new-conversation-btn'].forEach(id => { $(id).disabled = ui.questionBusy || reqLock; });
+  $('compare-btn').disabled = ui.questionBusy || reqLock || ui.followUp;
+  $('follow-up-btn').disabled = ui.questionBusy || reqLock || !ui.conversation.length;
   const hasRecords = !!(ui.last && ui.last.db && ui.last.db.records);
   if ($('normalize-btn')) $('normalize-btn').disabled = jobLock || reqLock || !hasRecords;
   if ($('import-btn')) $('import-btn').disabled = jobLock || reqLock || ui.mappingBlocked || ui.mappingDirty;
@@ -162,7 +162,7 @@ function updateLocks() {
   $('english-btn').disabled = jobLock || reqLock || hasDirty() || !hasRecords;
   $('english-retry-btn').disabled = $('english-btn').disabled || !(ui.last && ui.last.db && ui.last.db.english_failed);
   $('english-limit').disabled = jobLock || reqLock;
-  $('bilingual').disabled = ui.busy || reqLock;
+  $('bilingual').disabled = ui.questionBusy || reqLock;
   $('vectors-btn').disabled = jobLock || reqLock || hasDirty() || !hasRecords;
   $('overnight-btn').disabled = jobLock || reqLock || hasDirty() || !hasRecords;
   $('overnight-stop-btn').disabled = reqLock || !ui.overnightRunning || ui.overnightStopping;
@@ -250,16 +250,33 @@ function renderJob(job) {
   const running = ['running', 'queued'].includes(job.status);
   ui.serverBusy = job.server_busy ?? running;
   ui.maintenance = job.maintenance_running ?? (running && job.kind !== 'ask');
-  ui.overnightRunning = running && job.kind === 'overnight';
-  ui.overnightStopping = ui.overnightRunning && !!(job.overnight && job.overnight.stop_requested);
+  const preparation = job.maintenance || (job.kind !== 'ask' ? job : null);
+  const durable = job.preparation;
+  ui.overnightRunning = !!(preparation && preparation.status === 'running' && preparation.kind === 'overnight');
+  ui.overnightStopping = ui.overnightRunning && !!(preparation.overnight && preparation.overnight.stop_requested);
+  ui.questionBusy = running && job.kind === 'ask';
   setBusy(running || ui.maintenance);
-  const preparation = ['import_many', 'overnight'].includes(job.kind) ? job : job.preparation;
-  renderOvernight(preparation && preparation.kind === 'overnight' ? preparation : job);
-  if (preparation && preparation.kind === 'import_many') renderImportQueue(preparation.result || preparation.progress);
+  const preparationBanner = $('preparation-banner');
+  preparationBanner.hidden = !(preparation && preparation.kind &&
+    (job.kind === 'ask' || (job.kind !== preparation.kind && preparation.status === 'running')));
+  if (!preparationBanner.hidden) {
+    const progress = preparation.progress || {};
+    const amount = typeof progress.completed === 'number' && typeof progress.total === 'number' ? ` · ${progress.completed}/${progress.total}건` : '';
+    const failedFiles = preparation.kind === 'import_many' && preparation.result ? preparation.result.failed || 0 : 0;
+    const failedItems = ((preparation.result || {}).failures || progress.failures || []).length;
+    const stopped = preparation.kind === 'overnight' && (preparation.overnight || preparation.result || {}).stopped;
+    preparationBanner.className = 'job-banner' + (preparation.status === 'error' || failedFiles || failedItems ? ' is-error' : preparation.status === 'done' ? ' is-done' : '');
+    const stage = stopped ? '중지됨 · 저장한 성공 결과 보존' : preparation.error || preparation.stage || preparation.status;
+    setText(preparationBanner, '자료 준비 · ' + stage + amount + (failedFiles ? ` · 실패 파일 ${failedFiles}개` : failedItems ? ` · 실패 ${failedItems}건` : '') +
+      ' · ' + (preparation.elapsed_seconds || 0) + '초');
+  }
+  renderOvernight(durable && durable.kind === 'overnight' ? durable : preparation || job);
+  if (durable && durable.kind === 'import_many') renderImportQueue(durable.result || durable.progress);
   $('convert-progress-panel').hidden = job.kind !== 'convert' || job.status === 'idle';
   if (job.status === 'idle' || !job.kind) {
     if (!running) banner.hidden = true;
-    setText($('ask-progress'), ui.serverBusy ? '다른 질문을 처리 중입니다. 질문을 제출하면 대기열에 등록됩니다.' : '');
+    setText($('ask-progress'), ui.maintenance ? '자료 준비 중에도 등록된 자료에 질문할 수 있습니다.' :
+      ui.serverBusy ? '다른 질문을 처리 중입니다. 질문을 제출하면 대기열에 등록됩니다.' : '');
     return;
   }
   banner.hidden = false;
@@ -309,6 +326,7 @@ function renderJob(job) {
   if (job.kind === 'overnight') msg = '야간 자동 실행 · ' + $('overnight-status').textContent;
   setText(banner, msg);
   if (job.kind === 'ask') setText($('ask-progress'), msg);
+  else if (ui.maintenance) setText($('ask-progress'), '자료를 준비하는 동안에도 등록된 자료에 질문할 수 있습니다. 진행 중인 모델 요청이 끝나면 질문을 우선 처리합니다.');
   if (job.kind === 'bulk_review' && running) setText($('batch-review-status'), msg);
   if (['vectors', 'auto_vectors', 'auto_search'].includes(job.kind) && running) setText($('vectors-status'), msg);
   if (['english', 'auto_search'].includes(job.kind) && running) setText($('english-status'), msg);
@@ -373,108 +391,16 @@ async function refreshJob() {
   try {
     const job = await api('/api/job');
     renderJob(job);
-    if (['running', 'queued'].includes(job.status)) { startPoll(); return; }
-    if (job.server_busy || job.recovery?.active) startPoll(); else stopPoll();
-    const key = job.status + ':' + job.kind + ':' + (job.error || '') + ':' + JSON.stringify(job.result || null);
-    if (!job.kind || ['idle', 'interrupted'].includes(job.status) || job.recovery || ui.handled === key) return;
-    ui.handled = key;
-    if (job.kind === 'claim_guard_prepare') {
-      applyState(await api('/api/state'));
-      showAlert('settings-error', job.status === 'error' ? job.error || '검사 모델 준비 실패' : '');
-    }
-    if (job.kind === 'overnight') applyState(await api('/api/state'));
-    if (job.kind === 'import_many') {
-      applyState(await api('/api/state'));
-      showAlert('source-error', job.error || '');
-      setText($('source-status'), job.status === 'error' ? '대기열 작업 오류입니다. 파일별 상태를 확인하세요.' :
-        '대기열 처리가 끝났습니다. 파일별 등록 결과를 확인하세요. 등록한 자료는 Excel 없이 사용할 수 있습니다.');
-    }
-    if (job.kind === 'convert') {
-      if (job.status === 'done') {
-        $('excel-path').value = job.result.path;
-        document.querySelector('input[name="reader"][value="openpyxl"]').checked = true;
-        applyState(await api('/api/state'));
-        setText($('source-status'), job.result.rows.toLocaleString() + '건을 변환했습니다. 현재 입력은 변환 파일입니다. 입력 검사 또는 문장 다듬기를 실행하세요.');
-        showAlert('source-error', '');
-      } else {
-        showAlert('source-error', job.error || '변환에 실패했습니다. Excel 입력과 열 대응을 확인하세요.');
-      }
-    }
-    if (job.kind === 'normalize' || job.kind === 'import') {
-      if (job.status === 'done') {
-        const s = await api('/api/state');
-        applyState(s);
-        const rows = job.result && job.result.rows;
-        const reused = job.result && job.result.reused;
-        let text = job.kind === 'import' ? 'DB 등록을 마쳤습니다. Excel 없이 계속 사용할 수 있습니다. ' : '문장 다듬기를 마쳤습니다. ';
-        if (rows) text += rows + '건을 저장했습니다. ';
-        if (typeof reused === 'number') text += '재사용 ' + reused + '건. ';
-        const imported = job.result && job.result.import;
-        if (imported) text += '추가 ' + imported.added + '건 · 원문 갱신 ' + imported.updated + '건 · 원문 동일 ' + imported.unchanged + '건 · DB 누적 ' + imported.total + '건. ';
-        const fallbackCells = job.result && job.result.fallback_cells || 0;
-        if (fallbackCells) text += '숫자·단위 보정 실패로 원문 유지 ' + fallbackCells + '셀. 검토 화면에서 확인할 수 있습니다. ';
-        if (s.config && s.config.embedding_auto_index) text += '검토를 반영하면 채택문으로 벡터를 갱신합니다. ';
-        text += '출력: ' + s.output_dir;
-        setText($('source-status'), text);
-        showAlert('source-error', '');
-      } else if (job.kind === 'import') {
-        setText($('source-status'), 'DB 등록을 완료하지 못했습니다.');
-        showAlert('source-error', job.error || '기존 자료는 유지됩니다. 입력을 확인하고 다시 등록하세요.');
-      } else {
-        setText($('source-status'), job.code === 'normalization_partial' ? '전체 행의 처리를 마쳤습니다. 아래 실패 목록을 확인하세요.' : '');
-        const failures = job.progress && job.progress.failures || [];
-        const retry = job.code === 'normalization_partial'
-          ? ' 나머지 행도 모두 처리했습니다. 성공 결과는 DB에 보관했습니다. 같은 원본·설정으로 이어서 실행하면 실패한 행만 재시도합니다. 검색 자료는 전체 성공 후 갱신됩니다.'
-          : ' 성공한 행은 따로 저장되어 같은 단추로 이어서 실행할 수 있습니다.';
-        showAlert('source-error', (job.error || '문장 다듬기에 실패했습니다. 원문과 저장된 검토는 유지됩니다.') + retry +
-          failures.map(item => '\n' + item.id + ': ' + item.error).join(''));
-      }
-    }
-    if (job.kind === 'ask') renderAsk(job);
-    const updatesVectors = ['vectors', 'auto_vectors', 'auto_search'].includes(job.kind) || (job.result && (job.result.embedding || job.result.embedding_warning));
-    const updatesEnglish = job.kind === 'english' || job.kind === 'auto_search' || (job.result && (job.result.english || job.result.english_warning));
-    if (updatesVectors || updatesEnglish) applyState(await api('/api/state'));
-    if (updatesVectors) {
-      const r = job.result && (job.result.embedding || (job.kind === 'vectors' || job.kind === 'auto_vectors' ? job.result : null));
-      setText($('vectors-status'), r ? r.skipped ? r.reason : '검색 가능 ' + r.indexed + '/' + r.rows + '건 · 새 벡터 ' + r.generated + '개 · 실패 ' + (r.failures || []).length + '개' : '');
-      showAlert('vectors-error', [r && (r.failures || []).map(item => item.error).join('\n'), job.result && job.result.embedding_warning,
-        job.kind !== 'auto_search' && !r && job.error].filter(Boolean).join('\n'));
-    }
-    if (updatesEnglish) {
-      const result = job.result && (job.result.english || (job.kind === 'english' ? job.result : null));
-      const warning = job.result && job.result.english_warning;
-      if (result) {
-        setText($('english-status'), englishSummary(result));
-        showAlert('english-error', [warning, ...(result.failures || []).map(item => item.id + ': ' + item.error)].filter(Boolean).join('\n'));
-      } else {
-        setText($('english-status'), '');
-        showAlert('english-error', warning || (job.status === 'error' ? job.error || '영어 변환을 완료하지 못했습니다.' : ''));
-      }
-    }
-    if (job.kind === 'bulk_review') {
-      if (job.status === 'done') {
-        const result = job.result;
-        applyState(await api('/api/state'));
-        setText($('batch-review-status'), '전체 ' + result.rows + '건 중 ' + result.applied_rows + '건의 ' + result.saved +
-          '개 셀을 채택·저장하고 검색에 반영했습니다. 기존 검토 ' + result.reviewed_cells + '개 셀 유지 · 제안 없는 접수 ' + result.missing_rows + '건 제외.');
-        const failures = result.failures || [];
-        showAlert('batch-review-error', failures.length ? '검사에 실패한 ' + failures.length + '건은 제외했습니다.\n' +
-          failures.map(item => item.id + ': ' + item.error).join('\n') : '');
-      } else {
-        setText($('batch-review-status'), '');
-        showAlert('batch-review-error', job.error || '일괄 채택을 완료하지 못했습니다.');
-      }
-    }
-    if (ui.view === 'review' && job.kind !== 'ask') {
-      await loadRecords();
-      if (ui.selected && !hasDirty()) {
-        const selected = ui.selected;
-        const refreshed = await api('/api/record?id=' + encodeURIComponent(selected));
-        if (ui.view === 'review' && ui.selected === selected && !hasDirty()) {
-          ui.record = refreshed;
-          renderRecord(refreshed);
-        }
-      }
+    if (job.server_busy || job.recovery?.active || ['running', 'queued'].includes(job.status)) startPoll();
+    else stopPoll();
+    const completed = job.maintenance ? [...(job.kind === 'ask' ? [job] : []), job.maintenance] : [job];
+    for (const item of completed) {
+      if (!item.kind || !['done', 'error'].includes(item.status)) continue;
+      const handled = item.kind === 'ask' ? 'handled' : 'preparationHandled';
+      const key = JSON.stringify([item.kind, item.status, item.started, item.elapsed_seconds, item.error, item.result]);
+      if (ui[handled] === key) continue;
+      await handleCompletedJob(item);
+      ui[handled] = key;
     }
   } catch (err) {
     stopPoll();
@@ -490,6 +416,107 @@ async function refreshJob() {
     else showAlert('source-error', msg);
   } finally {
     ui.refreshing = false;
+  }
+}
+
+async function handleCompletedJob(job) {
+  if (job.kind === 'claim_guard_prepare') {
+    applyState(await api('/api/state'));
+    showAlert('settings-error', job.status === 'error' ? job.error || '검사 모델 준비 실패' : '');
+  }
+  if (job.kind === 'overnight') applyState(await api('/api/state'));
+  if (job.kind === 'import_many') {
+    applyState(await api('/api/state'));
+    showAlert('source-error', job.error || '');
+    setText($('source-status'), job.status === 'error' ? '대기열 작업 오류입니다. 파일별 상태를 확인하세요.' :
+      '대기열 처리가 끝났습니다. 파일별 등록 결과를 확인하세요. 등록한 자료는 Excel 없이 사용할 수 있습니다.');
+  }
+  if (job.kind === 'convert') {
+    if (job.status === 'done') {
+      $('excel-path').value = job.result.path;
+      document.querySelector('input[name="reader"][value="openpyxl"]').checked = true;
+      applyState(await api('/api/state'));
+      setText($('source-status'), job.result.rows.toLocaleString() + '건을 변환했습니다. 현재 입력은 변환 파일입니다. 입력 검사 또는 문장 다듬기를 실행하세요.');
+      showAlert('source-error', '');
+    } else {
+      showAlert('source-error', job.error || '변환에 실패했습니다. Excel 입력과 열 대응을 확인하세요.');
+    }
+  }
+  if (job.kind === 'normalize' || job.kind === 'import') {
+    if (job.status === 'done') {
+      const s = await api('/api/state');
+      applyState(s);
+      const rows = job.result && job.result.rows;
+      const reused = job.result && job.result.reused;
+      let text = job.kind === 'import' ? 'DB 등록을 마쳤습니다. Excel 없이 계속 사용할 수 있습니다. ' : '문장 다듬기를 마쳤습니다. ';
+      if (rows) text += rows + '건을 저장했습니다. ';
+      if (typeof reused === 'number') text += '재사용 ' + reused + '건. ';
+      const imported = job.result && job.result.import;
+      if (imported) text += '추가 ' + imported.added + '건 · 원문 갱신 ' + imported.updated + '건 · 원문 동일 ' + imported.unchanged + '건 · DB 누적 ' + imported.total + '건. ';
+      const fallbackCells = job.result && job.result.fallback_cells || 0;
+      if (fallbackCells) text += '숫자·단위 보정 실패로 원문 유지 ' + fallbackCells + '셀. 검토 화면에서 확인할 수 있습니다. ';
+      if (s.config && s.config.embedding_auto_index) text += '검토를 반영하면 채택문으로 벡터를 갱신합니다. ';
+      text += '출력: ' + s.output_dir;
+      setText($('source-status'), text);
+      showAlert('source-error', '');
+    } else if (job.kind === 'import') {
+      setText($('source-status'), 'DB 등록을 완료하지 못했습니다.');
+      showAlert('source-error', job.error || '기존 자료는 유지됩니다. 입력을 확인하고 다시 등록하세요.');
+    } else {
+      setText($('source-status'), job.code === 'normalization_partial' ? '전체 행의 처리를 마쳤습니다. 아래 실패 목록을 확인하세요.' : '');
+      const failures = job.progress && job.progress.failures || [];
+      const retry = job.code === 'normalization_partial'
+        ? ' 나머지 행도 모두 처리했습니다. 성공 결과는 DB에 보관했습니다. 같은 원본·설정으로 이어서 실행하면 실패한 행만 재시도합니다. 검색 자료는 전체 성공 후 갱신됩니다.'
+        : ' 성공한 행은 따로 저장되어 같은 단추로 이어서 실행할 수 있습니다.';
+      showAlert('source-error', (job.error || '문장 다듬기에 실패했습니다. 원문과 저장된 검토는 유지됩니다.') + retry +
+        failures.map(item => '\n' + item.id + ': ' + item.error).join(''));
+    }
+  }
+  if (job.kind === 'ask') renderAsk(job);
+  const updatesVectors = ['vectors', 'auto_vectors', 'auto_search'].includes(job.kind) || (job.result && (job.result.embedding || job.result.embedding_warning));
+  const updatesEnglish = job.kind === 'english' || job.kind === 'auto_search' || (job.result && (job.result.english || job.result.english_warning));
+  if (updatesVectors || updatesEnglish) applyState(await api('/api/state'));
+  if (updatesVectors) {
+    const r = job.result && (job.result.embedding || (job.kind === 'vectors' || job.kind === 'auto_vectors' ? job.result : null));
+    setText($('vectors-status'), r ? r.skipped ? r.reason : '검색 가능 ' + r.indexed + '/' + r.rows + '건 · 새 벡터 ' + r.generated + '개 · 실패 ' + (r.failures || []).length + '개' : '');
+    showAlert('vectors-error', [r && (r.failures || []).map(item => item.error).join('\n'), job.result && job.result.embedding_warning,
+      job.kind !== 'auto_search' && !r && job.error].filter(Boolean).join('\n'));
+  }
+  if (updatesEnglish) {
+    const result = job.result && (job.result.english || (job.kind === 'english' ? job.result : null));
+    const warning = job.result && job.result.english_warning;
+    if (result) {
+      setText($('english-status'), englishSummary(result));
+      showAlert('english-error', [warning, ...(result.failures || []).map(item => item.id + ': ' + item.error)].filter(Boolean).join('\n'));
+    } else {
+      setText($('english-status'), '');
+      showAlert('english-error', warning || (job.status === 'error' ? job.error || '영어 변환을 완료하지 못했습니다.' : ''));
+    }
+  }
+  if (job.kind === 'bulk_review') {
+    if (job.status === 'done') {
+      const result = job.result;
+      applyState(await api('/api/state'));
+      setText($('batch-review-status'), '전체 ' + result.rows + '건 중 ' + result.applied_rows + '건의 ' + result.saved +
+        '개 셀을 채택·저장하고 검색에 반영했습니다. 기존 검토 ' + result.reviewed_cells + '개 셀 유지 · 제안 없는 접수 ' + result.missing_rows + '건 제외.');
+      const failures = result.failures || [];
+      showAlert('batch-review-error', failures.length ? '검사에 실패한 ' + failures.length + '건은 제외했습니다.\n' +
+        failures.map(item => item.id + ': ' + item.error).join('\n') : '');
+    } else {
+      setText($('batch-review-status'), '');
+      showAlert('batch-review-error', job.error || '일괄 채택을 완료하지 못했습니다.');
+    }
+  }
+  if (ui.view === 'review' && job.kind !== 'ask') {
+    await loadRecords();
+    if (ui.selected && !hasDirty()) {
+      const selected = ui.selected;
+      const refreshed = await api('/api/record?id=' + encodeURIComponent(selected));
+      if (ui.view === 'review' && ui.selected === selected && !hasDirty()) {
+        ui.record = refreshed;
+        renderRecord(refreshed);
+      }
+    }
   }
 }
 
@@ -1658,7 +1685,7 @@ function renderClaimVerification(result) {
 }
 
 async function startAsk(comparison = false) {
-  if (ui.busy || ui.pending) return;
+  if (ui.questionBusy || ui.pending) return;
   const question = $('question').value.trim();
   if (!question) { showAlert('ask-error', '질문을 입력하세요.'); return; }
   const referenceLimit = $('reference-mode').value === 'auto' ? 0 : Number($('reference-limit').value);
@@ -1668,6 +1695,7 @@ async function startAsk(comparison = false) {
   showAlert('ask-error', '');
   $('ask-result').hidden = true;
   ui.handled = '';
+  ui.questionBusy = true;
   setBusy(true);
   try {
     const settings = await api('/api/settings', {method: 'POST', body: {reference_limit: referenceLimit}});
@@ -1679,6 +1707,7 @@ async function startAsk(comparison = false) {
     startPoll();
     await refreshJob();
   } catch (err) {
+    ui.questionBusy = false;
     setBusy(false);
     setText($('ask-progress'), '');
     showAlert('ask-error', err.message);
@@ -1876,7 +1905,7 @@ $('follow-up-btn').addEventListener('click', () => {
   updateLocks();
 });
 $('new-conversation-btn').addEventListener('click', async () => {
-  if (ui.busy || ui.pending) return;
+  if (ui.questionBusy || ui.pending) return;
   setPending(true);
   try {
     await api('/api/conversation/reset', {method: 'POST', body: {}});

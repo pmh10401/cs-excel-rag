@@ -29,10 +29,10 @@ def ensure_case_indexes(db):
     db.execute(f'CREATE INDEX IF NOT EXISTS records_case_family ON normalized_records ({CASE_FAMILY_SQL})')
 
 
-def ensure_search_index(db, rules, schema):
+def ensure_search_index(db, rules, schema, *, read_only=False):
     """입수·검토 때 만든 색인을 재사용하고 구형 DB만 한 번 마이그레이션합니다."""
     tables = {name for (name,) in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    if 'normalized_records' in tables:
+    if 'normalized_records' in tables and not read_only:
         ensure_case_indexes(db)
     expected = {
         'rag_documents': ['document_id', 'record_id', 'content', 'evidence'],
@@ -43,7 +43,11 @@ def ensure_search_index(db, rules, schema):
             prefix + ['keywords', 'symptom', 'alarm', 'equipment', 'action', 'grams']
             for table, prefix in expected.items()):
         if db.execute('SELECT signature FROM rag_search_meta WHERE id=1').fetchone() == (search_signature(schema, rules),):
+            if read_only and 'rag_document_ids' in tables:
+                return False
             if 'rag_document_ids' not in tables or 'rag_chunks' in tables:
+                if read_only:
+                    raise ValueError('검색 색인 갱신이 필요합니다.')
                 db.execute('SAVEPOINT prune_legacy_search')
                 try:
                     if 'rag_document_ids' not in tables:
@@ -56,6 +60,8 @@ def ensure_search_index(db, rules, schema):
                 finally:
                     db.execute('RELEASE prune_legacy_search')
             return 'rag_chunks' in tables
+    if read_only:
+        raise ValueError('검색 색인 갱신이 필요합니다.')
     from .storage import prepared_record, stored_rows
     prepared = (prepared_record(db, json.loads(raw), json.loads(proposal), rules) for _, raw, proposal in stored_rows(db))
     # rebuild_search의 SAVEPOINT가 단독 실행과 외부 트랜잭션의 원자성을 함께 보장합니다.

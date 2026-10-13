@@ -72,14 +72,13 @@ def main(root):
                 pending = app.job_snapshot()['progress']
                 assert [item['status'] for item in pending['files']] == ['running'] + ['waiting'] * 8
                 for action in (lambda: app.import_many({'paths': [str(last)]}),
-                               lambda: app.import_input({'path': str(last)}),
-                               lambda: app.queue_question(app.token, lambda: None, question='전체 접수 건수는?')):
+                               lambda: app.import_input({'path': str(last)})):
                     try:
                         action()
                     except web.ApiError as error:
                         assert error.status == 409
                     else:
-                        raise AssertionError('다른 쓰기·질문이 대기열 작업에 끼어들었습니다.')
+                        raise AssertionError('다른 쓰기 작업이 대기열 작업에 끼어들었습니다.')
             finally:
                 release.set()
                 result = finish()

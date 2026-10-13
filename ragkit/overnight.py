@@ -112,7 +112,7 @@ def run(app, path, reader, *, previous=None):
         return value
 
     def vectors():
-        with closing(app.connect()) as db, closing(semantic.client_for(app.config, progress=app.set_stage)) as client:
+        with closing(app.connect()) as db, app.embedding_client() as client:
             return semantic.build_vectors(db, client, app.config, progress=app.set_stage, cancelled=stop.is_set)
 
     def english():

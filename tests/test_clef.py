@@ -241,10 +241,11 @@ def main(root):
         def compare():
             main_app.ask({'question': '진공 알람', 'reference_limit': 1}, comparison=True)
             deadline = time.monotonic() + 5
-            while main_app.job['status'] == 'running' and time.monotonic() < deadline:
+            while main_app.question_worker and time.monotonic() < deadline:
                 time.sleep(.01)
-            assert main_app.job['status'] == 'done', main_app.job
-            return main_app.job['result']
+            job = main_app.job_snapshot(main_app.token)
+            assert job['status'] == 'done', job
+            return job['result']
         with patch.object(web.semantic, 'search_cases', return_value=copy.deepcopy(original)), \
                 patch.object(clef, 'urlopen', side_effect=AssertionError('꺼진 Clef를 호출했습니다.')):
             baseline = compare()

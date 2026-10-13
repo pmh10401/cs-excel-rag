@@ -168,11 +168,13 @@ def main(root):
                     app.start_job('normalize', maintenance)
                     assert maintenance_entered.wait(5)
                     assert a.request('/api/job')['maintenance_running']
-                    a.request('/api/ask', question('A'), status=409)
+                    a.request('/api/ask', question('A'), status=202)
+                    assert until(lambda: completed(a))['kind'] == 'ask'
+                    assert a.request('/api/job')['maintenance']['kind'] == 'normalize'
                 finally:
                     maintenance_release.set()
                     until(lambda: not app.busy())
-                assert a.request('/api/job')['kind'] == 'normalize'
+                assert a.request('/api/job')['maintenance']['status'] == 'done'
 
                 # 명시적으로 허용한 LAN Host/Origin만 통과합니다. 실제 LAN 연결은 별도 확인 대상입니다.
                 app.allowed_hosts.add('192.168.0.50')

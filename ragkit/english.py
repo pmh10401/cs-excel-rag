@@ -620,7 +620,22 @@ def build_english(db, client, config, schema, *, limit=20, progress=None, record
     return result
 
 
-def bilingual_retrieve(db, question, client, config, *, details=None, limit=3, search_english=True, record_ids=None):
+def translate_query(question, client, config):
+    """DB를 잡지 않고 질문만 번역합니다. 실패하면 원문 검색을 계속합니다."""
+    try:
+        has_korean = bool(re.search('[가-힣ㄱ-ㅎㅏ-ㅣ]', question))
+        result = request_json(client, config, QUERY_PROMPT, {'question': question}) if has_korean else {'query': question}
+        if not isinstance(result, dict) or set(result) != {'query'}:
+            raise ValueError('영어 질문 번역 형식이 올바르지 않습니다.')
+        validate_translation({'질문': result['query']}, {'질문': question})
+        if has_korean and result['query'].strip() == question.strip():
+            raise ValueError('한국어 질문을 번역하지 않고 그대로 반환했습니다.')
+        return dict(english_query=result['query'].strip(), translation_status='translated' if has_korean else 'original')
+    except (ValueError, APIError):
+        return dict(translation_status='failed', warning='질문 영어 번역에 실패하여 원문 질문으로 검색·답변합니다.')
+
+
+def bilingual_retrieve(db, question, client, config, *, details=None, limit=3, search_english=True, record_ids=None, translation=None):
     """질문을 한 번 번역해 검색·답변에 재사용합니다. 실패하면 원문으로 계속합니다."""
     options = {'record_ids': record_ids} if record_ids is not None else {}
     korean = retrieve(db, question, limit=limit, **options)
@@ -637,18 +652,8 @@ def bilingual_retrieve(db, question, client, config, *, details=None, limit=3, s
     if exact and not korean:
         # 없는 코드·날짜의 검색 조건을 번역으로 우회하지 않습니다. 답변도 생성하지 않습니다.
         return korean
-    try:
-        has_korean = bool(re.search('[가-힣ㄱ-ㅎㅏ-ㅣ]', question))
-        result = request_json(client, config, QUERY_PROMPT, {'question': question}) if has_korean else {'query': question}
-        if not isinstance(result, dict) or set(result) != {'query'}:
-            raise ValueError('영어 질문 번역 형식이 올바르지 않습니다.')
-        # 문서 번역과 같은 숫자·단위·식별자 검사를 사용합니다. 의미 전체의 검증은 아닙니다.
-        validate_translation({'질문': result['query']}, {'질문': question})
-        if has_korean and result['query'].strip() == question.strip():
-            raise ValueError('한국어 질문을 번역하지 않고 그대로 반환했습니다.')
-        info.update(english_query=result['query'].strip(), translation_status='translated' if has_korean else 'original')
-    except (ValueError, APIError):
-        info.update(translation_status='failed', warning='질문 영어 번역에 실패하여 원문 질문으로 검색·답변합니다.')
+    info.update(translate_query(question, client, config) if translation is None else translation)
+    if info['translation_status'] in ('failed', 'skipped'):
         return korean
     if exact or not search_english:
         return korean  # 정확 검색·벡터 질의는 원문을 유지하고 답변에는 번역을 함께 전달합니다.

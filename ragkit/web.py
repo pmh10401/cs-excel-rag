@@ -12,7 +12,7 @@ import sys
 import threading
 import time
 import webbrowser
-from contextlib import closing, contextmanager
+from contextlib import closing, contextmanager, nullcontext
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -26,9 +26,9 @@ from .claim_verification import validate_mode, VerificationError
 from .records import (public_cells, read_excel,
                       HeaderMappingError, load_header_aliases, save_header_aliases,
                       validate_header_aliases)
-from .search import count_records, retrieve
+from .search import count_records, retrieve, exact_terms, receipt_number, focused_query
 from .english import (build_english, bilingual_retrieve, english_count,
-                      translation_documents, translation_status, translation_profile)
+                      translation_documents, translation_status, translation_profile, translate_query)
 from .source_cache import convert_excel, SUFFIX
 from . import semantic, nli
 from .llm_trace import LLMTrace
@@ -134,6 +134,9 @@ class App:
                 raise ValueError(f'embedding.{flag}는 참 또는 거짓이어야 합니다.')
         self.token = secrets.token_urlsafe(32)
         self.lock = threading.RLock()  # 복구 확인과 기존 작업 접수를 한 잠금 안에서 수행합니다.
+        from .workload import ModelTurns
+        self.models = ModelTurns()
+        self.context = threading.local()
         self.llm_trace = LLMTrace(self.output, self.config)
         self.sync_busy = False
         self.port = None
@@ -175,16 +178,43 @@ class App:
     def llm_client(self):
         from .clef import chat_model
         model_config = self.config if self.clef_enabled else self.config | {'clef': {}}
-        with chat_model(model_config, self.set_stage, self.output / 'clef_server.log'), closing(OpenAI(base_url=self.config['base_url'], api_key=self.config['api_key'],
+        job = getattr(self.context, 'job', self.job)
+        foreground = job.get('kind') == 'ask'
+        managed = bool((model_config.get('clef') or {}).get('manage_lm_studio'))
+        progress = lambda stage: self._set_job_stage(job, stage)
+        chat = lambda: chat_model(model_config, progress, self.output / 'clef_server.log')
+        with (chat() if foreground else nullcontext()), closing(OpenAI(base_url=self.config['base_url'], api_key=self.config['api_key'],
                             timeout=self.config['timeout_seconds'], max_retries=0)) as client:
             create = client.chat.completions.create
-            owner = self.job.get('owner')
+            owner = job.get('owner')
             owner = hashlib.sha256(owner.encode()).hexdigest() if owner else None
-            client.chat.completions.create = lambda **request: self.llm_trace.capture(create, self.job.get('kind'), request, owner=owner)
+            def request_model(**request):
+                # 병렬 정리 스레드에도 생성 당시 작업·소유자를 전달합니다.
+                with (nullcontext() if foreground else self.models.background(exclusive=managed)):
+                    with (nullcontext() if foreground else chat()):
+                        return self.llm_trace.capture(create, job.get('kind'), request, owner=owner)
+            client.chat.completions.create = request_model
             try:
                 yield client
             finally:
                 client.chat.completions.create = create
+
+    @contextmanager
+    def embedding_client(self):
+        foreground = getattr(self.context, 'job', {}).get('kind') == 'ask'
+        slot = lambda: nullcontext() if foreground else self.models.background()
+        with slot():
+            client = semantic.client_for(self.config, progress=self.set_stage)
+        with closing(client):
+            create = client.embeddings.create
+            def request_embedding(**request):
+                with slot():
+                    return create(**request)
+            client.embeddings.create = request_embedding
+            try:
+                yield client
+            finally:
+                client.embeddings.create = create
 
     def _idle_job(self):
         return {'status': 'idle', 'kind': None, 'stage': '', 'started': None,
@@ -228,7 +258,8 @@ class App:
         def work():
             self.set_stage('영어 근거 검사 모델 다운로드·준비 중' if body['download'] else '영어 근거 검사 모델 확인 중')
             try:
-                return nli.prepare_model(download=body['download'])
+                with self.models.background(exclusive=True):
+                    return nli.prepare_model(download=body['download'])
             except nli.NLIError as error:
                 raise ApiError(503, self.redact(error), 'verification_unavailable') from error
         self.start_job('claim_guard_prepare', work)
@@ -252,7 +283,7 @@ class App:
             if input_changed:
                 result = self.index_input(self.excel, self.reader, 0)
             else:
-                with closing(semantic.client_for(self.config, progress=self.set_stage)) as client:
+                with self.embedding_client() as client:
                     self.set_stage('임베딩 모델 응답 확인 중')
                     semantic.embed(client, ['임베딩 연결 확인'], semantic.settings(self.config))
                     result = {'rows': 0, 'indexed': 0, 'generated': 0, 'failures': []}
@@ -318,6 +349,7 @@ class App:
                    'instruction_language': details.get('instruction_language', 'ko'),
                    'resolved_question': details.get('resolved_question', question),
                    'candidate_ids': [hit.get('record_id', hit['id']) for hit in hits],
+                   'evidence_snapshot': details.get('evidence_snapshot'),
                    'validation_events': details.get('validation_events', []),
                    'claim_verification': details.get('claim_verification'),
                    'verification_attempts': details.get('verification_attempts', []),
@@ -433,6 +465,43 @@ class App:
     def connect(self):
         return sqlite3.connect(self.db_path, timeout=30)
 
+    def prepare_search(self, *, graph=False):
+        from . import relations
+        with closing(self.connect()) as db:
+            if not db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone():
+                raise ApiError(400, NO_DATA, 'no_data')
+            try:
+                ensure_search_index(db, self.rules, self.schema, read_only=True)
+                ready = True
+            except ValueError:
+                ready = False
+            if ready and (not graph or relations.exists(db)):
+                return False
+            try:
+                self._begin_sync(during_question=True)
+            except ApiError:
+                if ready:
+                    return False  # 첫 관계 색인만 없으면 기존 결합 검색을 유지합니다.
+                raise ApiError(409, '검색 색인 갱신이 필요합니다. 자료 준비가 끝난 뒤 다시 질문하세요.', 'index_not_ready')
+            try:
+                rebuilt = ensure_search_index(db, self.rules, self.schema)
+                if graph:
+                    relations.ensure(db)
+                return rebuilt
+            finally:
+                self._end_sync()
+
+    @contextmanager
+    def search_snapshot(self):
+        with closing(self.connect()) as db:
+            db.execute('PRAGMA query_only=ON')
+            db.execute('BEGIN')
+            try:
+                ensure_search_index(db, self.rules, self.schema, read_only=True)
+                yield db
+            finally:
+                db.rollback()
+
     def db_summary(self):
         if not self.db_path.exists():
             return {'exists': False, 'records': 0, 'has_proposals': False}
@@ -516,15 +585,20 @@ class App:
             server_busy = self.job['status'] == 'running' or self.sync_busy or self.question_worker
             maintenance = (self.job['status'] == 'running' and self.job['kind'] != 'ask') or self.sync_busy
             job = self.job
-            if owner is not None:
-                own = self.sessions[owner]['job']
-                if job['kind'] == 'ask' or own['status'] in ('queued', 'running') or (not maintenance and (own.get('started') or 0) > (job.get('started') or 0)):
-                    job = own
+            session = self.sessions[owner or self.token]
+            own = session['job']
+            if (own['status'] in ('queued', 'running') or
+                    max(own.get('started') or 0, own.get('finished') or 0,
+                        session.get('reset_at', 0)) > (job.get('started') or 0)):
+                job = own
             job = dict(job)
             position = next((i for i, (queued, _) in enumerate(self.questions, 1) if queued.get('owner') == owner), 0) if owner else 0
             started, finished = job.get('started'), job.get('finished')
             progress = dict(job['progress']) if isinstance(job.get('progress'), dict) else None
             conversation = list(self.sessions[owner].get('conversation', [])) if owner else []
+            maintenance_job = self.preparation_snapshot()
+            preparation = maintenance_job if self.job['kind'] in ('import_many', 'overnight') else self.last_preparation
+            recovery = self.recovery
         elapsed = round(job.get('elapsed_before', 0) + (finished if finished is not None else time.monotonic()) - started, 1) if started else job.get('elapsed_seconds', 0)
         return {
             'status': job['status'], 'kind': job['kind'],
@@ -535,14 +609,23 @@ class App:
             'conversation': conversation,
             'progress': progress, 'overnight': job.get('overnight'),
             'queue_position': position, 'server_busy': server_busy, 'maintenance_running': maintenance,
-            'recovery': self.recovery,
-            'preparation': self.last_preparation,
+            'recovery': recovery,
+            'maintenance': maintenance_job,
+            'preparation': preparation,
         }
+
+    def preparation_snapshot(self):
+        with self.lock:
+            job = json.loads(json.dumps(self.job))
+        start, finish = job.get('started'), job.pop('finished', None)
+        job['elapsed_seconds'] = round(job.pop('elapsed_before', 0) +
+            ((finish if finish is not None else time.monotonic()) - start if start else job.get('elapsed_seconds', 0)), 1)
+        return job
 
     def queue_question(self, owner, func, *, question=None, start_new=False):
         with self.lock:
-            if self.sync_busy or (self.job['status'] == 'running' and self.job['kind'] != 'ask'):
-                raise ApiError(409, '자료 갱신 작업 중입니다. 완료 후 질문하세요.', 'busy')
+            if self.sync_busy:
+                raise ApiError(409, '설정·자료 확인이 진행 중입니다. 잠시 후 다시 질문하세요.', 'busy')
             if self.sessions[owner]['job']['status'] in ('queued', 'running'):
                 raise ApiError(409, '내 질문이 이미 대기 또는 처리 중입니다.', 'busy')
             if len(self.questions) >= 50:
@@ -552,6 +635,7 @@ class App:
             job = self._idle_job() | {'kind': 'ask', 'status': 'queued', 'stage': '질문 대기 중', 'owner': owner, 'question': question}
             self.sessions[owner]['job'] = job
             self.questions.append((job, func))
+            self.models.enqueue_question()
             if self.question_worker:
                 return
             self.question_worker = True
@@ -565,15 +649,19 @@ class App:
                     self.question_worker = False
                     return
                 job, func = self.questions.popleft()
-                self.job = job
                 job.update(status='running', stage='준비 중', started=time.monotonic())
+            self.context.job = job
             try:
-                result = func()
+                self.set_stage('모델 사용 대기 중 · 진행 중인 자료 요청이 끝나면 질문을 처리합니다')
+                with self.models.question():
+                    result = func()
                 update = dict(status='done', stage='완료', result=result, error=None, code=None)
             except Exception as error:
                 message, code = self.public_error(error)
                 update = dict(status='error', stage='실패', error=message, code=code,
                               result=getattr(error, 'extra', {}).get('answer_result'))
+            finally:
+                del self.context.job
             with self.lock:
                 job.update(update, finished=time.monotonic())
                 result = job.get('result') or {}
@@ -600,6 +688,7 @@ class App:
                 raise ApiError(409, '내 질문이 끝난 뒤 새 대화를 시작하세요.', 'busy')
             session['conversation'] = []
             session['job'] = self._idle_job()
+            session['reset_at'] = time.monotonic()
         return {'reset': True}
 
     def busy(self):
@@ -699,7 +788,7 @@ class App:
 
     def start_job(self, kind, func, *, from_sync=False, request=None, resume=None):
         with self.lock:
-            if self.job['status'] == 'running' or self.question_worker or (self.sync_busy and not from_sync):
+            if self.job['status'] == 'running' or (self.sync_busy and not from_sync):
                 raise ApiError(409, '다른 작업이 진행 중입니다. 끝난 뒤에 다시 실행하세요.', 'busy')
             handle = self.sync_handle if from_sync else self._execution_handle(resume)
             if from_sync:
@@ -724,6 +813,7 @@ class App:
             self.recovery = None
 
         def target():
+            self.context.job = self.job
             try:
                 result = func()
                 if kind == 'bulk_review':
@@ -753,12 +843,13 @@ class App:
                         self.last_preparation = json.loads(json.dumps(self.job))
                     self.job_record = None
                     self.jobs.release(handle)
+                    del self.context.job
 
         threading.Thread(target=target, name='cs-rag-job', daemon=True).start()
 
-    def _begin_sync(self):
+    def _begin_sync(self, *, during_question=False):
         with self.lock:
-            if self.job['status'] == 'running' or self.question_worker or self.sync_busy:
+            if self.job['status'] == 'running' or (self.question_worker and not during_question) or self.sync_busy:
                 raise ApiError(409, '다른 작업이 진행 중입니다. 끝난 뒤에 다시 실행하세요.', 'busy')
             self.sync_handle = self._execution_handle()
             self.sync_busy = True
@@ -770,9 +861,12 @@ class App:
             self.sync_handle = None
 
     def set_stage(self, stage):
+        self._set_job_stage(getattr(self.context, 'job', self.job), stage)
+
+    def _set_job_stage(self, job, stage):
         with self.lock:
-            if self.job['status'] == 'running':
-                self.job['stage'] = self.redact(stage)
+            if job['status'] == 'running':
+                job['stage'] = self.redact(stage)
 
     def state(self, owner=None):
         summary = self.db_summary()
@@ -1091,7 +1185,7 @@ class App:
                 ingest(db, rows, self.rules, schema=self.schema, append=True)
             else:
                 ensure_search_index(db, self.rules, self.schema)
-            with closing(semantic.client_for(self.config, progress=self.set_stage)) as client:
+            with self.embedding_client() as client:
                 return semantic.build_vectors(db, client, self.config, limit=limit, progress=self.set_stage)
 
     def ask(self, body, *, comparison=False, owner=None):
@@ -1151,87 +1245,107 @@ class App:
                     record_ids = list(dict.fromkeys(identity.rsplit('/', 1)[0] for identity in resolved['source_ids']))
             details['resolved_question'] = resolved_question
             scope = {'record_ids': record_ids} if record_ids is not None else {}
-            self.set_stage('DB 원문 확인 중')
-            with closing(self.connect()) as db:
-                if not db.execute("SELECT 1 FROM sqlite_master WHERE name='normalized_records'").fetchone():
-                    raise ApiError(400, NO_DATA, 'no_data')
-                details['source_db'] = True
-                timings['source_check'] = round(time.monotonic() - started, 4)
-                self.set_stage('검색 자료 버전 확인 중')
+            self.set_stage('검색 자료 버전 확인 중')
+            stage_started = time.monotonic()
+            details['index_rebuilt'] = self.prepare_search(graph=search_mode == 'graph')
+            timings['index_prepare'] = round(time.monotonic() - stage_started, 4)
+            # 모델 입력 준비에는 DB 연결을 유지하지 않습니다. 최종 검색은 새 스냅샷 하나로 끝냅니다.
+            stage_started = time.monotonic()
+            with self.search_snapshot() as db:
+                aggregate = None if record_ids is not None else count_records(db, resolved_question)
+                exact = bool(any(exact_terms(resolved_question)) or receipt_number(db, resolved_question))
+                translate = (bilingual and not aggregate and record_ids is None and
+                             (not exact or bool(retrieve(db, resolved_question, limit=1))))
+                embed_query = (search_mode != 'keyword' and not aggregate and record_ids is None
+                               and not exact and semantic.vector_count(db, self.config))
+            timings['source_check'] = round(time.monotonic() - stage_started, 4)
+            translation = {}
+            if translate:
+                self.set_stage('영어 검색 질문 준비 중')
+                with self.llm_client() as client:
+                    translation = translate_query(resolved_question, client, self.config)
+            query_vector = ValueError('현재 설정으로 준비된 질문 벡터가 없습니다.')
+            if embed_query:
+                self.set_stage('질문 벡터 준비 중')
                 stage_started = time.monotonic()
-                details['index_rebuilt'] = ensure_search_index(db, self.rules, self.schema)
-                timings['index_prepare'] = round(time.monotonic() - stage_started, 4)
-                self.set_stage('검색 중')
+                try:
+                    with self.embedding_client() as client:
+                        query_vector = semantic.embed(client, [focused_query(resolved_question)],
+                                                      semantic.settings(self.config), query=True)
+                except (ValueError, RuntimeError, APIError) as error:
+                    query_vector = error
+                timings['query_embedding'] = round(time.monotonic() - stage_started, 4)
+            self.set_stage('DB 원문 검색 중')
+            search_started = time.monotonic()
+            with self.search_snapshot() as db:
+                details['source_db'] = True
                 stage_started = time.monotonic()
                 aggregate = None if record_ids is not None else count_records(db, resolved_question)
                 timings['aggregate_check'] = round(time.monotonic() - stage_started, 4)
-                if search_mode == 'graph' and not aggregate and record_ids is None:
-                    from .relations import ensure
-                    self.set_stage('관계 검색 자료 확인 중 · 첫 사용은 원문 셀을 한 번 읽습니다')
-                    stage_started = time.monotonic()
-                    ensure(db)
-                    timings['relations_prepare'] = round(time.monotonic() - stage_started, 4)
-                search_started = time.monotonic()
+                exact_receipt = bool(receipt_number(db, resolved_question))
                 hits = []
                 if bilingual and not aggregate:
-                    self.set_stage('한국어·영어로 검색 중')
-                    with self.llm_client() as client:
-                        hits = bilingual_retrieve(db, resolved_question, client, self.config, details=details,
-                                                  limit=max(20, search_limit) if search_mode in ('hybrid', 'graph') else search_limit,
-                                                  search_english=search_mode != 'vector', **scope)
-                    timings['bilingual'] = round(time.monotonic() - search_started, 4)
+                    stage_started = time.monotonic()
+                    hits = bilingual_retrieve(db, resolved_question, None, self.config, details=details,
+                                              limit=max(20, search_limit) if search_mode in ('hybrid', 'graph') else search_limit,
+                                              search_english=search_mode != 'vector', translation=translation, **scope)
+                    timings['bilingual'] = round(time.monotonic() - stage_started, 4)
                 if not aggregate and (search_mode != 'keyword' or comparison):
                     hits = semantic.search_cases(db, resolved_question, self.config, mode=search_mode,
-                        keyword_hits=hits if bilingual else None, details=details, limit=search_limit, **scope)
+                        keyword_hits=hits if bilingual else None, details=details, limit=search_limit,
+                        query_vector=query_vector, **scope)
                 elif not aggregate and not bilingual:
+                    stage_started = time.monotonic()
                     hits = retrieve(db, resolved_question, limit=search_limit, **scope)
-                    timings['keyword'] = round(time.monotonic() - search_started, 4)
-                if not aggregate and record_ids is None and self.clef_enabled:
-                    from .clef import rerank
-                    hits = rerank(db, resolved_question, hits, self.config['clef'], details=details, progress=self.set_stage,
-                                  log_path=self.output / 'clef_server.log', answer_config=self.config)
-                hits = hits[:retrieval_limit]
-                timings['retrieval_total'] = round(time.monotonic() - search_started, 4)
-                details['references'] = {'mode': 'auto' if reference_limit == 0 else 'manual',
-                    'requested_limit': reference_limit, 'candidates': len(hits), 'selected': len(hits),
-                    'applied_to': 'comparison' if comparison else 'aggregate' if aggregate else 'answer'}
-                stage_started = time.monotonic()
-                if comparison and not aggregate:
-                    reply, code = '검색 방식별 후보를 비교했습니다. 답변 모델은 호출하지 않았습니다.', 'ok'
-                    details['comparison'] = True
-                    details['note'] = '키워드·벡터·결합 검색 후보는 아래 검색 방식과 후보 비교에서 확인하세요.'
-                elif aggregate:
-                    reply, code = aggregate['answer'], 'aggregate'
-                elif not hits:
-                    reply, code = '해당 질문에 맞는 기록이 없어 확인할 수 없습니다.', 'no_match'
-                else:
-                    self.set_stage('답변 생성 중')
-                    with self.llm_client() as client:
-                        try:
-                            answer_config = answer_settings
-                            if reference_limit == 0:
-                                self.set_stage('답변 모델의 문맥 한도·참고 사례 분량 확인 중')
-                                hits, answer_config = select_answer_cases(answer_settings, resolved_question, hits, details=details)
-                            self.set_stage('답변 생성·영어 근거 검사 중' if answer_settings['claim_guard_mode'] != 'off' else '답변 생성 중')
-                            reply, _context = answer(client, answer_config, resolved_question, hits, details=details)
-                            code = details.get('answer_status', 'ok')
-                        except Exception as error:
-                            text, failure_code = self.public_error(error)
-                            failure_code = ('validation_failed' if isinstance(error, ValueError) and
-                                            ('근거 검사' in text or 'claims' in text) else failure_code or 'error')
-                            summary = details | {'claims': [], 'source_supplements': [],
-                                'validation_events': [{k: self.redact(v) if isinstance(v, str) else v
-                                    for k, v in event.items() if k != 'response'}
-                                    for event in details.get('validation_events', [])]}
-                            result = pack_answer(question, text, hits, None, summary, time.monotonic()-started, code=failure_code)
-                            http_status = (422 if failure_code in ('validation_failed', 'verification_overlength', 'verification_empty') else
-                                           504 if failure_code == 'verification_timeout' else
-                                           503 if failure_code == 'verification_unavailable' else 500)
-                            raise ApiError(http_status, text, failure_code,
-                                           extra={'answer_result': result}) from error
-                        finally:
-                            self.save_answer_diagnostics(question, hits, details, details.get('answer_status', 'error'))
-                timings['answer'] = round(time.monotonic() - stage_started, 4)
+                    timings['keyword'] = round(time.monotonic() - stage_started, 4)
+                details['evidence_snapshot'] = {'captured_at': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
+                    'sha256': hashlib.sha256(json.dumps([hits, aggregate], ensure_ascii=False, sort_keys=True).encode()).hexdigest()}
+            if not aggregate and record_ids is None and self.clef_enabled:
+                from .clef import rerank
+                hits = rerank(None, resolved_question, hits, self.config['clef'], details=details, progress=self.set_stage,
+                              log_path=self.output / 'clef_server.log', answer_config=self.config, exact_receipt=exact_receipt)
+            hits = hits[:retrieval_limit]
+            timings['retrieval_total'] = round(time.monotonic() - search_started, 4)
+            details['references'] = {'mode': 'auto' if reference_limit == 0 else 'manual',
+                'requested_limit': reference_limit, 'candidates': len(hits), 'selected': len(hits),
+                'applied_to': 'comparison' if comparison else 'aggregate' if aggregate else 'answer'}
+            stage_started = time.monotonic()
+            if comparison and not aggregate:
+                reply, code = '검색 방식별 후보를 비교했습니다. 답변 모델은 호출하지 않았습니다.', 'ok'
+                details['comparison'] = True
+                details['note'] = '키워드·벡터·결합 검색 후보는 아래 검색 방식과 후보 비교에서 확인하세요.'
+            elif aggregate:
+                reply, code = aggregate['answer'], 'aggregate'
+            elif not hits:
+                reply, code = '해당 질문에 맞는 기록이 없어 확인할 수 없습니다.', 'no_match'
+            else:
+                self.set_stage('답변 생성 중')
+                with self.llm_client() as client:
+                    try:
+                        answer_config = answer_settings
+                        if reference_limit == 0:
+                            self.set_stage('답변 모델의 문맥 한도·참고 사례 분량 확인 중')
+                            hits, answer_config = select_answer_cases(answer_settings, resolved_question, hits, details=details)
+                        self.set_stage('답변 생성·영어 근거 검사 중' if answer_settings['claim_guard_mode'] != 'off' else '답변 생성 중')
+                        reply, _context = answer(client, answer_config, resolved_question, hits, details=details)
+                        code = details.get('answer_status', 'ok')
+                    except Exception as error:
+                        text, failure_code = self.public_error(error)
+                        failure_code = ('validation_failed' if isinstance(error, ValueError) and
+                                        ('근거 검사' in text or 'claims' in text) else failure_code or 'error')
+                        summary = details | {'claims': [], 'source_supplements': [],
+                            'validation_events': [{k: self.redact(v) if isinstance(v, str) else v
+                                for k, v in event.items() if k != 'response'}
+                                for event in details.get('validation_events', [])]}
+                        result = pack_answer(question, text, hits, None, summary, time.monotonic()-started, code=failure_code)
+                        http_status = (422 if failure_code in ('validation_failed', 'verification_overlength', 'verification_empty') else
+                                       504 if failure_code == 'verification_timeout' else
+                                       503 if failure_code == 'verification_unavailable' else 500)
+                        raise ApiError(http_status, text, failure_code,
+                                       extra={'answer_result': result}) from error
+                    finally:
+                        self.save_answer_diagnostics(question, hits, details, details.get('answer_status', 'error'))
+            timings['answer'] = round(time.monotonic() - stage_started, 4)
             timings['total'] = round(time.monotonic() - started, 4)
             if not comparison and (aggregate or not hits):
                 self.save_answer_diagnostics(question, hits, details, code)
@@ -1656,6 +1770,7 @@ def pack_answer(question, reply, hits, aggregate, details, elapsed, code='ok'):
         'timings': (details or {}).get('timings', {}),
         'source_db': (details or {}).get('source_db', False),
         'index_rebuilt': (details or {}).get('index_rebuilt', False),
+        'evidence_snapshot': (details or {}).get('evidence_snapshot'),
         'comparison': (details or {}).get('comparison', False),
         'error': None if ok else reply,
         'code': code,

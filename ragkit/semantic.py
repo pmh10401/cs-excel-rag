@@ -216,7 +216,7 @@ def load_index(db, config):
     return value
 
 
-def vector_hits(db, question, config, *, limit=20, timings=None, embedding_client=None):
+def vector_hits(db, question, config, *, limit=20, timings=None, embedding_client=None, query_vector=None):
     timings = timings if timings is not None else {}
     question = focused_query(question)
     cfg = settings(config)
@@ -224,7 +224,11 @@ def vector_hits(db, question, config, *, limit=20, timings=None, embedding_clien
     identities, index = load_index(db, config)
     timings['index_load'] = round(time.monotonic() - started, 4)
     started = time.monotonic()
-    if embedding_client is None:
+    if isinstance(query_vector, Exception):
+        raise query_vector
+    if query_vector is not None:
+        query = query_vector
+    elif embedding_client is None:
         with closing(client_for(config)) as client:
             query = embed(client, [question], cfg, query=True)
     else:
@@ -301,7 +305,7 @@ def prefer_action_variants(hits, question):
     return [next(groups[key]) for key in keys]
 
 
-def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, details=None, embedding_client=None, limit=3, record_ids=None):
+def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, details=None, embedding_client=None, limit=3, record_ids=None, query_vector=None):
     if type(limit) is not int or not 1 <= limit <= 100:
         raise ValueError('참고 사례 수는 1~100 사이 정수여야 합니다.')
     candidate_limit = max(20, limit)
@@ -361,6 +365,8 @@ def search_cases(db, question, config, *, mode='hybrid', keyword_hits=None, deta
     vector_failed = False
     try:
         options = {'embedding_client': embedding_client} if embedding_client is not None else {}
+        if query_vector is not None:
+            options['query_vector'] = query_vector
         vectors = [] if exact else vector_hits(db, question, config, limit=candidate_limit, timings=timings, **options)
     except (ValueError, RuntimeError, APIError) as error:
         if mode == 'vector':

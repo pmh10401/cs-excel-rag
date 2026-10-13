@@ -159,12 +159,12 @@ def chat_model(config, progress, log_path=None):
             print('설정된 답변 모델 해제를 확인하지 못했습니다. lms ps로 확인하세요. 다음 Clef 실행 전에 다시 확인합니다.', flush=True)
 
 
-def rerank(db, question, hits, config, *, details, progress=lambda text: None, log_path=None, answer_config=None):
+def rerank(db, question, hits, config, *, details, progress=lambda text: None, log_path=None, answer_config=None, exact_receipt=None):
     cfg = options(config)
     info = {'status': 'skipped', 'model': cfg['model'], 'baseline_ids': [h['id'] for h in hits],
             'reranked_ids': [h['id'] for h in hits], 'scores': [], 'reason': '', 'seconds': 0.0}
     details['clef_search'] = info
-    if not hits or any(exact_terms(question)) or receipt_number(db, question):
+    if not hits or any(exact_terms(question)) or (receipt_number(db, question) if exact_receipt is None else exact_receipt):
         info['reason'] = '빈 후보·접수번호·코드·날짜의 정확 검색은 그대로 유지했습니다.'
         return hits
     selected = hits[:cfg['candidates']]

@@ -329,8 +329,6 @@ def main(root):
                 assert entered.wait(5)
                 request('/api/ask', {'question': '두 번째 질문'}, status=409)
                 request('/api/reviews', review, status=409)
-                request('/api/reviews/accept-pending', {}, status=409)
-                request('/api/english', {}, status=409)
                 request('/api/header-mappings', {'aliases': {}}, status=409)
                 request('/api/settings', {'normalization_workers': 1}, status=409)
                 release.set()
@@ -482,7 +480,7 @@ def main(root):
                         graph_result = finished()['result']
                     assert graph_result['vector_search']['mode'] == 'graph'
                     assert graph_result['vector_search']['relations']['status'] == 'skipped'
-                    assert graph_result['timings']['relations_prepare'] >= 0
+                    assert graph_result['timings']['index_prepare'] >= 0
                 with closing(sqlite3.connect(app.db_path)) as db:
                     assert db.execute('SELECT * FROM normalized_records').fetchall() == saved
                     assert db.execute('SELECT * FROM cell_reviews').fetchall() == reviews
