@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-14",
+  "code_commit": "df5fb7e036d74d2eff9180f6f2f99ab9ad33b2e9",
+  "division": "AI, separate criteria pending",
+  "speaker": "박민호",
+  "affiliation": "photo sw 그룹",
+  "main_slides": 10,
+  "appendix_slides": 6,
+  "allocated_seconds": 540,
+  "files": [
+    "SEMES-Tech-Fair-RAG-발표-20261014-083353.pptx",
+    "SEMES-Tech-Fair-RAG-별첨증빙-20261014-083353.pptx"
+  ],
+  "sources": {
+    "E1": {
+      "name": "제품 구조와 원문 보존",
+      "date": "2026-10-13",
+      "doc": "docs/전체-프로그램-플로우.md",
+      "notes": "현 구조, 원문·상세·셀 인용, 선택적 번역·재정렬. 실제 정확도나 특허 신규성 증거가 아님."
+    },
+    "E2": {
+      "name": "10만 합성 자료 검색 비교",
+      "date": "2026-10-07",
+      "doc": "docs/임베딩-품질비교-20261007.md",
+      "notes": "50개 고정 개발 질문 중 정답 있는 44개. 키워드 첫 정답28/44, Qwen결합39/44, EmbeddingGemma 2결합35/44. 최종 답변은 평가하지 않음."
+    },
+    "E3": {
+      "name": "원문 관계 보완 비교",
+      "date": "2026-10-07",
+      "doc": "docs/관계검색-비교-20261007.md",
+      "notes": "2,000 합성 상세,41문항 중 정답있는34개. 첫 정답32/34와34/34. 정답없는3개 중2개는 두방식 모두 유사후보를 반환."
+    },
+    "E4": {
+      "name": "작업 복구와 동시 질문",
+      "date": "2026-10-13",
+      "doc": "docs/임원보고서.md",
+      "notes": "Mac·모의 모델. 작업 복구14건과 동시 처리7건 통과. Windows실기기/DRM 및 실제120B부하 미확인."
+    },
+    "E5": {
+      "name": "모델 실행과 사용자 화면",
+      "date": "2026-10-08",
+      "doc": "docs/Clef-테스트-RAG-20261008.md",
+      "notes": "Clef MLX 실제Mac연결. 동일질문 반복기능확인. 한국어현장품질향상 및 Windows GPU 미확인."
+    },
+    "E6": {
+      "name": "제품화 목표와 남은 검증",
+      "date": "2026-10-13",
+      "doc": "docs/제품화-설계-20261013.md",
+      "notes": "Windows 사내서버+여러브라우저 목표. 사용자·관리자권한,운영API,현장정확도,실제부하 확인 필요. 문서 최초설계의 후속범위 중 동시질문은E4로 상태갱신."
+    },
+    "E7": {
+      "name": "Clef 조건 구분 8문항 대조",
+      "date": "2026-10-14",
+      "doc": "docs/Clef-발표-조건비교-20261014.md",
+      "url": "https://github.com/pmh10401/cs-excel-rag/blob/main/docs/Clef-발표-조건비교-20261014.md",
+      "notes": "기존 개발 질문의 유사 현상 구분 8개 전부. 저장된 Gemma 2 결합 후보5건 고정. 현재 Clef 프롬프트, MLX GPU 8비트. 소규모 검색 순서 진단이며 최종 답변·현장 정확도는 평가하지 않음."
+    },
+    "E8": {
+      "name": "Cloudflare Clef-flash 모델 카드",
+      "date": "2026-10-14 열람",
+      "url": "https://huggingface.co/Cloudflare/clef-flash",
+      "notes": "상태와 질문 스키마를 읽어 허용 선택지의 확률을 출력하는 9B 판단 모델. 공급자 벤치마크와 지연을 본 시스템 성과로 사용하지 않음."
+    },
+    "E9": {
+      "name": "Sentence Transformers Retrieve & Re-Rank",
+      "date": "2026-10-14 열람",
+      "url": "https://www.sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html",
+      "notes": "검색 후 재정렬 자체는 기존에 널리 사용되는 구조. 여기서는 재정렬 없는 기본 RAG를 비교 대상으로 한정하며 다른 재정렬 모델 대비 우위는 검증하지 않음."
+    }
+  }
+}

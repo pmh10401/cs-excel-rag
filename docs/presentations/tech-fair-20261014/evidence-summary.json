@@ -1,0 +1,282 @@
+{
+  "complete": true,
+  "date": "2026-10-14",
+  "independent_recalculation": true,
+  "unchanged_candidates_and_cells": true,
+  "unchanged_sources_and_code_hashes": true,
+  "gpu_verified": true,
+  "summary": {
+    "total": 8,
+    "applied": 8,
+    "before_top1": 5,
+    "after_top1": 8,
+    "before_top3": 8,
+    "after_top3": 8,
+    "improved": [
+      "contrast-01",
+      "contrast-03",
+      "contrast-08"
+    ],
+    "regressed": []
+  },
+  "runtime_seconds": {
+    "min": 29.516,
+    "max": 35.853,
+    "median": 30.868000000000002,
+    "inference_min": 5.073,
+    "inference_max": 7.375
+  },
+  "protocol": {
+    "date": "2026-10-14",
+    "selection": "All 8 pre-existing contrast-category development questions, fixed before inference",
+    "baseline": "Stored EmbeddingGemma 2 hybrid top 5, 2026-10-07",
+    "source_sha256": "fd4e5d7ad40b27af36b23423817c8ffc411ce04eebac38cbba7da80b1752b3f4",
+    "dataset_sha256": "58c64b6b3f4eb2995a491179af36d572eaf3745405aa48b767bad417004171ba",
+    "clef_code_sha256": "87dae271f0569d588e8bd90c3e5161fae606bd10623ae680d2eb0e147afaf7db",
+    "case_ids": [
+      "contrast-01",
+      "contrast-02",
+      "contrast-03",
+      "contrast-04",
+      "contrast-05",
+      "contrast-06",
+      "contrast-07",
+      "contrast-08"
+    ],
+    "model_revision": "5a195dc147926b63b1d139691ed4480ca9f92c0e",
+    "protocol": "Current production prompt and validation. Transport replaced with existing local GPU worker; no HTTP/UI test. No training, prompt adjustment, retrieval rerun or answer generation.",
+    "limitations": [
+      "Small fixed development subgroup, not independent field labels",
+      "Reordering cannot add a missing candidate",
+      "One pass; no order-bias or repeated-run evaluation",
+      "Ranks evaluate case relevance, not action success or final answer truth"
+    ]
+  },
+  "rows": [
+    {
+      "id": "contrast-01",
+      "question": "냉각수 흐름 자체는 충분한데 식각 척에서 되돌아오는 물이 너무 뜨거워집니다. 이런 과거 사례는?",
+      "before_top1": false,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-01622/문서",
+        "CS-2026-82420/문서",
+        "CS-2026-01322/문서",
+        "CS-2026-17340/문서",
+        "CS-2026-00942/문서"
+      ],
+      "after_ids": [
+        "CS-2026-17340/문서",
+        "CS-2026-82420/문서",
+        "CS-2026-01322/문서",
+        "CS-2026-01622/문서",
+        "CS-2026-00942/문서"
+      ],
+      "expected_templates": [
+        "AGY-020"
+      ],
+      "seconds_including_load": 35.853,
+      "load_seconds": 29.08,
+      "inference_seconds": 5.531
+    },
+    {
+      "id": "contrast-02",
+      "question": "질소를 쓰면서 압력이 떨어지는 문제가 아니라 밸브를 닫은 채 두었는데 후단 압력이 서서히 올라갑니다.",
+      "before_top1": true,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-49774/문서",
+        "CS-2026-00192/문서",
+        "CS-2026-25894/문서",
+        "CS-2026-01412/문서",
+        "CS-2026-25414/문서"
+      ],
+      "after_ids": [
+        "CS-2026-49774/문서",
+        "CS-2026-25414/문서",
+        "CS-2026-25894/문서",
+        "CS-2026-00192/문서",
+        "CS-2026-01412/문서"
+      ],
+      "expected_templates": [
+        "AGY-014"
+      ],
+      "seconds_including_load": 31.145,
+      "load_seconds": 23.408,
+      "inference_seconds": 5.737
+    },
+    {
+      "id": "contrast-03",
+      "question": "챔버 진공을 만드는 동작은 괜찮은데 공기를 넣어 대기압으로 돌아오는 동작만 너무 늦습니다.",
+      "before_top1": false,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-48248/문서",
+        "CS-2026-18561/문서",
+        "CS-2026-88928/문서",
+        "CS-2026-21641/문서",
+        "CS-2026-21848/문서"
+      ],
+      "after_ids": [
+        "CS-2026-18561/문서",
+        "CS-2026-21641/문서",
+        "CS-2026-48248/문서",
+        "CS-2026-88928/문서",
+        "CS-2026-21848/문서"
+      ],
+      "expected_templates": [
+        "AGY-001",
+        "AGY-032"
+      ],
+      "seconds_including_load": 32.196,
+      "load_seconds": 23.263,
+      "inference_seconds": 7.375
+    },
+    {
+      "id": "contrast-04",
+      "question": "배기량은 실제로 정상입니다. 코팅 컵 문을 움직일 때만 배기 부족 경보가 켜지는 사례를 찾습니다.",
+      "before_top1": true,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-05397/문서",
+        "CS-2026-01252/문서",
+        "CS-2026-04957/문서",
+        "CS-2026-01992/문서",
+        "CS-2026-02717/문서"
+      ],
+      "after_ids": [
+        "CS-2026-05397/문서",
+        "CS-2026-04957/문서",
+        "CS-2026-02717/문서",
+        "CS-2026-01252/문서",
+        "CS-2026-01992/문서"
+      ],
+      "expected_templates": [
+        "AGY-037"
+      ],
+      "seconds_including_load": 30.591,
+      "load_seconds": 23.061,
+      "inference_seconds": 5.717
+    },
+    {
+      "id": "contrast-05",
+      "question": "실제 압력이 낮은 현상이 아니라 식각 챔버의 계기가 기준 계기보다 낮게 표시되는 사례입니다.",
+      "before_top1": true,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-16452/문서",
+        "CS-2026-40692/문서",
+        "CS-2026-35372/문서",
+        "CS-2026-21612/문서",
+        "CS-2026-32492/문서"
+      ],
+      "after_ids": [
+        "CS-2026-16452/문서",
+        "CS-2026-40692/문서",
+        "CS-2026-21612/문서",
+        "CS-2026-32492/문서",
+        "CS-2026-35372/문서"
+      ],
+      "expected_templates": [
+        "AGY-012"
+      ],
+      "seconds_including_load": 30.026,
+      "load_seconds": 23.234,
+      "inference_seconds": 5.227
+    },
+    {
+      "id": "contrast-06",
+      "question": "웨이퍼 중심이 틀어진 문제가 아니라 얼라이너가 웨이퍼 가장자리 홈을 찾지 못합니다.",
+      "before_top1": true,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-07464/문서",
+        "CS-2026-82264/문서",
+        "CS-2026-07384/문서",
+        "CS-2026-16104/문서",
+        "CS-2026-06944/문서"
+      ],
+      "after_ids": [
+        "CS-2026-07464/문서",
+        "CS-2026-82264/문서",
+        "CS-2026-16104/문서",
+        "CS-2026-07384/문서",
+        "CS-2026-06944/문서"
+      ],
+      "expected_templates": [
+        "AGY-024"
+      ],
+      "seconds_including_load": 32.093,
+      "load_seconds": 23.392,
+      "inference_seconds": 7.225
+    },
+    {
+      "id": "contrast-07",
+      "question": "문 열림 경보가 아니라 후면 비상 정지 스위치를 누르지 않았는데 그 회로 접점이 순간적으로 끊깁니다.",
+      "before_top1": true,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-06840/문서",
+        "CS-2026-07640/문서",
+        "CS-2026-66840/문서",
+        "CS-2026-07360/문서",
+        "CS-2026-44880/문서"
+      ],
+      "after_ids": [
+        "CS-2026-06840/문서",
+        "CS-2026-07640/문서",
+        "CS-2026-66840/문서",
+        "CS-2026-44880/문서",
+        "CS-2026-07360/문서"
+      ],
+      "expected_templates": [
+        "AGY-040"
+      ],
+      "seconds_including_load": 29.516,
+      "load_seconds": 23.011,
+      "inference_seconds": 5.175
+    },
+    {
+      "id": "contrast-08",
+      "question": "로봇을 구동할 때 위치는 정상인데 전원을 끈 순간 팔이 아래로 처집니다.",
+      "before_top1": false,
+      "after_top1": true,
+      "before_top3": true,
+      "after_top3": true,
+      "before_ids": [
+        "CS-2026-01950/문서",
+        "CS-2026-84795/문서",
+        "CS-2026-01890/문서",
+        "CS-2026-99875/문서",
+        "CS-2026-01370/문서"
+      ],
+      "after_ids": [
+        "CS-2026-84795/문서",
+        "CS-2026-99875/문서",
+        "CS-2026-01890/문서",
+        "CS-2026-01950/문서",
+        "CS-2026-01370/문서"
+      ],
+      "expected_templates": [
+        "AGY-035"
+      ],
+      "seconds_including_load": 30.125,
+      "load_seconds": 23.524,
+      "inference_seconds": 5.073
+    }
+  ]
+}
