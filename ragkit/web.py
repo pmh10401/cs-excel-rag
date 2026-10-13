@@ -43,6 +43,7 @@ STATIC = {
 }
 GET_API = {'/api/state', '/api/job', '/api/records', '/api/record', '/api/llm-messages'}
 POST_API = {'/api/inspect', '/api/import', '/api/import-many', '/api/convert', '/api/normalize', '/api/english', '/api/vectors', '/api/compare-search', '/api/ask', '/api/conversation/reset', '/api/reviews', '/api/reviews/accept-pending', '/api/header-mappings', '/api/settings', '/api/overnight', '/api/overnight/stop', '/api/claim-guard/prepare'}
+POST_API.update({'/api/job/resume', '/api/job/dismiss'})
 PUBLIC_CONFIG = ('model', 'base_url', 'reasoning_effort', 'timeout_seconds',
                  'max_context_chars', 'max_tokens', 'context_window', 'temperature', 'top_p',
                  'answer_max_tokens', 'answer_temperature', 'answer_top_p')
@@ -132,7 +133,7 @@ class App:
             if type((self.config.get('embedding') or {}).get(flag, True)) is not bool:
                 raise ValueError(f'embedding.{flag}는 참 또는 거짓이어야 합니다.')
         self.token = secrets.token_urlsafe(32)
-        self.lock = threading.Lock()  # 공유 DB 갱신과 순차 질문 실행의 접수 잠금입니다.
+        self.lock = threading.RLock()  # 복구 확인과 기존 작업 접수를 한 잠금 안에서 수행합니다.
         self.llm_trace = LLMTrace(self.output, self.config)
         self.sync_busy = False
         self.port = None
@@ -141,6 +142,12 @@ class App:
         self.excel_text = ''
         self.input_sheet = SHEET
         self.job = self._idle_job()
+        from .jobs import JobStore
+        self.jobs = JobStore(self.output.resolve())
+        self.job_record = None
+        self.recovery = None
+        self.last_preparation = None
+        self.sync_handle = None
         self.overnight_stop = threading.Event()
         self.embedding_status = {'status': 'idle', 'message': ''}
         self.normalization_workers = validate_workers(self.config.get('normalization_workers', 200))
@@ -232,6 +239,8 @@ class App:
         return bool(cfg.get('base_url') and cfg.get('model') and cfg.get('auto_index', True))
 
     def start_embedding(self):
+        if self.recovery or self.busy():
+            return
         cfg = self.config.get('embedding') or {}
         if cfg.get('base_url') and cfg.get('model'):
             self.start_job('auto_vectors', self.update_vectors)
@@ -501,6 +510,8 @@ class App:
         return token
 
     def job_snapshot(self, owner=None):
+        if self.recovery and self.recovery.get('active'):
+            self.recover_jobs()
         with self.lock:
             server_busy = self.job['status'] == 'running' or self.sync_busy or self.question_worker
             maintenance = (self.job['status'] == 'running' and self.job['kind'] != 'ask') or self.sync_busy
@@ -514,7 +525,7 @@ class App:
             started, finished = job.get('started'), job.get('finished')
             progress = dict(job['progress']) if isinstance(job.get('progress'), dict) else None
             conversation = list(self.sessions[owner].get('conversation', [])) if owner else []
-        elapsed = round((finished if finished is not None else time.monotonic()) - started, 1) if started else 0
+        elapsed = round(job.get('elapsed_before', 0) + (finished if finished is not None else time.monotonic()) - started, 1) if started else job.get('elapsed_seconds', 0)
         return {
             'status': job['status'], 'kind': job['kind'],
             'stage': self.redact(job['stage']) if job['stage'] else '',
@@ -524,6 +535,8 @@ class App:
             'conversation': conversation,
             'progress': progress, 'overnight': job.get('overnight'),
             'queue_position': position, 'server_busy': server_busy, 'maintenance_running': maintenance,
+            'recovery': self.recovery,
+            'preparation': self.last_preparation,
         }
 
     def queue_question(self, owner, func, *, question=None, start_new=False):
@@ -593,15 +606,122 @@ class App:
         with self.lock:
             return self.job['status'] == 'running' or self.sync_busy or self.question_worker
 
-    def start_job(self, kind, func, *, from_sync=False):
+    def checkpoint_job(self):
+        with self.lock:
+            self._save_job_locked()
+
+    def _save_job_locked(self):
+        if self.job_record is None:
+            return
+        snapshot = dict(self.job)
+        start, finish = snapshot.pop('started', None), snapshot.pop('finished', None)
+        snapshot['elapsed_seconds'] = snapshot.pop('elapsed_before', 0) + ((finish or time.monotonic()) - start if start else 0)
+        if snapshot['kind'] == 'overnight':
+            snapshot['stop_requested'] = self.overnight_stop.is_set()
+        record = self.job_record
+        record['id'] = self.jobs.save(record['kind'], record['request'], snapshot, record.get('id'))
+
+    def _execution_handle(self, resume=None):
+        handle = self.jobs.acquire()
+        if handle is None:
+            raise ApiError(409, '같은 출력 폴더에서 다른 작업이 실행 중입니다.', 'busy')
+        try:
+            pending = self.jobs.latest(unfinished=True, locked=True)
+            if pending and (not resume or pending['id'] != resume['id']):
+                raise ApiError(409, '중단된 자료 작업을 이어서 실행하거나 복구 대기를 해제하세요.', 'recovery_pending')
+            if resume and (not pending or pending['id'] != resume['id']):
+                raise ApiError(409, '복구할 작업이 변경되었습니다. 화면을 새로 고치세요.', 'recovery_changed')
+            return handle
+        except Exception:
+            self.jobs.release(handle)
+            raise
+
+    def recover_jobs(self):
+        with self.lock:
+            if self.busy():
+                return True
+            try:
+                handle = self.jobs.acquire()
+                if handle is None:
+                    self.recovery = {'id': None, 'active': True, 'message': '다른 서버 프로세스가 이 자료 작업을 실행 중입니다.'}
+                    return False
+                try:
+                    pending = self.jobs.latest(unfinished=True, locked=True)
+                    latest = pending or self.jobs.latest(locked=True)
+                finally:
+                    self.jobs.release(handle)
+                self.recovery = None
+                if not pending:
+                    if latest and latest['snapshot']['status'] == 'done':
+                        self.job = self._idle_job() | latest['snapshot'] | {'kind': latest['kind'], 'started': None, 'finished': None}
+                        self.last_preparation = json.loads(json.dumps(self.job))
+                    return False
+                self.recovery = {'id': pending['id'], 'active': False,
+                                 'message': '이전 자료 준비 작업이 중단되었습니다. 저장한 성공분을 재사용할 수 있습니다.'}
+                self.job = self._idle_job() | pending['snapshot'] | {'status': 'interrupted', 'kind': pending['kind'],
+                            'stage': '자료 준비 복구 대기', 'started': None, 'finished': None}
+                if pending['snapshot'].get('stop_requested') or pending['snapshot']['status'] == 'error':
+                    self.recovery['message'] = '중지 요청 또는 실패 기록이 있어 자동 실행을 보류했습니다. 원인을 확인한 뒤 이어서 실행하세요.'
+                else:
+                    self.resume_job({'id': pending['id']})
+                return True
+            except Exception as error:
+                self.recovery = {'id': (self.recovery or {}).get('id'), 'active': False, 'message': self.public_error(error)[0]}
+                return True
+
+    def _recovery_record(self, body):
+        if not isinstance(body, dict) or set(body) != {'id'} or not isinstance(body['id'], str):
+            raise ApiError(400, '복구할 작업 ID만 지정하세요.')
+        record = self.jobs.latest(unfinished=True)
+        if not record or record['id'] != body['id']:
+            raise ApiError(409, '복구할 작업이 변경되었습니다. 화면을 새로 고치세요.', 'recovery_changed')
+        return record
+
+    def resume_job(self, body):
+        record = self._recovery_record(body)
+        if record['kind'] == 'import_many':
+            return self.import_many(record['request'], resume=record)
+        return self.start_overnight(record['request'], resume=record)
+
+    def dismiss_job(self, body):
+        record = self._recovery_record(body)
+        with self.lock:
+            if self.job['status'] == 'running' or self.sync_busy or self.question_worker:
+                raise ApiError(409, '진행 중인 작업이 끝난 뒤 복구 대기를 해제하세요.', 'busy')
+            handle = self._execution_handle(record)
+            try:
+                self.jobs.save(record['kind'], record['request'], record['snapshot'] | {'status': 'dismissed'}, record['id'])
+                self.recovery = None
+                self.job = self._idle_job()
+            finally:
+                self.jobs.release(handle)
+        return {'dismissed': True}
+
+    def start_job(self, kind, func, *, from_sync=False, request=None, resume=None):
         with self.lock:
             if self.job['status'] == 'running' or self.question_worker or (self.sync_busy and not from_sync):
                 raise ApiError(409, '다른 작업이 진행 중입니다. 끝난 뒤에 다시 실행하세요.', 'busy')
+            handle = self.sync_handle if from_sync else self._execution_handle(resume)
+            if from_sync:
+                self.sync_handle = None
+            previous = self.job
             self.job = {'status': 'running', 'kind': kind, 'stage': '준비 중',
                         'started': time.monotonic(), 'finished': None,
                         'error': None, 'code': None, 'result': None, 'progress': None}
+            if resume:
+                self.job.update(progress=resume['snapshot'].get('progress'),
+                                overnight=resume['snapshot'].get('overnight'),
+                                elapsed_before=resume['snapshot'].get('elapsed_seconds', 0))
+            self.job_record = {'kind': kind, 'request': request, 'id': resume['id'] if resume else None} if request is not None else None
             if kind == 'overnight':
                 self.overnight_stop.clear()
+            try:
+                self._save_job_locked()
+            except Exception:
+                self.job, self.job_record = previous, None
+                self.jobs.release(handle)
+                raise
+            self.recovery = None
 
         def target():
             try:
@@ -615,16 +735,24 @@ class App:
                     except Exception as error:
                         # 등록·변환 결과는 보관하고 임베딩 실패만 별도로 알립니다.
                         result['embedding_warning'] = self.redact(error)
-                finished = time.monotonic()
-                with self.lock:
-                    self.job.update(status='done', stage='완료', result=result,
-                                    error=None, code=None, finished=finished)
+                update = dict(status='done', stage='완료', result=result, error=None, code=None)
             except Exception as error:
                 message, code = self.public_error(error)
-                finished = time.monotonic()
-                with self.lock:
-                    self.job.update(status='error', stage='실패', error=message,
-                                    code=code, result=getattr(error, 'extra', {}).get('answer_result'), finished=finished)
+                update = dict(status='error', stage='실패', error=message,
+                              code=code, result=getattr(error, 'extra', {}).get('answer_result'))
+            with self.lock:
+                self.job.update(update, finished=time.monotonic())
+                try:
+                    self._save_job_locked()
+                except Exception as error:
+                    self.job.update(status='error', stage='작업 기록 저장 실패', error=self.public_error(error)[0], code='job_storage')
+                finally:
+                    if self.job_record and self.job['status'] == 'error':
+                        self.recovery = {'id': self.job_record['id'], 'active': False, 'message': self.job['error']}
+                    if self.job_record:
+                        self.last_preparation = json.loads(json.dumps(self.job))
+                    self.job_record = None
+                    self.jobs.release(handle)
 
         threading.Thread(target=target, name='cs-rag-job', daemon=True).start()
 
@@ -632,11 +760,14 @@ class App:
         with self.lock:
             if self.job['status'] == 'running' or self.question_worker or self.sync_busy:
                 raise ApiError(409, '다른 작업이 진행 중입니다. 끝난 뒤에 다시 실행하세요.', 'busy')
+            self.sync_handle = self._execution_handle()
             self.sync_busy = True
 
     def _end_sync(self):
         with self.lock:
             self.sync_busy = False
+            self.jobs.release(self.sync_handle)
+            self.sync_handle = None
 
     def set_stage(self, stage):
         with self.lock:
@@ -771,7 +902,7 @@ class App:
         return {'rows': len(rows), 'import': incoming, 'path': str(path),
                 'reader': reader, 'sheet': rows[0]['_source_sheet']}
 
-    def import_many(self, body):
+    def import_many(self, body, *, resume=None):
         paths = body.get('paths')
         reader = body.get('reader', self.reader)
         if set(body) - {'paths', 'reader'} or not isinstance(paths, list) or not 1 <= len(paths) <= 100:
@@ -781,22 +912,38 @@ class App:
         if reader not in ('openpyxl', 'xlwings'):
             raise ApiError(400, '읽기 방식은 일반 파일 또는 Windows Excel에서 열린 파일이어야 합니다.')
 
+        paths = list(paths)
+        for i, path in enumerate(paths):
+            try:
+                paths[i] = str(self.resolve_excel(path))
+            except ApiError:
+                pass  # 잘못된 파일 하나가 나머지 대기열 접수를 막지 않습니다.
+
         def work():
-            # ponytail: 최대 100파일의 메모리 대기열. 서버 재시작 복구가 필요하면 작업 목록을 영속화합니다.
             files = [{'path': path, 'status': 'waiting'} for path in paths]
             result = {'files': files, 'reader': reader, 'total': len(files), 'completed': 0,
                       'succeeded': 0, 'failed': 0, 'skipped': 0, 'rows': 0,
                       'import': {'added': 0, 'updated': 0, 'unchanged': 0}}
+            if resume and resume['snapshot'].get('progress'):
+                result = json.loads(json.dumps(resume['snapshot']['progress']))
+                files = result['files']
 
             def publish():
                 with self.lock:
                     # 조회 스레드가 처리 도중 바뀌는 목록을 읽지 않도록 스냅샷을 교체합니다.
                     self.job['progress'] = result | {'files': [dict(item) for item in files],
                                                      'import': dict(result['import'])}
+                self.checkpoint_job()
 
             seen = set()
             publish()
             for item in files:
+                if item['status'] in ('done', 'error', 'skipped'):
+                    try:
+                        seen.add(self.resolve_excel(item['path']))
+                    except ApiError:
+                        pass
+                    continue
                 item['status'] = 'running'
                 publish()
                 try:
@@ -822,7 +969,7 @@ class App:
             return result
 
         # 기존 작업 잠금을 사용합니다. Excel/SQLite는 파일별로 순차 처리하고 벡터는 마지막에 갱신합니다.
-        self.start_job('import_many', work)
+        self.start_job('import_many', work, request={'paths': paths, 'reader': reader}, resume=resume)
         return {'accepted': True, 'kind': 'import_many'}
 
     def normalize(self, body):
@@ -833,14 +980,16 @@ class App:
             self.read_rows(path, reader) if path else self.stored_rows(), path, reader))
         return {'accepted': True, 'kind': 'normalize'}
 
-    def start_overnight(self, body):
+    def start_overnight(self, body, *, resume=None):
         if not isinstance(body, dict) or set(body)-{'path','reader'}:
             raise ApiError(400,'야간 실행에는 입력 경로와 읽기 방식만 지정하세요.')
-        path, reader = self.require_excel(body) if body.get('path') else (None, self.reader)
+        saved = (resume or {}).get('snapshot', {}).get('overnight') or {}
+        path, reader = self.require_excel(body) if body.get('path') and 'input' not in saved else (None, body.get('reader', self.reader))
         if self.config.get('embedding'):
             semantic.settings(self.config)
         from .overnight import run
-        self.start_job('overnight',lambda:run(self,path,reader))
+        request = {'path': str(path), 'reader': reader} if path else {'reader': reader}
+        self.start_job('overnight', lambda: run(self, path, reader, previous=saved), request=request, resume=resume)
         return {'accepted':True,'kind':'overnight'}
 
     def stop_overnight(self, body):
@@ -853,6 +1002,7 @@ class App:
             if self.job.get('overnight'):
                 self.job['overnight']['stop_requested'] = True
             self.job['stage'] = '중지 요청됨 · 진행 중인 행·묶음을 저장한 뒤 중지합니다.'
+            self._save_job_locked()
         return {'stopping':True}
 
     def normalize_rows(self, rows, path, reader, *, previous_errors=None, cancelled=None):
@@ -1360,6 +1510,10 @@ class App:
                     send_json(handler, 202, self.import_input(body))
                 elif path == '/api/import-many':
                     send_json(handler, 202, self.import_many(body))
+                elif path == '/api/job/resume':
+                    send_json(handler, 202, self.resume_job(body))
+                elif path == '/api/job/dismiss':
+                    send_json(handler, 200, self.dismiss_job(body))
                 elif path == '/api/convert':
                     send_json(handler, 202, self.convert(body))
                 elif path == '/api/normalize':
@@ -1556,6 +1710,7 @@ def serve(root, *, config_path, output_dir, schema_path, port=8765, excel=None, 
     print(f'CS RAG UI: {url}', flush=True)
     print(f'출력 폴더: {Path(output_dir).resolve()}', flush=True)
     print('종료하려면 Ctrl+C를 누르세요.', flush=True)
+    app.recover_jobs()
     app.start_embedding()
     if open_browser:
         webbrowser.open(url)

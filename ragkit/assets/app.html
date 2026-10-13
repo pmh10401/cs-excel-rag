@@ -66,6 +66,12 @@
             <p id="convert-excel-hint" class="muted" hidden>Excel 응답 대기가 길면 셀 편집 상태와 열린 대화상자를 확인하세요. Enter는 편집 확정, Esc는 편집 취소입니다.</p>
           </div>
           <p id="source-error" class="error" role="alert" tabindex="-1" hidden></p>
+          <section id="job-recovery" class="cell" aria-labelledby="job-recovery-title" hidden>
+            <h2 id="job-recovery-title">자료 준비 복구</h2>
+            <p id="job-recovery-message" role="status" aria-live="polite"></p>
+            <p class="muted">저장한 원문·검토·성공 결과는 유지합니다. 대기 해제는 남은 자동 실행만 취소합니다. 아직 읽지 못한 DRM 파일은 서버 Excel에서 인증 후 열어 두세요.</p>
+            <div class="actions"><button type="button" id="job-resume-btn">이어서 실행</button><button type="button" id="job-dismiss-btn" class="quiet">복구 대기 해제</button></div>
+          </section>
           <dl id="source-meta" class="meta" hidden></dl>
           <div class="cell" aria-labelledby="import-queue-title">
             <h2 id="import-queue-title">여러 파일 등록 대기열</h2>
@@ -73,7 +79,7 @@
             <textarea id="import-paths" rows="4" spellcheck="false" aria-describedby="import-queue-help" placeholder="C:\CS자료\기존자료.xlsx&#10;C:\CS자료\누적자료.xlsx&#10;C:\CS자료\변환자료.rag.jsonl.gz"></textarea>
             <p id="import-queue-help" class="muted">프로그램이 실행되는 PC의 경로를 사용합니다. 위에서 선택한 읽기 방식으로 순서대로 등록하며, 변환 파일은 일반 파일로 읽습니다. DRM 파일은 모두 Excel에서 열고 셀 편집을 끝내세요. 실패한 파일이 있어도 다음 파일을 계속 처리합니다.</p>
             <div class="actions"><button type="button" id="import-many-btn">대기열 등록 시작</button><button type="button" id="import-retry-btn" class="quiet" disabled>실패 파일만 재시도</button></div>
-            <p class="muted">같은 경로는 한 번만 처리하고, 번호·원문이 같은 자료는 재사용합니다. 내용 충돌은 해당 파일 전체를 제외합니다. 브라우저를 닫아도 처리는 계속되지만 프로그램 재시작 시 대기 목록은 초기화됩니다. 등록 후 DB 문장 다듬기 또는 야간 자동 실행을 누르세요.</p>
+            <p class="muted">같은 경로는 한 번만 처리하고, 번호·원문이 같은 자료는 재사용합니다. 내용 충돌은 해당 파일 전체를 제외합니다. 브라우저를 닫아도 처리는 계속되며, 서버를 재시작하면 완료한 파일을 건너뛰고 이어서 실행합니다. 등록 후 DB 문장 다듬기 또는 야간 자동 실행을 누르세요.</p>
             <p id="import-queue-status" class="status" role="status" aria-live="polite"></p>
             <progress id="import-queue-progress" max="100" value="0" aria-label="파일 등록 진행률" hidden></progress>
             <ol id="import-queue-list" aria-label="파일별 등록 상태"></ol>
@@ -99,7 +105,7 @@
             <p id="overnight-status" class="night-status" role="status" aria-live="polite">자료를 등록한 뒤 실행하세요.</p>
             <p id="overnight-retry" class="retry-note" hidden></p>
             <div class="actions"><button type="button" id="overnight-btn">자동 채택하고 검색까지 준비</button><button type="button" id="overnight-stop-btn" class="quiet" disabled>저장 후 중지</button><button type="button" id="overnight-ask-btn" hidden>질문으로 이동</button></div>
-            <p class="muted night-help">브라우저를 닫아도 계속 실행됩니다. 프로그램과 모델 서버를 켜 두고 PC 절전을 해제하세요. 프로그램을 다시 시작하면 자동 실행 버튼을 눌러 이어서 처리합니다.</p>
+            <p class="muted night-help">브라우저를 닫아도 계속 실행됩니다. 프로그램과 모델 서버를 켜 두고 PC 절전을 해제하세요. 서버를 다시 시작하면 성공분을 재사용해 이어갑니다. 중지·실패 기록이 있으면 자료 준비 복구에서 재개하세요.</p>
             <details id="overnight-details" class="usage-note"><summary>시도 횟수와 오류 상세</summary><p id="overnight-attempts" class="muted"></p><p id="overnight-error" class="error" hidden></p></details>
           </section>
           <details id="advanced-prep" class="prep-disclosure"><summary>개별 실행 <span>벡터 · 영어 번역</span></summary>

@@ -104,8 +104,11 @@ function setPending(running) {
   updateLocks();
 }
 function updateLocks() {
-  const jobLock = ui.busy || ui.serverBusy;
+  const jobLock = ui.busy || ui.serverBusy || !!ui.recovery;
   const reqLock = ui.pending;
+  ['job-resume-btn', 'job-dismiss-btn'].forEach(id => {
+    $(id).disabled = reqLock || ui.busy || ui.serverBusy || !ui.recovery || !ui.recovery.id || ui.recovery.active;
+  });
   $('import-paths').disabled = jobLock || reqLock;
   $('import-many-btn').disabled = jobLock || reqLock || ui.mappingDirty || !$('import-paths').value.trim();
   $('import-retry-btn').disabled = jobLock || reqLock || ui.mappingDirty || !(ui.importQueue && ui.importQueue.failed);
@@ -234,11 +237,14 @@ function applyState(s) {
   if (!ui.mappingDirty) ui.aliasDraft = Object.assign({}, s.header_aliases || {});
   renderHeaderMapping();
   renderJob(s.job || {status: 'idle'});
-  if (s.job && (s.job.server_busy || ['running', 'queued'].includes(s.job.status))) startPoll();
+  if (s.job && (s.job.server_busy || s.job.recovery?.active || ['running', 'queued'].includes(s.job.status))) startPoll();
 }
 
 function renderJob(job) {
   const banner = $('job-banner');
+  ui.recovery = job.recovery || null;
+  $('job-recovery').hidden = !ui.recovery;
+  setText($('job-recovery-message'), ui.recovery ? ui.recovery.message : '');
   renderConversation(job.conversation || []);
   if (job.kind === 'ask' && job.question && !ui.followUp && !$('question').value.trim()) $('question').value = job.question;
   const running = ['running', 'queued'].includes(job.status);
@@ -247,8 +253,9 @@ function renderJob(job) {
   ui.overnightRunning = running && job.kind === 'overnight';
   ui.overnightStopping = ui.overnightRunning && !!(job.overnight && job.overnight.stop_requested);
   setBusy(running || ui.maintenance);
-  renderOvernight(job);
-  if (job.kind === 'import_many') renderImportQueue(job.result || job.progress);
+  const preparation = ['import_many', 'overnight'].includes(job.kind) ? job : job.preparation;
+  renderOvernight(preparation && preparation.kind === 'overnight' ? preparation : job);
+  if (preparation && preparation.kind === 'import_many') renderImportQueue(preparation.result || preparation.progress);
   $('convert-progress-panel').hidden = job.kind !== 'convert' || job.status === 'idle';
   if (job.status === 'idle' || !job.kind) {
     if (!running) banner.hidden = true;
@@ -367,9 +374,9 @@ async function refreshJob() {
     const job = await api('/api/job');
     renderJob(job);
     if (['running', 'queued'].includes(job.status)) { startPoll(); return; }
-    if (job.server_busy) startPoll(); else stopPoll();
+    if (job.server_busy || job.recovery?.active) startPoll(); else stopPoll();
     const key = job.status + ':' + job.kind + ':' + (job.error || '') + ':' + JSON.stringify(job.result || null);
-    if (!job.kind || job.status === 'idle' || ui.handled === key) return;
+    if (!job.kind || ['idle', 'interrupted'].includes(job.status) || job.recovery || ui.handled === key) return;
     ui.handled = key;
     if (job.kind === 'claim_guard_prepare') {
       applyState(await api('/api/state'));
@@ -1209,6 +1216,19 @@ async function startOvernight() {
   finally { setPending(false); }
 }
 
+async function recoverJob(action) {
+  if (!ui.recovery || ui.recovery.active || ui.pending || ui.busy) return;
+  const identity = ui.recovery.id;
+  setPending(true);
+  try {
+    await api('/api/job/' + action, {method: 'POST', body: {id: identity}});
+    ui.handled = '';
+    await refreshJob();
+    applyState(await api('/api/state'));
+  } catch (err) { showAlert('source-error', err.message); }
+  finally { setPending(false); }
+}
+
 async function stopOvernight() {
   if (ui.pending || !ui.overnightRunning) return;
   setPending(true);
@@ -1801,6 +1821,8 @@ $('import-many-btn').addEventListener('click', () => startImportQueue(false));
 $('import-retry-btn').addEventListener('click', () => startImportQueue(true));
 $('import-paths').addEventListener('input', updateLocks);
 $('overnight-btn').addEventListener('click', startOvernight);
+$('job-resume-btn').addEventListener('click', () => recoverJob('resume'));
+$('job-dismiss-btn').addEventListener('click', () => recoverJob('dismiss'));
 $('overnight-stop-btn').addEventListener('click', stopOvernight);
 $('overnight-ask-btn').addEventListener('click', () => setView('ask'));
 $('convert-btn').addEventListener('click', startConvert);

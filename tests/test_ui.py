@@ -526,7 +526,7 @@ def main(root):
                     app.start_embedding()
                     assert finished()['result']['generated'] == 1
                 from ragkit import overnight
-                def waiting(*args):
+                def waiting(*args, **kwargs):
                     assert app.overnight_stop.wait(5)
                     return {'ready':False,'stopped':True}
                 with patch.object(overnight,'run',side_effect=waiting):

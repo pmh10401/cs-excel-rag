@@ -13,11 +13,17 @@ STAGE_LABELS = {'input': '자료 준비', 'normalize': '문장 다듬기', 'revi
                 'embedding': '벡터 생성', 'english': '영어 번역', 'index': '검색 확인'}
 
 
-def run(app, path, reader):
+def run(app, path, reader, *, previous=None):
     stop = app.overnight_stop
     result = {'ready': False, 'stopped': False, 'attempts': {}, 'pending': {}, 'failures': [],
               'phase': 'input', 'status': 'running', 'retry_at': None, 'started_at': time.time(),
               'path': str(path) if path else None}
+    if previous:
+        # 단계 완료 표시 대신 기존 행별 캐시를 다시 검사하므로 설정 변경도 반영됩니다.
+        result['attempts'] = dict(previous.get('attempts', {}))
+        result['started_at'] = previous.get('started_at', result['started_at'])
+        if 'input' in previous:
+            result['input'] = previous['input']
     report = app.output / 'overnight_result.json'
     previous_errors, failed_stages = {}, {}
     rows = []
@@ -34,6 +40,7 @@ def run(app, path, reader):
             result['report_warning'] = '상태 파일 저장 실패: ' + app.redact(error)
         with app.lock:
             app.job['overnight'] = json.loads(json.dumps(result))
+        app.checkpoint_job()
 
     def check_stop():
         if stop.is_set():
