@@ -1,0 +1,1130 @@
+[
+  {
+    "query_id": "CB-N-0-0",
+    "K": 5,
+    "status": "error",
+    "timings": {
+      "answer_load": 28.926353666000068,
+      "answer_validation_repair": 231.82939824998903,
+      "embedding_load": 2.22467179200612,
+      "query_prepare": 0.10032229199714493,
+      "retrieval": 0.07590283399622422,
+      "selection_including_load_cleanup": 28.49866862500494,
+      "total_wall": 294.84670812499826
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4",
+      "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+      "누적28상세:18ec38a06c8524319c8f4c29c7e766d8ae5564df5a2b17e3267ffb71cf914600"
+    ],
+    "actual_output_caps": [
+      3877,
+      3877
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 106.11816374999762,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3877,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3850,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3046,
+          "prompt_tokens_details": null,
+          "total_tokens": 6923
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 125.69979179200891,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3877,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3863,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3046,
+          "prompt_tokens_details": null,
+          "total_tokens": 6923
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-0-0",
+    "K": 10,
+    "status": "error",
+    "timings": {
+      "answer_load": 28.629802415991435,
+      "answer_validation_repair": 231.06682958400052,
+      "embedding_load": 2.0013049999979557,
+      "query_prepare": 0.06977466600073967,
+      "retrieval": 0.026617291994625703,
+      "selection_including_load_cleanup": 31.83225558299455,
+      "total_wall": 296.25287262500206
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4",
+      "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+      "누적28상세:18ec38a06c8524319c8f4c29c7e766d8ae5564df5a2b17e3267ffb71cf914600"
+    ],
+    "actual_output_caps": [
+      3877,
+      3877
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 111.89675983300549,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3877,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3850,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3046,
+          "prompt_tokens_details": null,
+          "total_tokens": 6923
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 119.16877270799887,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3877,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3863,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3046,
+          "prompt_tokens_details": null,
+          "total_tokens": 6923
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-0-0",
+    "K": 20,
+    "status": "error",
+    "timings": {
+      "answer_load": 28.622815540991724,
+      "answer_validation_repair": 238.07157779201225,
+      "embedding_load": 2.104920666999533,
+      "query_prepare": 0.07496979099232703,
+      "retrieval": 0.03150670899776742,
+      "selection_including_load_cleanup": 36.8082808330073,
+      "total_wall": 308.60724504200334
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4",
+      "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+      "누적28상세:ac965f955178d3bb0a818174b15cc6d86895ac930c010122713e310f262c92af"
+    ],
+    "actual_output_caps": [
+      3877,
+      3877
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 118.33571970798948,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3877,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3861,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3039,
+          "prompt_tokens_details": null,
+          "total_tokens": 6916
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 119.73478158299986,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3877,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3855,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3039,
+          "prompt_tokens_details": null,
+          "total_tokens": 6916
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-1-1",
+    "K": 10,
+    "status": "ok",
+    "timings": {
+      "answer_load": 28.60318575000565,
+      "answer_validation_repair": 207.92016574999434,
+      "embedding_load": 1.929374250001274,
+      "query_prepare": 0.03867875000287313,
+      "retrieval": 0.026905874998192303,
+      "selection_including_load_cleanup": 31.380624249999528,
+      "total_wall": 275.0935332499939
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:f4fed3c813b763487c023ba318841251a0dbd0cc45d942687ba3935bb00dc09f"
+    ],
+    "actual_output_caps": [
+      3907,
+      3907
+    ],
+    "error_type": "",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 114.10254920799343,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3907,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3891,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3009,
+          "prompt_tokens_details": null,
+          "total_tokens": 6916
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 93.79506295900501,
+        "finish_reasons": [
+          "stop"
+        ],
+        "usage": {
+          "completion_tokens": 3105,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 2634,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3009,
+          "prompt_tokens_details": null,
+          "total_tokens": 6114
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-1-1",
+    "K": 20,
+    "status": "error",
+    "timings": {
+      "answer_load": 28.635315124993213,
+      "answer_validation_repair": 199.50668629100255,
+      "embedding_load": 1.9999255420116242,
+      "query_prepare": 0.048754250005003996,
+      "retrieval": 0.03452429099706933,
+      "selection_including_load_cleanup": 36.887321792004514,
+      "total_wall": 270.79015616599645
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:a8af664f7527f777707e56672f07ba0550daef4151fcdb464460457b097338dd",
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c"
+    ],
+    "actual_output_caps": [
+      3907,
+      3907
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 90.82299275000696,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3907,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3793,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3007,
+          "prompt_tokens_details": null,
+          "total_tokens": 6914
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 108.68249766700319,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3907,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3899,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3007,
+          "prompt_tokens_details": null,
+          "total_tokens": 6914
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-1-1",
+    "K": 5,
+    "status": "error",
+    "timings": {
+      "answer_load": 29.11032345800777,
+      "answer_validation_repair": 175.62766816699877,
+      "embedding_load": 2.1701964999956544,
+      "query_prepare": 0.07757220799976494,
+      "retrieval": 0.03732416698767338,
+      "selection_including_load_cleanup": 28.304175291996216,
+      "total_wall": 238.10211033400265
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4"
+    ],
+    "actual_output_caps": [
+      3864,
+      3864
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 90.3756673750031,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3864,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3835,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3029,
+          "prompt_tokens_details": null,
+          "total_tokens": 6893
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 85.25082325001131,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3864,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3850,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3029,
+          "prompt_tokens_details": null,
+          "total_tokens": 6893
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-2-0",
+    "K": 20,
+    "status": "error",
+    "timings": {
+      "answer_load": 28.414260125005967,
+      "answer_validation_repair": 211.70756933301163,
+      "embedding_load": 2.164203541004099,
+      "query_prepare": 0.054121124994708225,
+      "retrieval": 0.042322540990426205,
+      "selection_including_load_cleanup": 37.17725554200297,
+      "total_wall": 282.2339486669953
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+      "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d",
+      "누적28상세:325f3fdabee1649fbd34d19b82950a0f282c62c9d7df2c0b6daeee6bd65d33b3"
+    ],
+    "actual_output_caps": [
+      3937,
+      3937
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 89.46785404099501,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3937,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3909,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3022,
+          "prompt_tokens_details": null,
+          "total_tokens": 6959
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 122.23904216599476,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3937,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3889,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3022,
+          "prompt_tokens_details": null,
+          "total_tokens": 6959
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-2-0",
+    "K": 5,
+    "status": "error",
+    "timings": {
+      "answer_load": 28.622072415993898,
+      "answer_validation_repair": 203.6906074169965,
+      "embedding_load": 2.0354810840071877,
+      "query_prepare": 0.049852625001221895,
+      "retrieval": 0.03483758399670478,
+      "selection_including_load_cleanup": 28.181403249996947,
+      "total_wall": 266.47090837499127
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d",
+      "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959"
+    ],
+    "actual_output_caps": [
+      3894,
+      3894
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 78.82561420901038,
+        "finish_reasons": [
+          "stop"
+        ],
+        "usage": {
+          "completion_tokens": 2931,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 2700,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3027,
+          "prompt_tokens_details": null,
+          "total_tokens": 5958
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 124.86342695799249,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3894,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3868,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3027,
+          "prompt_tokens_details": null,
+          "total_tokens": 6921
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-2-0",
+    "K": 10,
+    "status": "ok",
+    "timings": {
+      "answer_load": 29.37987529099337,
+      "answer_validation_repair": 238.3581806250004,
+      "embedding_load": 2.4165560830006143,
+      "query_prepare": 0.0779546669946285,
+      "retrieval": 0.04215154200210236,
+      "selection_including_load_cleanup": 33.0445159170049,
+      "total_wall": 306.444714000012
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d",
+      "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+      "누적28상세:237eff3d58bb6533c631398310ff989b62c0bcefed11005553edf8247a23d1b9"
+    ],
+    "actual_output_caps": [
+      3931,
+      3931
+    ],
+    "error_type": "",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 114.62280575001205,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3931,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3898,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3018,
+          "prompt_tokens_details": null,
+          "total_tokens": 6949
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 123.73348895800882,
+        "finish_reasons": [
+          "stop"
+        ],
+        "usage": {
+          "completion_tokens": 3734,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3399,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3018,
+          "prompt_tokens_details": null,
+          "total_tokens": 6752
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-3-1",
+    "K": 5,
+    "status": "error",
+    "timings": {
+      "answer_load": 47.30688483300037,
+      "answer_validation_repair": 217.6022441249952,
+      "embedding_load": 2.092456875005155,
+      "query_prepare": 0.055880708998302,
+      "retrieval": 0.042528792007942684,
+      "selection_including_load_cleanup": 28.318030583002837,
+      "total_wall": 329.0066721250041
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:368c7e67024601970c2d3f4136f4e8c86f432ec29f7aa4651b7ec5b6c0752122"
+    ],
+    "actual_output_caps": [
+      3854,
+      3854
+    ],
+    "error_type": "RuntimeError",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 94.91757629199128,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3854,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3833,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3042,
+          "prompt_tokens_details": null,
+          "total_tokens": 6896
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 122.68205916699662,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3854,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3841,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3042,
+          "prompt_tokens_details": null,
+          "total_tokens": 6896
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-3-1",
+    "K": 10,
+    "status": "ok",
+    "timings": {
+      "answer_load": 32.6330849169899,
+      "answer_validation_repair": 204.28429524999228,
+      "embedding_load": 2.1923067919997266,
+      "query_prepare": 0.058247416993253864,
+      "retrieval": 0.032133375003468245,
+      "selection_including_load_cleanup": 32.519091666996246,
+      "total_wall": 274.3838162920001
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 2,
+    "source_record_ids": [
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:943123b5d1629534c80e9afbef290a3c6fb7af609d710ec9dde7bead077009a6"
+    ],
+    "actual_output_caps": [
+      3829,
+      3829
+    ],
+    "error_type": "",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 107.9370718329883,
+        "finish_reasons": [
+          "length"
+        ],
+        "usage": {
+          "completion_tokens": 3829,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3822,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3041,
+          "prompt_tokens_details": null,
+          "total_tokens": 6870
+        },
+        "error_type": ""
+      },
+      {
+        "seconds": 96.3445855420141,
+        "finish_reasons": [
+          "stop"
+        ],
+        "usage": {
+          "completion_tokens": 3194,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 2782,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3041,
+          "prompt_tokens_details": null,
+          "total_tokens": 6235
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-3-1",
+    "K": 20,
+    "status": "ok",
+    "timings": {
+      "answer_load": 28.081216459002462,
+      "answer_validation_repair": 80.90237095800694,
+      "embedding_load": 2.0815308330056723,
+      "query_prepare": 0.05014841600495856,
+      "retrieval": 0.03103933400416281,
+      "selection_including_load_cleanup": 35.05619987499085,
+      "total_wall": 150.17504458299663
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 1,
+    "source_record_ids": [
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:497837a6d2c6e44e3e2c3fb7b31114836e18cc8dae910fd9ffd888e88c1a85f0"
+    ],
+    "actual_output_caps": [
+      3819
+    ],
+    "error_type": "",
+    "cleanup_failed": false,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 80.90062941600627,
+        "finish_reasons": [
+          "stop"
+        ],
+        "usage": {
+          "completion_tokens": 3156,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 2848,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3048,
+          "prompt_tokens_details": null,
+          "total_tokens": 6204
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-4-0",
+    "K": 10,
+    "status": "error",
+    "timings": {
+      "answer_load": 29.106206166004995,
+      "answer_validation_repair": 111.43130558400298,
+      "embedding_load": 2.040661665989319,
+      "query_prepare": 0.042766875005327165,
+      "retrieval": 0.03370637500484008,
+      "selection_including_load_cleanup": 31.398575916988193,
+      "total_wall": 176.57735854199564
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 1,
+    "source_record_ids": [
+      "누적28상세:cec1c961e5f1f0b97d02168b3f11159a82104916d75adba61e59ca6654964ea5",
+      "누적28상세:3249cfc5a61eff2157bbcd257c5e483da251ee03533aa373a691844548d49228",
+      "누적28상세:9dc90aa76572c8f516bc12439c3ed20b85134dba6425146e63b2190aec4d8e50"
+    ],
+    "actual_output_caps": [
+      3829
+    ],
+    "error_type": "cleanup",
+    "cleanup_failed": true,
+    "selection_status": "ok",
+    "call_metadata": [
+      {
+        "seconds": 111.42681033299596,
+        "finish_reasons": [
+          "stop"
+        ],
+        "usage": {
+          "completion_tokens": 3403,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 3106,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens": 3035,
+          "prompt_tokens_details": null,
+          "total_tokens": 6438
+        },
+        "error_type": ""
+      }
+    ]
+  },
+  {
+    "query_id": "CB-N-4-0",
+    "K": 20,
+    "status": "error",
+    "timings": {
+      "total_wall": 1.1716317910031648
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 0,
+    "source_record_ids": [],
+    "actual_output_caps": [],
+    "error_type": "JSONDecodeError",
+    "cleanup_failed": true,
+    "selection_status": null,
+    "call_metadata": []
+  },
+  {
+    "query_id": "CB-N-4-0",
+    "K": 5,
+    "status": "error",
+    "timings": {
+      "total_wall": 1.2272432909958297
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 0,
+    "source_record_ids": [],
+    "actual_output_caps": [],
+    "error_type": "JSONDecodeError",
+    "cleanup_failed": true,
+    "selection_status": null,
+    "call_metadata": []
+  },
+  {
+    "query_id": "CB-N-5-1",
+    "K": 20,
+    "status": "error",
+    "timings": {
+      "total_wall": 1.0442652920028195
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 0,
+    "source_record_ids": [],
+    "actual_output_caps": [],
+    "error_type": "JSONDecodeError",
+    "cleanup_failed": true,
+    "selection_status": null,
+    "call_metadata": []
+  },
+  {
+    "query_id": "CB-N-5-1",
+    "K": 5,
+    "status": "error",
+    "timings": {
+      "total_wall": 1.0911803749913815
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 0,
+    "source_record_ids": [],
+    "actual_output_caps": [],
+    "error_type": "JSONDecodeError",
+    "cleanup_failed": true,
+    "selection_status": null,
+    "call_metadata": []
+  },
+  {
+    "query_id": "CB-N-5-1",
+    "K": 10,
+    "status": "error",
+    "timings": {
+      "total_wall": 1.1815295419946779
+    },
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "http_calls": 0,
+    "source_record_ids": [],
+    "actual_output_caps": [],
+    "error_type": "JSONDecodeError",
+    "cleanup_failed": true,
+    "selection_status": null,
+    "call_metadata": []
+  }
+]

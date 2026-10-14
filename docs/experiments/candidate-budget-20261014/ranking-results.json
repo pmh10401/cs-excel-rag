@@ -1,0 +1,2786 @@
+[
+  {
+    "query_id": "CB-N-0-0",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4",
+      "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+      "누적28상세:18ec38a06c8524319c8f4c29c7e766d8ae5564df5a2b17e3267ffb71cf914600",
+      "누적28상세:127f445efe64b99059ced475d8299fff7a7ddc84bf986992c2d1ecf8a201b60a",
+      "누적28상세:1d6fa7c390e29e23ec98756d661cdaac9ba87db99a51a2a8428f82057648ae1d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.872445500004687,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 24.127,
+      "inference_seconds": 3.927,
+      "peak_memory_bytes": 10743397972,
+      "peak_rss_bytes": 3448291328,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1129,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-0-0",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4",
+      "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+      "누적28상세:18ec38a06c8524319c8f4c29c7e766d8ae5564df5a2b17e3267ffb71cf914600",
+      "누적28상세:85f348fa38f567afd9bd07b9753e85eed1b15e39dfc763fbb169b4b1d1645208",
+      "누적28상세:3cbe94e14087562f3f667d753f4d293eb3a519292fca24423c159c84594e321c",
+      "누적28상세:127f445efe64b99059ced475d8299fff7a7ddc84bf986992c2d1ecf8a201b60a",
+      "누적28상세:4c39cb3ae43b90a85996400aaba81f1a1ada84f40c4154d50b50e2e65021e09b",
+      "누적28상세:069e45428168522c118cbf2174d05fd4403c42618c09f8d0ed24c2e59a7d1a77",
+      "누적28상세:1d6fa7c390e29e23ec98756d661cdaac9ba87db99a51a2a8428f82057648ae1d",
+      "누적28상세:11f7406217a46e57d8c8edd0fa21007efa462430a5e6556784ef2133fbc81bd1"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.843885082998895,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.12,
+      "inference_seconds": 6.713,
+      "peak_memory_bytes": 10851370878,
+      "peak_rss_bytes": 6582124544,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2107,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-0-0",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4",
+      "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+      "누적28상세:ac965f955178d3bb0a818174b15cc6d86895ac930c010122713e310f262c92af",
+      "누적28상세:18ec38a06c8524319c8f4c29c7e766d8ae5564df5a2b17e3267ffb71cf914600",
+      "누적28상세:85f348fa38f567afd9bd07b9753e85eed1b15e39dfc763fbb169b4b1d1645208",
+      "누적28상세:11f7406217a46e57d8c8edd0fa21007efa462430a5e6556784ef2133fbc81bd1",
+      "누적28상세:3cbe94e14087562f3f667d753f4d293eb3a519292fca24423c159c84594e321c",
+      "누적28상세:127f445efe64b99059ced475d8299fff7a7ddc84bf986992c2d1ecf8a201b60a",
+      "누적28상세:f53f85cbed749231efe16b58ce46af5a2e5cd0b23a201f9d39a086f0b41736d5",
+      "누적28상세:1d6fa7c390e29e23ec98756d661cdaac9ba87db99a51a2a8428f82057648ae1d",
+      "누적28상세:62cd5f37a7254c2851fdd07a3a7db600a7904c41136b1f4bac01d99eb2b299e7",
+      "누적28상세:4c39cb3ae43b90a85996400aaba81f1a1ada84f40c4154d50b50e2e65021e09b",
+      "누적28상세:f21695719aa57d773e5df1b29efe4d29f700720281fd774ff88adb2af4ec4fb6",
+      "누적28상세:069e45428168522c118cbf2174d05fd4403c42618c09f8d0ed24c2e59a7d1a77",
+      "누적28상세:223c7c5a3bdbe8f8ddc7ce015f19899eca4ec4b98ee456cc48bbc8a60dc8fd71",
+      "누적28상세:80d5405baaec333e9e63924b40e8b20dd18deee8e75e091468b01c41519705f8",
+      "누적28상세:f5206095aaadd6b6250b7c7c84eb0b68dd6313b2b95980aec8d9f53ba3bd4e14",
+      "누적28상세:718e195eb09d923a92ff8ec12075634d74bf7dedbb5e1e5bec307401165c5bd7",
+      "누적28상세:5bffed69af430b530a827a40ad6064ea4bc7fd43e51e2505e792dab603f1fe46",
+      "누적28상세:be22d5763fe0fa53109f9bda86f0207696a5464558d6666fcced70ed51e9b062"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.26568395800132,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.985,
+      "inference_seconds": 11.655,
+      "peak_memory_bytes": 10959582758,
+      "peak_rss_bytes": 6809387008,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4067,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-0-1",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b9e46ca19e414f13fd6a977e090be209cc63e20bf2e2d4bdbeaf3ce80b32dac2",
+      "누적28상세:0cc30b2acaa6492e691ccd1a1a636f9b66012abd44d22b0d3edb6b3a73340452",
+      "누적28상세:f53f85cbed749231efe16b58ce46af5a2e5cd0b23a201f9d39a086f0b41736d5",
+      "누적28상세:18437b160c290937c83bb5ff2fee89f9eed010ccd84d6888569a670eab39c0bb",
+      "누적28상세:fc6cf382d145425021dafe5d3f16fd11fd94a8ffe031b0918d88195d499d9431",
+      "누적28상세:be22d5763fe0fa53109f9bda86f0207696a5464558d6666fcced70ed51e9b062",
+      "누적28상세:2a27437564c847f397ecded6c4f677073b4523542a1d7f90a94d9a3f1497d06d",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:2320218033d0c2e073944542ba49fa0700892807e553c8ef77199ab840a92ff4",
+      "누적28상세:bd57c0ac9f26492b42784413a83c16d98c78d7bbcd7593d67e8a1143d468ef8f"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.890719624992926,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.51,
+      "inference_seconds": 6.413,
+      "peak_memory_bytes": 10846062410,
+      "peak_rss_bytes": 6628835328,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2094,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-0-1",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b9e46ca19e414f13fd6a977e090be209cc63e20bf2e2d4bdbeaf3ce80b32dac2",
+      "누적28상세:0cc30b2acaa6492e691ccd1a1a636f9b66012abd44d22b0d3edb6b3a73340452",
+      "누적28상세:4ad64d75756f00eca759355bdc641dd679210dc27d9d8cd757a4425e66e43203",
+      "누적28상세:18437b160c290937c83bb5ff2fee89f9eed010ccd84d6888569a670eab39c0bb",
+      "누적28상세:33e04394a9a8e72576a9ef90b0458e14a1bad3f9193f3a03330da093d381bd97",
+      "누적28상세:fc6cf382d145425021dafe5d3f16fd11fd94a8ffe031b0918d88195d499d9431",
+      "누적28상세:bce5a76dbcefbfa9a0ba8ff27fb65f2ed0f32e08346d7c5a04695ff4324e0b81",
+      "누적28상세:f53f85cbed749231efe16b58ce46af5a2e5cd0b23a201f9d39a086f0b41736d5",
+      "누적28상세:7ce7d0a2fd06ad7caf8e0ee9955363c40ee2d6c5320550101ecdcf45b00fa05f",
+      "누적28상세:8edc86dc67f5aae8b9635495a09a9451a98d17ecc4efb4aeeee7d23c7301bf93",
+      "누적28상세:4fb3fec8aef6fbe02701b1d96ef3bd6be9bdda77f15dc267dc0b08c99dccfc65",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:727508d5c1ba438dc0eed28671d8d0280f08701619517e7d0c01e188ead9810e",
+      "누적28상세:40d3296fa9b0499b93ffbe342f09487eee294cc819b1a7afcc473af3b7192044",
+      "누적28상세:3da04edb259fd080a79eb2335302f64b0642b7ed5c2f8b6607acab176a01e512",
+      "누적28상세:2a27437564c847f397ecded6c4f677073b4523542a1d7f90a94d9a3f1497d06d",
+      "누적28상세:2320218033d0c2e073944542ba49fa0700892807e553c8ef77199ab840a92ff4",
+      "누적28상세:be22d5763fe0fa53109f9bda86f0207696a5464558d6666fcced70ed51e9b062",
+      "누적28상세:3d0e5423c6ad4abd40f5374139499f099b5acf26ae36e500542da98d1a124a85",
+      "누적28상세:bd57c0ac9f26492b42784413a83c16d98c78d7bbcd7593d67e8a1143d468ef8f"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.67927945799602,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.202,
+      "inference_seconds": 11.767,
+      "peak_memory_bytes": 10958616086,
+      "peak_rss_bytes": 6656458752,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4063,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-0-1",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b9e46ca19e414f13fd6a977e090be209cc63e20bf2e2d4bdbeaf3ce80b32dac2",
+      "누적28상세:0cc30b2acaa6492e691ccd1a1a636f9b66012abd44d22b0d3edb6b3a73340452",
+      "누적28상세:f53f85cbed749231efe16b58ce46af5a2e5cd0b23a201f9d39a086f0b41736d5",
+      "누적28상세:18437b160c290937c83bb5ff2fee89f9eed010ccd84d6888569a670eab39c0bb",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.569510124987573,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.528,
+      "inference_seconds": 3.571,
+      "peak_memory_bytes": 10731011668,
+      "peak_rss_bytes": 7374995456,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1111,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-1-0",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:c9bdc193b1398e571f22abfc8b5b43563196606595ed738e58c951276621e0e1",
+      "누적28상세:ddf20fdc13687149d9545f02f12bbb7f85faf88f496a7fc3e78cc481ed4bdd43",
+      "누적28상세:b141606288a86db91457ad61a5bda8b33b4e2d0b9816ffa842d3d24788d303ba",
+      "누적28상세:f4d62b4dec4063beb6affbca52256c222eb09b95d4258ff220fd4fe4216750b9",
+      "누적28상세:28ddfaa16295df851e5067743b9e47a787b3f784fa3a1761290fd7b1de96e0a2",
+      "누적28상세:d616ab49c1643fe01c9fb5884dcc5500205e2025b813eb21cd0478e29ddffe16",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4",
+      "누적28상세:f7fdb213b5893544f12ac12f73640b75d48f254b30cb4ee8ec0e72fa40eff0a2",
+      "누적28상세:1cf7e9eac58305a25ec215ef051445affd7c1ee2e86f50641c386ea6f12eabab",
+      "누적28상세:1a1f7ac9c71ab0ea2fa51835a0dd5346e990518913ac0b2ab4a6baac73344a98",
+      "누적28상세:d7a9bc2ecb56f9ac994ca9a7ad49f4b67cc383d476694ec69a476c8afc3f11ee",
+      "누적28상세:09d9fa4eb39bf8dbd5bbed6001bba29baa35acda32d30f0a14f54c9f9720e97a",
+      "누적28상세:0952a35e9ef9d7c1ab9048372d4c076ca127b2d3f3173fdfe46027a4c692624d",
+      "누적28상세:cc86afc21b585c26ee138b7f314d106fbb9b69c70cd5522138322f28b2621ada",
+      "누적28상세:ab9955c8d812bd1772ee6719d53aca3e4956b2618770feb5bd6fe26d60003e59",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:416141853f80940fadb8d73489540d84e1e495f4d084eb3a6abf888fc388f7d0",
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:45e7ce0d7e80a4e2a22ee1a77ab98b9e23239ab5f12429b332c67d2b3804ab1b",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": false
+    },
+    "wall_seconds": 36.47158345799835,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.343,
+      "inference_seconds": 11.493,
+      "peak_memory_bytes": 10959238690,
+      "peak_rss_bytes": 7638302720,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4066,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-1-0",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:ddf20fdc13687149d9545f02f12bbb7f85faf88f496a7fc3e78cc481ed4bdd43",
+      "누적28상세:28ddfaa16295df851e5067743b9e47a787b3f784fa3a1761290fd7b1de96e0a2",
+      "누적28상세:09d9fa4eb39bf8dbd5bbed6001bba29baa35acda32d30f0a14f54c9f9720e97a",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.439763667003717,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.658,
+      "inference_seconds": 3.456,
+      "peak_memory_bytes": 10739646036,
+      "peak_rss_bytes": 7720353792,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1124,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-1-0",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:ddf20fdc13687149d9545f02f12bbb7f85faf88f496a7fc3e78cc481ed4bdd43",
+      "누적28상세:28ddfaa16295df851e5067743b9e47a787b3f784fa3a1761290fd7b1de96e0a2",
+      "누적28상세:f4d62b4dec4063beb6affbca52256c222eb09b95d4258ff220fd4fe4216750b9",
+      "누적28상세:f7fdb213b5893544f12ac12f73640b75d48f254b30cb4ee8ec0e72fa40eff0a2",
+      "누적28상세:09d9fa4eb39bf8dbd5bbed6001bba29baa35acda32d30f0a14f54c9f9720e97a",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4",
+      "누적28상세:416141853f80940fadb8d73489540d84e1e495f4d084eb3a6abf888fc388f7d0",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:cc86afc21b585c26ee138b7f314d106fbb9b69c70cd5522138322f28b2621ada"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.960904167004628,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.759,
+      "inference_seconds": 5.914,
+      "peak_memory_bytes": 10845849414,
+      "peak_rss_bytes": 7349764096,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2093,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-1-1",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4",
+      "누적28상세:09d9fa4eb39bf8dbd5bbed6001bba29baa35acda32d30f0a14f54c9f9720e97a",
+      "누적28상세:f7fdb213b5893544f12ac12f73640b75d48f254b30cb4ee8ec0e72fa40eff0a2"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 58.08793933299603,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.139,
+      "inference_seconds": 3.253,
+      "peak_memory_bytes": 10735517268,
+      "peak_rss_bytes": 7424294912,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1118,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-1-1",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:f4fed3c813b763487c023ba318841251a0dbd0cc45d942687ba3935bb00dc09f",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4",
+      "누적28상세:28ddfaa16295df851e5067743b9e47a787b3f784fa3a1761290fd7b1de96e0a2",
+      "누적28상세:09d9fa4eb39bf8dbd5bbed6001bba29baa35acda32d30f0a14f54c9f9720e97a",
+      "누적28상세:ddf20fdc13687149d9545f02f12bbb7f85faf88f496a7fc3e78cc481ed4bdd43",
+      "누적28상세:f7fdb213b5893544f12ac12f73640b75d48f254b30cb4ee8ec0e72fa40eff0a2",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:f4d62b4dec4063beb6affbca52256c222eb09b95d4258ff220fd4fe4216750b9"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.128737334001926,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.109,
+      "inference_seconds": 6.159,
+      "peak_memory_bytes": 10834724566,
+      "peak_rss_bytes": 7153762304,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2065,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-1-1",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:a8af664f7527f777707e56672f07ba0550daef4151fcdb464460457b097338dd",
+      "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+      "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c",
+      "누적28상세:f4fed3c813b763487c023ba318841251a0dbd0cc45d942687ba3935bb00dc09f",
+      "누적28상세:7d5fd21bbb7a9bc5965069f3a0fbdaa68fd442a691fa8b9e86f69debde7496f1",
+      "누적28상세:70c7401a81d5ea600b009fcb41820fee516fec6cf02f247a59e59d4898a74ef7",
+      "누적28상세:1f68608dfd606c1707e8bd72b96ae72c7ac3e7af506d4a1c4d85824cfac2ddc4",
+      "누적28상세:fd3c63bc041bf18d6a5fd39d0c9aafe2b4e4e5202816e14c8ab6aead95698c8f",
+      "누적28상세:9c1774ebd417f165cda87fb40fc3bdff3b63794c2d8259bdb1f6e9ce9f4ced78",
+      "누적28상세:ee39adba4a345e1862cd56200772030b9fc614fbb04896d2ae965f7f042180db",
+      "누적28상세:09d9fa4eb39bf8dbd5bbed6001bba29baa35acda32d30f0a14f54c9f9720e97a",
+      "누적28상세:ddf20fdc13687149d9545f02f12bbb7f85faf88f496a7fc3e78cc481ed4bdd43",
+      "누적28상세:416141853f80940fadb8d73489540d84e1e495f4d084eb3a6abf888fc388f7d0",
+      "누적28상세:28ddfaa16295df851e5067743b9e47a787b3f784fa3a1761290fd7b1de96e0a2",
+      "누적28상세:ab9955c8d812bd1772ee6719d53aca3e4956b2618770feb5bd6fe26d60003e59",
+      "누적28상세:0952a35e9ef9d7c1ab9048372d4c076ca127b2d3f3173fdfe46027a4c692624d",
+      "누적28상세:f7fdb213b5893544f12ac12f73640b75d48f254b30cb4ee8ec0e72fa40eff0a2",
+      "누적28상세:f4d62b4dec4063beb6affbca52256c222eb09b95d4258ff220fd4fe4216750b9",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:cc86afc21b585c26ee138b7f314d106fbb9b69c70cd5522138322f28b2621ada"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": false
+    },
+    "wall_seconds": 35.626666458992986,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.925,
+      "inference_seconds": 11.0,
+      "peak_memory_bytes": 10951079318,
+      "peak_rss_bytes": 6511050752,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4031,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-2-0",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d",
+      "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+      "누적28상세:237eff3d58bb6533c631398310ff989b62c0bcefed11005553edf8247a23d1b9",
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+      "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511",
+      "누적28상세:7fb579bc8dc9e6876b0ddac79a19a2fcadf85ef9479c769fe6203f35bbfb26d7",
+      "누적28상세:b7eb8051e99bd6ef2cbb067045c1194d8c93e988b8da595bcea6c77c7430ec64",
+      "누적28상세:c427c901afae20262f97984408bfe2c2763c1ba7627de0a35660d88aa8a21767",
+      "누적28상세:408967816b446a54214f3c13efa0a786efc514fc68b65a482c59801090e11048",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.87810291700589,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.677,
+      "inference_seconds": 5.901,
+      "peak_memory_bytes": 10838869762,
+      "peak_rss_bytes": 7804223488,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2076,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-2-0",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+      "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d",
+      "누적28상세:325f3fdabee1649fbd34d19b82950a0f282c62c9d7df2c0b6daeee6bd65d33b3",
+      "누적28상세:237eff3d58bb6533c631398310ff989b62c0bcefed11005553edf8247a23d1b9",
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+      "누적28상세:fbca3c9f1363c15ab735db11f00dbbfde586a797841c5bbe22bfeac7ab0bd31e",
+      "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511",
+      "누적28상세:7fb579bc8dc9e6876b0ddac79a19a2fcadf85ef9479c769fe6203f35bbfb26d7",
+      "누적28상세:b7eb8051e99bd6ef2cbb067045c1194d8c93e988b8da595bcea6c77c7430ec64",
+      "누적28상세:408967816b446a54214f3c13efa0a786efc514fc68b65a482c59801090e11048",
+      "누적28상세:1526dd48dca0778212b96b54423e09ef2851eb35d300fbba2676f84a7dac7a6d",
+      "누적28상세:c427c901afae20262f97984408bfe2c2763c1ba7627de0a35660d88aa8a21767",
+      "누적28상세:e676d5b9c4dfb6eb21c6076816e3d77b25ccd356eb7358a1752e74b92b24f266",
+      "누적28상세:638aae2f4b0c64ce17152a54ffe5d4cc38c962c280574bfc0474296d550959b6",
+      "누적28상세:ddcf08806f190e0bd15e7b6a40ab673b09b72a6f31b44b8fe9d41537d138a32e",
+      "누적28상세:f65b6c84c51b1e4350c8c83cd455a4227061df5131eec5d98b9f45d32830a496",
+      "누적28상세:a88f1fedc037aa55bec9e6d41fa2ce83dfc559e7fd8f70c3cec412e223773020",
+      "누적28상세:0df112d1ad7232742ba23cba7f6234aef90ce825e60b701bd5be3e8928cbb5a3",
+      "누적28상세:d545be0d443dac8af6bed8a4403699a98748ead090e8fce3d3ca925129592579",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 35.87545108300401,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.21,
+      "inference_seconds": 11.128,
+      "peak_memory_bytes": 10953078202,
+      "peak_rss_bytes": 7788216320,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4040,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-2-0",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d",
+      "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+      "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 57.823840083001414,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.982,
+      "inference_seconds": 3.313,
+      "peak_memory_bytes": 10732813908,
+      "peak_rss_bytes": 7651672064,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1114,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-2-1",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+      "누적28상세:2e2d84318f313dfcef7055f9fe9ac32e8198a0c5535ae8bc8d7fdaa39eb7cd3c",
+      "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511",
+      "누적28상세:628d754fdc7e9c144c923669c44959008c0722ec1bbfd6413f36b6bdcb701fea",
+      "누적28상세:6de2214b169b320fbe9d8d4237265a3f06600e3a23ab7ef0b4220d60c2b447ef",
+      "누적28상세:1f3020487efdc89f09b773f04fe0bf1d608fd5aa58db05a1c6507d38b9c9db51",
+      "누적28상세:0df112d1ad7232742ba23cba7f6234aef90ce825e60b701bd5be3e8928cbb5a3",
+      "누적28상세:6dfd6e81b5f1f8e2e909b0b985cc83a6f0c80bbc87a6b62e3d9dedcdba85efd0",
+      "누적28상세:93e1fb91469454c2c680f44a4bf194e1ae5edf7c6b20802aeb0b8e853d0e4d96",
+      "누적28상세:e574deab4f238d5ce888842baa2f2fa0f9c4d283bf0d949500d073ac797417bd",
+      "누적28상세:b66b1c8c48bae86f8a35988bf2a16ce6b792726b941dd2900e2faf0ab0c7965d",
+      "누적28상세:99d8ba479447f4a0701816eaff8b95fa788cdd96e317a1202211bfd269fd652b",
+      "누적28상세:7a877f3e7234c0f1bfbffc88ead7c14e6cd86f7f16b5af8c147c3cc3a3119c94",
+      "누적28상세:3011e2e63c2849c9cada3ce818c06fe663595d5b1f4181330541012d4a4a9754",
+      "누적28상세:a10f8d69f77fc98e6fefa53fd7278e5037769be84d05303e71114ecd01391167",
+      "누적28상세:e66c65fb6b64a9054dfe1a1d1806b64c17e4c7d9dcf1a7ab0fbb9e6a61c24792",
+      "누적28상세:7948562a7ffbcd603fbdce6280ccdb07b60c990d945a25544db2e5aad0ef96c9",
+      "누적28상세:d7d68e8c540077052eae470863625f6c0f978347d604fd631887c95261b94de8",
+      "누적28상세:987244b3ad4d39cd9bad1b7fd2261462c00482e1e03c182d5837d2b22bb843f4",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 35.67087112501031,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.62,
+      "inference_seconds": 11.441,
+      "peak_memory_bytes": 10969020058,
+      "peak_rss_bytes": 6925041664,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4107,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-2-1",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+      "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511",
+      "누적28상세:2e2d84318f313dfcef7055f9fe9ac32e8198a0c5535ae8bc8d7fdaa39eb7cd3c",
+      "누적28상세:0df112d1ad7232742ba23cba7f6234aef90ce825e60b701bd5be3e8928cbb5a3",
+      "누적28상세:93e1fb91469454c2c680f44a4bf194e1ae5edf7c6b20802aeb0b8e853d0e4d96"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.117677250003908,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.144,
+      "inference_seconds": 3.564,
+      "peak_memory_bytes": 10749214292,
+      "peak_rss_bytes": 7705329664,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1138,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-2-1",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+      "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511",
+      "누적28상세:2e2d84318f313dfcef7055f9fe9ac32e8198a0c5535ae8bc8d7fdaa39eb7cd3c",
+      "누적28상세:1f3020487efdc89f09b773f04fe0bf1d608fd5aa58db05a1c6507d38b9c9db51",
+      "누적28상세:6de2214b169b320fbe9d8d4237265a3f06600e3a23ab7ef0b4220d60c2b447ef",
+      "누적28상세:6dfd6e81b5f1f8e2e909b0b985cc83a6f0c80bbc87a6b62e3d9dedcdba85efd0",
+      "누적28상세:b66b1c8c48bae86f8a35988bf2a16ce6b792726b941dd2900e2faf0ab0c7965d",
+      "누적28상세:0df112d1ad7232742ba23cba7f6234aef90ce825e60b701bd5be3e8928cbb5a3",
+      "누적28상세:93e1fb91469454c2c680f44a4bf194e1ae5edf7c6b20802aeb0b8e853d0e4d96",
+      "누적28상세:e574deab4f238d5ce888842baa2f2fa0f9c4d283bf0d949500d073ac797417bd"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.316366833008942,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.86,
+      "inference_seconds": 6.692,
+      "peak_memory_bytes": 10855450534,
+      "peak_rss_bytes": 7064993792,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2117,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-3-0",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c",
+      "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8",
+      "누적28상세:497837a6d2c6e44e3e2c3fb7b31114836e18cc8dae910fd9ffd888e88c1a85f0",
+      "누적28상세:0e4347664e87e0b045b410b4c81a36bc699decab98e0e501e4ea15b5626016b9",
+      "누적28상세:acd1950e37a95179d301cf0a66657d15a77c1afc60cc62aa8a87102f0acd698d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.37061320900102,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.314,
+      "inference_seconds": 3.736,
+      "peak_memory_bytes": 10754276948,
+      "peak_rss_bytes": 7396212736,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1145,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-3-0",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c",
+      "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8",
+      "누적28상세:497837a6d2c6e44e3e2c3fb7b31114836e18cc8dae910fd9ffd888e88c1a85f0",
+      "누적28상세:051d68bebd2d37ba4931d13bb01e081839143629f16c4c36d64f56bb255d2aae",
+      "누적28상세:acd1950e37a95179d301cf0a66657d15a77c1afc60cc62aa8a87102f0acd698d",
+      "누적28상세:0e4347664e87e0b045b410b4c81a36bc699decab98e0e501e4ea15b5626016b9",
+      "누적28상세:2c9f5c91e91dad9403833d9e02c64a47a9a5ef1f87d5e707341ad861aaab5056",
+      "누적28상세:524e504450fa961fac8ccea17642a30d3eb9f478ae8c36b8b701e43a68778481",
+      "누적28상세:2e537fcdffdd311f331f3f66c0d5cca210f9501159a09a29e67350ce2ef156ed",
+      "누적28상세:bd5cbf5b2634aec6378e16e3405c3af9f3b568259761b1fa627f03083a0188e3"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.292454915994313,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.108,
+      "inference_seconds": 6.371,
+      "peak_memory_bytes": 10861807590,
+      "peak_rss_bytes": 6010060800,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2133,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-3-0",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c",
+      "누적28상세:5240187a8c8c7b6fd81f9eb1c54eb243850d40bb9bad5cd1610444f4319cc058",
+      "누적28상세:051d68bebd2d37ba4931d13bb01e081839143629f16c4c36d64f56bb255d2aae",
+      "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8",
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:2c9f5c91e91dad9403833d9e02c64a47a9a5ef1f87d5e707341ad861aaab5056",
+      "누적28상세:bd5cbf5b2634aec6378e16e3405c3af9f3b568259761b1fa627f03083a0188e3",
+      "누적28상세:497837a6d2c6e44e3e2c3fb7b31114836e18cc8dae910fd9ffd888e88c1a85f0",
+      "누적28상세:0e4347664e87e0b045b410b4c81a36bc699decab98e0e501e4ea15b5626016b9",
+      "누적28상세:524e504450fa961fac8ccea17642a30d3eb9f478ae8c36b8b701e43a68778481",
+      "누적28상세:acd1950e37a95179d301cf0a66657d15a77c1afc60cc62aa8a87102f0acd698d",
+      "누적28상세:8a28dc6b4008da4055510a0de3e7fa594fa37c225eedbdd0f66e2a49c5953f26",
+      "누적28상세:9a0fe9d36e2dc330fc31be24af94d44db94c7a7386a96366c5ffb0634acb3c9a",
+      "누적28상세:9f9383a89579decfcac436bd5ffeda2ae8a23a9d64f9bb08f684d0e287f2a5fd",
+      "누적28상세:1a8d0eb2afc69502ef0fc3352b55d4ccbd61c0e0ab8bf018348f44d5d76c82ac",
+      "누적28상세:acf61e1b689ae88c7958cee7e8cb681c40e26aa4e4c1522ce71125d7811ff371",
+      "누적28상세:2e537fcdffdd311f331f3f66c0d5cca210f9501159a09a29e67350ce2ef156ed",
+      "누적28상세:74cd5e73182ae8660919ac47fb18acadeba961ca59f7508c104ceac155f7fcbd",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:420d5e6360d82045a4064c8f5fe237813f992dbbb8c561cad2c828bef817f598"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 39.41607816699252,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.143,
+      "inference_seconds": 12.507,
+      "peak_memory_bytes": 10968168090,
+      "peak_rss_bytes": 5772361728,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4104,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-3-1",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:943123b5d1629534c80e9afbef290a3c6fb7af609d710ec9dde7bead077009a6",
+      "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8",
+      "누적28상세:420d5e6360d82045a4064c8f5fe237813f992dbbb8c561cad2c828bef817f598",
+      "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c",
+      "누적28상세:368c7e67024601970c2d3f4136f4e8c86f432ec29f7aa4651b7ec5b6c0752122",
+      "누적28상세:9a0fe9d36e2dc330fc31be24af94d44db94c7a7386a96366c5ffb0634acb3c9a",
+      "누적28상세:acf61e1b689ae88c7958cee7e8cb681c40e26aa4e4c1522ce71125d7811ff371",
+      "누적28상세:9f9383a89579decfcac436bd5ffeda2ae8a23a9d64f9bb08f684d0e287f2a5fd"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 32.131909541989444,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.501,
+      "inference_seconds": 6.424,
+      "peak_memory_bytes": 10849994610,
+      "peak_rss_bytes": 6602833920,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2104,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-3-1",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:497837a6d2c6e44e3e2c3fb7b31114836e18cc8dae910fd9ffd888e88c1a85f0",
+      "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8",
+      "누적28상세:77ad2363be304d976ea02225fa56cea08c59540df3c6abdfa8fb090b0282f325",
+      "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c",
+      "누적28상세:939147b29730b29580bd5cc8c79531c72dd4016ec240c9ddf522555029a9dd66",
+      "누적28상세:943123b5d1629534c80e9afbef290a3c6fb7af609d710ec9dde7bead077009a6",
+      "누적28상세:b261312664128a6bc3e6e6f71ec9cfe21c1deaaf880e197789645ab597634656",
+      "누적28상세:c20717990126e4b7309313203c02058af7ddb57920390069192ff6f44c5b4669",
+      "누적28상세:368c7e67024601970c2d3f4136f4e8c86f432ec29f7aa4651b7ec5b6c0752122",
+      "누적28상세:9a0fe9d36e2dc330fc31be24af94d44db94c7a7386a96366c5ffb0634acb3c9a",
+      "누적28상세:77e2979b116f4c443466f40a4a74bc1727d15ef715a8a83edd7d83699678ace5",
+      "누적28상세:420d5e6360d82045a4064c8f5fe237813f992dbbb8c561cad2c828bef817f598",
+      "누적28상세:3b85fe196a4e5e9a874e9a06958787bd177cdeea87d4a29bcccafb2de21c48de",
+      "누적28상세:74cd5e73182ae8660919ac47fb18acadeba961ca59f7508c104ceac155f7fcbd",
+      "누적28상세:a18ec3eecb338b70eb8f51fbcf3be9117f0f140ac8c921a3730963233ead7381",
+      "누적28상세:acf61e1b689ae88c7958cee7e8cb681c40e26aa4e4c1522ce71125d7811ff371",
+      "누적28상세:9f9383a89579decfcac436bd5ffeda2ae8a23a9d64f9bb08f684d0e287f2a5fd",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.98813666700153,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.362,
+      "inference_seconds": 11.772,
+      "peak_memory_bytes": 10963056226,
+      "peak_rss_bytes": 6539329536,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4082,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-3-1",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+      "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7",
+      "누적28상세:368c7e67024601970c2d3f4136f4e8c86f432ec29f7aa4651b7ec5b6c0752122",
+      "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8",
+      "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.61325133399805,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.6,
+      "inference_seconds": 3.6,
+      "peak_memory_bytes": 10753195604,
+      "peak_rss_bytes": 6693142528,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1144,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-4-0",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:cec1c961e5f1f0b97d02168b3f11159a82104916d75adba61e59ca6654964ea5",
+      "누적28상세:3249cfc5a61eff2157bbcd257c5e483da251ee03533aa373a691844548d49228",
+      "누적28상세:6b73b70316f42d44d5428272f024bd5535f6bf8b33c9691f1774123c3207a882",
+      "누적28상세:d07a7b7cc4399c8b3a0358988c09320c4011f5c9045297605f66f711ddbb96f6",
+      "누적28상세:b3cca90f8e53b76df75e113bb8cff0a9a8987ebb91ccced5f509b616d2900d28",
+      "누적28상세:8b67c97f39ff2370a4a3e594ff6e72bf043d08df1306947ea0dccbbc0f7f78d7",
+      "누적28상세:1361682f318f0bdfe4638c625e9e75e6928a5e3cb47181fb4da614b54537f297",
+      "누적28상세:ce14b2b70620bfa7bf284ed0b5755ad9de48088ca2286dc5275074ccb255dce0",
+      "누적28상세:506c5a25b945c4ad39297ed9660f7438566559a7b8cb52a9350496859ed742e1",
+      "누적28상세:3f32385d36036697a4279675674f1c7bb7585bfef19ef061dd8b0733ea4d8f11",
+      "누적28상세:9dc90aa76572c8f516bc12439c3ed20b85134dba6425146e63b2190aec4d8e50",
+      "누적28상세:07ad03f1f99db8754932bd837c5889c478dd2de24a2384acea050a02e4c9651a",
+      "누적28상세:f3683df20ba82126f83c6f9ea93f869f5c2dc81b4829033b4cd1974e554e0e5d",
+      "누적28상세:b0edfa2ce8b6c23a4b2e4e274e092e7e3beea99311e9afdf5df6dea6744b9025",
+      "누적28상세:6192d9df8459b8348e40e9357fe9ed5160e210d6fed7b937b9a3c7069e45f841",
+      "누적28상세:fd26a94fc365e387db3e009934a9dbc9061d3e070c0dfd5bfd9440f6e72082b7",
+      "누적28상세:b7a6c78429a928c05d6bb5dd6504fbd7a942b3ea8e942c0688bb2b1454ab889d",
+      "누적28상세:e051acd25b3cce88e4f0272e7e23fe42d2ef4970e9f3b861d1981e4a15fc59be",
+      "누적28상세:d1948f295ff47249cf7561e5fdc22f5759c582feedf461c8fe1d613abb80b761",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.06089237499691,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.958,
+      "inference_seconds": 11.576,
+      "peak_memory_bytes": 10960156210,
+      "peak_rss_bytes": 6913572864,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4070,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-4-0",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:cec1c961e5f1f0b97d02168b3f11159a82104916d75adba61e59ca6654964ea5",
+      "누적28상세:3249cfc5a61eff2157bbcd257c5e483da251ee03533aa373a691844548d49228",
+      "누적28상세:8b67c97f39ff2370a4a3e594ff6e72bf043d08df1306947ea0dccbbc0f7f78d7",
+      "누적28상세:1361682f318f0bdfe4638c625e9e75e6928a5e3cb47181fb4da614b54537f297",
+      "누적28상세:ce14b2b70620bfa7bf284ed0b5755ad9de48088ca2286dc5275074ccb255dce0"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.002930499991635,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.547,
+      "inference_seconds": 3.764,
+      "peak_memory_bytes": 10745069140,
+      "peak_rss_bytes": 7496728576,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1132,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-4-0",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:cec1c961e5f1f0b97d02168b3f11159a82104916d75adba61e59ca6654964ea5",
+      "누적28상세:3249cfc5a61eff2157bbcd257c5e483da251ee03533aa373a691844548d49228",
+      "누적28상세:9dc90aa76572c8f516bc12439c3ed20b85134dba6425146e63b2190aec4d8e50",
+      "누적28상세:8b67c97f39ff2370a4a3e594ff6e72bf043d08df1306947ea0dccbbc0f7f78d7",
+      "누적28상세:506c5a25b945c4ad39297ed9660f7438566559a7b8cb52a9350496859ed742e1",
+      "누적28상세:b0edfa2ce8b6c23a4b2e4e274e092e7e3beea99311e9afdf5df6dea6744b9025",
+      "누적28상세:1361682f318f0bdfe4638c625e9e75e6928a5e3cb47181fb4da614b54537f297",
+      "누적28상세:ce14b2b70620bfa7bf284ed0b5755ad9de48088ca2286dc5275074ccb255dce0",
+      "누적28상세:b7a6c78429a928c05d6bb5dd6504fbd7a942b3ea8e942c0688bb2b1454ab889d",
+      "누적28상세:d1948f295ff47249cf7561e5fdc22f5759c582feedf461c8fe1d613abb80b761"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 30.603599333990132,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.98,
+      "inference_seconds": 6.224,
+      "peak_memory_bytes": 10845226818,
+      "peak_rss_bytes": 6996475904,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2092,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-4-1",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e051acd25b3cce88e4f0272e7e23fe42d2ef4970e9f3b861d1981e4a15fc59be",
+      "누적28상세:b3cca90f8e53b76df75e113bb8cff0a9a8987ebb91ccced5f509b616d2900d28",
+      "누적28상세:3c2a0ddc71f439f2cd9b7f41c30d41db3cabb00bd5307b9ca81da369ce0f8cf5",
+      "누적28상세:9d3ed566a1f1efbbf27bb1eb8d3356572eb6b334e8aac8267f0f4826883923eb",
+      "누적28상세:1f3cdad80ef72b56420a14cf4679a82935d55457f222393834be0296b8b9e467"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.07993937500578,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.937,
+      "inference_seconds": 3.667,
+      "peak_memory_bytes": 10735517268,
+      "peak_rss_bytes": 7258849280,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1118,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-4-1",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e051acd25b3cce88e4f0272e7e23fe42d2ef4970e9f3b861d1981e4a15fc59be",
+      "누적28상세:b3cca90f8e53b76df75e113bb8cff0a9a8987ebb91ccced5f509b616d2900d28",
+      "누적28상세:2406b991e5654b54e34cbe55aae221178d840851255a291616f497c62c9b33d5",
+      "누적28상세:3c2a0ddc71f439f2cd9b7f41c30d41db3cabb00bd5307b9ca81da369ce0f8cf5",
+      "누적28상세:08132e8a376ccf39ad0b24a3195273ee486f0b51ae2f08a7da5e53941c24ee19",
+      "누적28상세:9d3ed566a1f1efbbf27bb1eb8d3356572eb6b334e8aac8267f0f4826883923eb",
+      "누적28상세:7b30a0cc9b04187a43eb419840d0d97abe207b32b33730f9dcd8220d58bf92a4",
+      "누적28상세:60d1e87609828190db2787e64d29cfab1768dd51536498e92cac49d86c5e1313",
+      "누적28상세:1f3cdad80ef72b56420a14cf4679a82935d55457f222393834be0296b8b9e467",
+      "누적28상세:fdb078f9eedc8677a55a92db006774f2a2e439d7cfccf856e80b173813608003"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.464968457992654,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.62,
+      "inference_seconds": 6.474,
+      "peak_memory_bytes": 10847438678,
+      "peak_rss_bytes": 7766999040,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2097,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-4-1",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e051acd25b3cce88e4f0272e7e23fe42d2ef4970e9f3b861d1981e4a15fc59be",
+      "누적28상세:b3cca90f8e53b76df75e113bb8cff0a9a8987ebb91ccced5f509b616d2900d28",
+      "누적28상세:f3683df20ba82126f83c6f9ea93f869f5c2dc81b4829033b4cd1974e554e0e5d",
+      "누적28상세:449e537cc9c218776c88d1d8241776cb5c53277d14b67a3deb17a3abb9f41e8e",
+      "누적28상세:a8b86758b53a60a89954b9cb00032a4cc3bee585cfd1f74adaa9a410fb1e56d3",
+      "누적28상세:08132e8a376ccf39ad0b24a3195273ee486f0b51ae2f08a7da5e53941c24ee19",
+      "누적28상세:3c2a0ddc71f439f2cd9b7f41c30d41db3cabb00bd5307b9ca81da369ce0f8cf5",
+      "누적28상세:9d3ed566a1f1efbbf27bb1eb8d3356572eb6b334e8aac8267f0f4826883923eb",
+      "누적28상세:60d1e87609828190db2787e64d29cfab1768dd51536498e92cac49d86c5e1313",
+      "누적28상세:2406b991e5654b54e34cbe55aae221178d840851255a291616f497c62c9b33d5",
+      "누적28상세:8766d1ebcf113d4064d3ffdc618d1aef3ad40233e6b967615957dad916687200",
+      "누적28상세:1f3cdad80ef72b56420a14cf4679a82935d55457f222393834be0296b8b9e467",
+      "누적28상세:873fa493cdac44904be3c440bb1c6f224bd275f37bb228c9147d6081c7c6e80e",
+      "누적28상세:f6c591772230e6fc41a9188019432d730a3684b18e9407b9158e6c4b1840a012",
+      "누적28상세:fdb078f9eedc8677a55a92db006774f2a2e439d7cfccf856e80b173813608003",
+      "누적28상세:7b30a0cc9b04187a43eb419840d0d97abe207b32b33730f9dcd8220d58bf92a4",
+      "누적28상세:ba9ca2880d91fdc47885726a442d5ce5991c85bce21bf6ef4ebe995f7b73e55d",
+      "누적28상세:3f02328e39cc5356f15e0ca4b0b367f397f46580e4f52bd05053c55336ceae0f",
+      "누적28상세:7f979c44ad68e3323b23c97ec6a125f9309933a6a744df0e6a6bb33f250d062a",
+      "누적28상세:8e507a52a4d972baaa0d26c7a6107e293b2dab4d12485bbd6e2f12bf33525fb5"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.561013041005936,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.048,
+      "inference_seconds": 11.921,
+      "peak_memory_bytes": 10963400294,
+      "peak_rss_bytes": 7437713408,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4083,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-5-0",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:cb15bdaa3b8f9d1c7fb9e81a77ae6d2b804d63d1c4b8ac6d300def08f15f6537",
+      "누적28상세:0e0b96f29d53f8a69acb3341d54c654000db0b442bcf7d941d50f283b3c54636",
+      "누적28상세:e50b996946a2d2c02408344eca919606fefc6bda30b4a79ebb4e12f3997f87c8",
+      "누적28상세:d275b587105cf34a49665eb278f4a92f59cefd4b4001ccff1999c62dcd265e3d",
+      "누적28상세:1a209d967ee97dfde2f269e573ae6f097bc11f012d6cb09c19aa4421c1b0d435",
+      "누적28상세:f793d895e83e5b1ac23c29f5bc8bf8b7d658b8a92155ede9772c8c3e565d435d",
+      "누적28상세:aba77f3bfa54802fd483a50aa3934b2963b4a4957591f4036b6fbd58b95e9cbc",
+      "누적28상세:4ef8aadecc0da99e56fef8de424ad18bd782f8253d61c9ec44e5dc5a169db3eb",
+      "누적28상세:fea7508b8e34066948834a891800cd92c773007d7ee98793732e8da7470c082e",
+      "누적28상세:a6a5aa2edeb829c9624468c8f72e4c1e13a177f0ecee5ba8ab634bdea39e4c1f"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 30.180413041991415,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.811,
+      "inference_seconds": 6.091,
+      "peak_memory_bytes": 10850830202,
+      "peak_rss_bytes": 7790084096,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2106,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-5-0",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:cb15bdaa3b8f9d1c7fb9e81a77ae6d2b804d63d1c4b8ac6d300def08f15f6537",
+      "누적28상세:e50b996946a2d2c02408344eca919606fefc6bda30b4a79ebb4e12f3997f87c8",
+      "누적28상세:0e0b96f29d53f8a69acb3341d54c654000db0b442bcf7d941d50f283b3c54636",
+      "누적28상세:995afa087672bd09da8612a822c85f38c9af3a6b2bc90c430a53944dcd613733",
+      "누적28상세:4e4e66833586721cd54f9e69efffa6667ecece01c26d0d8a7845b4bc87136331",
+      "누적28상세:d275b587105cf34a49665eb278f4a92f59cefd4b4001ccff1999c62dcd265e3d",
+      "누적28상세:395f629cf8665478e6fc560fbf71e7dda62f2b5958f5acb1e6a6f42e42f7bb25",
+      "누적28상세:1a209d967ee97dfde2f269e573ae6f097bc11f012d6cb09c19aa4421c1b0d435",
+      "누적28상세:438a13b69e54ac9286fb09b5c4d4c3160455c07c777cda9b43223f15d679474e",
+      "누적28상세:4ef8aadecc0da99e56fef8de424ad18bd782f8253d61c9ec44e5dc5a169db3eb",
+      "누적28상세:48c233edc17445706c5b5f10285404a339530082cfc536766a234ae6d4b0e97e",
+      "누적28상세:01e185016aa7f5b51333fe8f7917e050367fe7e75b22ed900edfd564693500db",
+      "누적28상세:227ded3df3ba8fd3e1c954cdb7388156f2f547f857de705605a9c3a886eda784",
+      "누적28상세:a6a5aa2edeb829c9624468c8f72e4c1e13a177f0ecee5ba8ab634bdea39e4c1f",
+      "누적28상세:7b19ebebc566ece86fc79800646189c244de4f3fba34a3f1b38ff703681e18f4",
+      "누적28상세:f793d895e83e5b1ac23c29f5bc8bf8b7d658b8a92155ede9772c8c3e565d435d",
+      "누적28상세:fea7508b8e34066948834a891800cd92c773007d7ee98793732e8da7470c082e",
+      "누적28상세:aba77f3bfa54802fd483a50aa3934b2963b4a4957591f4036b6fbd58b95e9cbc",
+      "누적28상세:305c17c729816442d7f32e4fc0e645d3ccc10ad1af927606776180875b31d969",
+      "누적28상세:f355195ff09fd1675a048c2e50303007f79140e1e3141e1ee78e14d51a241a37"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.37738829100272,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.815,
+      "inference_seconds": 11.806,
+      "peak_memory_bytes": 10969478810,
+      "peak_rss_bytes": 6831439872,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4109,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-5-0",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:cb15bdaa3b8f9d1c7fb9e81a77ae6d2b804d63d1c4b8ac6d300def08f15f6537",
+      "누적28상세:0e0b96f29d53f8a69acb3341d54c654000db0b442bcf7d941d50f283b3c54636",
+      "누적28상세:a6a5aa2edeb829c9624468c8f72e4c1e13a177f0ecee5ba8ab634bdea39e4c1f",
+      "누적28상세:aba77f3bfa54802fd483a50aa3934b2963b4a4957591f4036b6fbd58b95e9cbc",
+      "누적28상세:fea7508b8e34066948834a891800cd92c773007d7ee98793732e8da7470c082e"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.59334404100082,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.763,
+      "inference_seconds": 3.484,
+      "peak_memory_bytes": 10749214292,
+      "peak_rss_bytes": 7702282240,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1138,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-5-1",
+    "slice": "new_synthetic",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e50b996946a2d2c02408344eca919606fefc6bda30b4a79ebb4e12f3997f87c8",
+      "누적28상세:d275b587105cf34a49665eb278f4a92f59cefd4b4001ccff1999c62dcd265e3d",
+      "누적28상세:1e1379353b209ff4020acacfb98dcb732b9d3401252bd2b9879de50ef0caaa61",
+      "누적28상세:066b2fbbdcb19847a9b3d16350f796eb9b46ad8ab753f1d43f53a26b84cf0a75",
+      "누적28상세:0e0b96f29d53f8a69acb3341d54c654000db0b442bcf7d941d50f283b3c54636",
+      "누적28상세:961b6ab51af283e5368ef6fe5c88aefea525be6f22c2c0f952969d2b575c44ab",
+      "누적28상세:cb15bdaa3b8f9d1c7fb9e81a77ae6d2b804d63d1c4b8ac6d300def08f15f6537",
+      "누적28상세:438a13b69e54ac9286fb09b5c4d4c3160455c07c777cda9b43223f15d679474e",
+      "누적28상세:c026e5665fe819caf20dc8206c586d4ec6caf8d4d1966ce14d9c0336ac9c9dc7",
+      "누적28상세:995afa087672bd09da8612a822c85f38c9af3a6b2bc90c430a53944dcd613733",
+      "누적28상세:395f629cf8665478e6fc560fbf71e7dda62f2b5958f5acb1e6a6f42e42f7bb25",
+      "누적28상세:e5279c425fddd8e82790b356830b49c281ce812290b1448af7b879ba8a75affe",
+      "누적28상세:09e45af2bf03f76c6463242559467aa4dd4cfd786a6911cdde75d82e0fe1443d",
+      "누적28상세:1891ace6ada1326b4000a51871cd600b2f7354a37e151e1e3ed69b0b0ae36aaa",
+      "누적28상세:4e4e66833586721cd54f9e69efffa6667ecece01c26d0d8a7845b4bc87136331",
+      "누적28상세:6776af225bbaeeff87b8eed4adf211f642625d4e220685d835048e64fbf10359",
+      "누적28상세:ade526cd71f7f12f6b363246ad8aae8b55f7de1df7a93eba23ec58097db21b72",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:1d16568fff7d4c2219f6bf545322638a8c6edd82001419f81c246796b049f320",
+      "누적28상세:d69a3e44c68dea8ff31d41b496ac537d04056baa997c8b1b06d0c9e88eaf939a"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.36377637500118,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.816,
+      "inference_seconds": 11.708,
+      "peak_memory_bytes": 10963973746,
+      "peak_rss_bytes": 7318536192,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4086,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-5-1",
+    "slice": "new_synthetic",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e50b996946a2d2c02408344eca919606fefc6bda30b4a79ebb4e12f3997f87c8",
+      "누적28상세:d275b587105cf34a49665eb278f4a92f59cefd4b4001ccff1999c62dcd265e3d",
+      "누적28상세:438a13b69e54ac9286fb09b5c4d4c3160455c07c777cda9b43223f15d679474e",
+      "누적28상세:995afa087672bd09da8612a822c85f38c9af3a6b2bc90c430a53944dcd613733",
+      "누적28상세:09e45af2bf03f76c6463242559467aa4dd4cfd786a6911cdde75d82e0fe1443d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.888208750009653,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 24.206,
+      "inference_seconds": 3.333,
+      "peak_memory_bytes": 10751524436,
+      "peak_rss_bytes": 7284981760,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1141,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "CB-N-5-1",
+    "slice": "new_synthetic",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e50b996946a2d2c02408344eca919606fefc6bda30b4a79ebb4e12f3997f87c8",
+      "누적28상세:d275b587105cf34a49665eb278f4a92f59cefd4b4001ccff1999c62dcd265e3d",
+      "누적28상세:cb15bdaa3b8f9d1c7fb9e81a77ae6d2b804d63d1c4b8ac6d300def08f15f6537",
+      "누적28상세:0e0b96f29d53f8a69acb3341d54c654000db0b442bcf7d941d50f283b3c54636",
+      "누적28상세:438a13b69e54ac9286fb09b5c4d4c3160455c07c777cda9b43223f15d679474e",
+      "누적28상세:1891ace6ada1326b4000a51871cd600b2f7354a37e151e1e3ed69b0b0ae36aaa",
+      "누적28상세:995afa087672bd09da8612a822c85f38c9af3a6b2bc90c430a53944dcd613733",
+      "누적28상세:09e45af2bf03f76c6463242559467aa4dd4cfd786a6911cdde75d82e0fe1443d",
+      "누적28상세:4e4e66833586721cd54f9e69efffa6667ecece01c26d0d8a7845b4bc87136331",
+      "누적28상세:395f629cf8665478e6fc560fbf71e7dda62f2b5958f5acb1e6a6f42e42f7bb25"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 32.351701958003105,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.484,
+      "inference_seconds": 6.898,
+      "peak_memory_bytes": 10855450534,
+      "peak_rss_bytes": 7333019648,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2117,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-0-0-0",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.178609249996953,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.829,
+      "inference_seconds": 3.733,
+      "peak_memory_bytes": 10727030356,
+      "peak_rss_bytes": 7387021312,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1105,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-0-0-0",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:72b43c84614f390a69a21eb1c0ecc7560e0e61080f0d129bb386f01d6bc3aab5",
+      "누적28상세:e676d5b9c4dfb6eb21c6076816e3d77b25ccd356eb7358a1752e74b92b24f266",
+      "누적28상세:faddfd3119cf5c6492887f794e39e5700259a8b6f67005e0e44636167a1b53f7",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 30.918767125011072,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.919,
+      "inference_seconds": 6.573,
+      "peak_memory_bytes": 10833888974,
+      "peak_rss_bytes": 6891323392,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2063,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-0-0-0",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:d545be0d443dac8af6bed8a4403699a98748ead090e8fce3d3ca925129592579",
+      "누적28상세:72b43c84614f390a69a21eb1c0ecc7560e0e61080f0d129bb386f01d6bc3aab5",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:6dfd6e81b5f1f8e2e909b0b985cc83a6f0c80bbc87a6b62e3d9dedcdba85efd0",
+      "누적28상세:e676d5b9c4dfb6eb21c6076816e3d77b25ccd356eb7358a1752e74b92b24f266",
+      "누적28상세:e574deab4f238d5ce888842baa2f2fa0f9c4d283bf0d949500d073ac797417bd",
+      "누적28상세:1f3020487efdc89f09b773f04fe0bf1d608fd5aa58db05a1c6507d38b9c9db51",
+      "누적28상세:b66b1c8c48bae86f8a35988bf2a16ce6b792726b941dd2900e2faf0ab0c7965d",
+      "누적28상세:faddfd3119cf5c6492887f794e39e5700259a8b6f67005e0e44636167a1b53f7",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.96787683299044,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.251,
+      "inference_seconds": 11.418,
+      "peak_memory_bytes": 10944509222,
+      "peak_rss_bytes": 6716555264,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4003,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-0-0-1",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:72b43c84614f390a69a21eb1c0ecc7560e0e61080f0d129bb386f01d6bc3aab5",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:faddfd3119cf5c6492887f794e39e5700259a8b6f67005e0e44636167a1b53f7",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.699553708007443,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.942,
+      "inference_seconds": 6.808,
+      "peak_memory_bytes": 10832299710,
+      "peak_rss_bytes": 7441989632,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2059,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-0-0-1",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:e574deab4f238d5ce888842baa2f2fa0f9c4d283bf0d949500d073ac797417bd",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:72b43c84614f390a69a21eb1c0ecc7560e0e61080f0d129bb386f01d6bc3aab5",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:6dfd6e81b5f1f8e2e909b0b985cc83a6f0c80bbc87a6b62e3d9dedcdba85efd0",
+      "누적28상세:b66b1c8c48bae86f8a35988bf2a16ce6b792726b941dd2900e2faf0ab0c7965d",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:d545be0d443dac8af6bed8a4403699a98748ead090e8fce3d3ca925129592579",
+      "누적28상세:e676d5b9c4dfb6eb21c6076816e3d77b25ccd356eb7358a1752e74b92b24f266",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:faddfd3119cf5c6492887f794e39e5700259a8b6f67005e0e44636167a1b53f7",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": false
+    },
+    "wall_seconds": 37.59958654100774,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.584,
+      "inference_seconds": 11.734,
+      "peak_memory_bytes": 10943083790,
+      "peak_rss_bytes": 6589513728,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 3997,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-0-0-1",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.250488999998197,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.578,
+      "inference_seconds": 3.332,
+      "peak_memory_bytes": 10727030356,
+      "peak_rss_bytes": 6719160320,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1105,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-1-0-0",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:4e8a8224093c9e23756434756ea9375748f20e9e624792dd9d2e815185495665",
+      "누적28상세:aeb2ceee13dbb7c341798fc95d46bbf9948b80a804e11896706a4e8db4cc0063",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:c9d32453cf686621f7fd19c2ae97e077238440924f24a0348641459dfab88080",
+      "누적28상세:667b13304a626ed6c5606e01f98586db441f22356c4abd2c5b04eb9d1413bac0",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:2391975e5e373a7e2eb6d485e86e12ed56e9ec39a33585199f9d65a3b395768b",
+      "누적28상세:597008885f8931d00682e4b8ec523a7bc3c3517c64d2465c41f3a3a6c73171c0",
+      "누적28상세:b7391ad9b73a3c83ea3d6dbdd8d6c91523d6a9e420610b1a7dd327453959030d",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:dfc144ba3289f2a46c9b38fe80d4073f0a594b1ae08de31b3dc25d48399974a4",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:655a02977882705c49889ac68c048fd589181492b182e638dcd65eede8b62e85"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": false
+    },
+    "wall_seconds": 36.33917404199019,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.947,
+      "inference_seconds": 11.805,
+      "peak_memory_bytes": 10957698566,
+      "peak_rss_bytes": 6962528256,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4059,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-1-0-0",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": false
+    },
+    "wall_seconds": 28.021886832997552,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.191,
+      "inference_seconds": 3.486,
+      "peak_memory_bytes": 10739269204,
+      "peak_rss_bytes": 6320881664,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1123,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-1-0-0",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:4e8a8224093c9e23756434756ea9375748f20e9e624792dd9d2e815185495665",
+      "누적28상세:c9d32453cf686621f7fd19c2ae97e077238440924f24a0348641459dfab88080",
+      "누적28상세:aeb2ceee13dbb7c341798fc95d46bbf9948b80a804e11896706a4e8db4cc0063",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:667b13304a626ed6c5606e01f98586db441f22356c4abd2c5b04eb9d1413bac0"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": false
+    },
+    "wall_seconds": 32.03686245800054,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.122,
+      "inference_seconds": 6.924,
+      "peak_memory_bytes": 10851321636,
+      "peak_rss_bytes": 6848233472,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2098,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-1-0-1",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.923902124995948,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.091,
+      "inference_seconds": 4.037,
+      "peak_memory_bytes": 10741038676,
+      "peak_rss_bytes": 6917373952,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1126,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-1-0-1",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:c9d32453cf686621f7fd19c2ae97e077238440924f24a0348641459dfab88080",
+      "누적28상세:aeb2ceee13dbb7c341798fc95d46bbf9948b80a804e11896706a4e8db4cc0063",
+      "누적28상세:4e8a8224093c9e23756434756ea9375748f20e9e624792dd9d2e815185495665",
+      "누적28상세:2391975e5e373a7e2eb6d485e86e12ed56e9ec39a33585199f9d65a3b395768b",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.204846916996757,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.086,
+      "inference_seconds": 6.385,
+      "peak_memory_bytes": 10852206470,
+      "peak_rss_bytes": 6901399552,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2109,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-1-0-1",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:c9d32453cf686621f7fd19c2ae97e077238440924f24a0348641459dfab88080",
+      "누적28상세:4e8a8224093c9e23756434756ea9375748f20e9e624792dd9d2e815185495665",
+      "누적28상세:aeb2ceee13dbb7c341798fc95d46bbf9948b80a804e11896706a4e8db4cc0063",
+      "누적28상세:2391975e5e373a7e2eb6d485e86e12ed56e9ec39a33585199f9d65a3b395768b",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:667b13304a626ed6c5606e01f98586db441f22356c4abd2c5b04eb9d1413bac0",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:597008885f8931d00682e4b8ec523a7bc3c3517c64d2465c41f3a3a6c73171c0",
+      "누적28상세:b7391ad9b73a3c83ea3d6dbdd8d6c91523d6a9e420610b1a7dd327453959030d",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:655a02977882705c49889ac68c048fd589181492b182e638dcd65eede8b62e85",
+      "누적28상세:dfc144ba3289f2a46c9b38fe80d4073f0a594b1ae08de31b3dc25d48399974a4",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 37.62830454199866,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.367,
+      "inference_seconds": 12.074,
+      "peak_memory_bytes": 10964776574,
+      "peak_rss_bytes": 7101300736,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4089,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-2-0-0",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:6b0b01012cc59cb2d35b898872344b29f071f4ed3d8c6ff27c6f7c577f6f1f6b",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:3562986d0ef828df8bec36aaced3cc7bfc81ece85ce5352c7e0fd024cac4e7fa",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.836126875001355,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.096,
+      "inference_seconds": 6.48,
+      "peak_memory_bytes": 10832512706,
+      "peak_rss_bytes": 6814646272,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2060,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-2-0-0",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:f489270703ca9f5fc13fbe4374b23f0f38e1365d0aa9ca3bf6afb9de7305d50c",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:952eac2c0805630f45c796c7cc25f1f5c6e7798c721521ca623ce2264690c88d",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:6b0b01012cc59cb2d35b898872344b29f071f4ed3d8c6ff27c6f7c577f6f1f6b",
+      "누적28상세:2988512b2efd081f1ce4a25846588d466f07489039b5bbe8113edc668a77e212",
+      "누적28상세:64b803c42ca676ef169f13b3c25d24bd157d4cf1c3ffcc162ede800d21a4737b",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:3562986d0ef828df8bec36aaced3cc7bfc81ece85ce5352c7e0fd024cac4e7fa",
+      "누적28상세:fa8686440a0a4a1d71cd7ae79abbde9c2cb2308727c53772df785ac3c9f86bb7"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 35.81351429199276,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.957,
+      "inference_seconds": 11.39,
+      "peak_memory_bytes": 10941314290,
+      "peak_rss_bytes": 7323107328,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 3990,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-2-0-0",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.68426224999712,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.84,
+      "inference_seconds": 3.469,
+      "peak_memory_bytes": 10731388500,
+      "peak_rss_bytes": 6787710976,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1112,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-2-0-1",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:6b0b01012cc59cb2d35b898872344b29f071f4ed3d8c6ff27c6f7c577f6f1f6b",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:3562986d0ef828df8bec36aaced3cc7bfc81ece85ce5352c7e0fd024cac4e7fa",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:9bd1f49c4b64d30ed741a40f1b2ed3b1015dd36aa24221910b0709b1ac03ce46",
+      "누적28상세:952eac2c0805630f45c796c7cc25f1f5c6e7798c721521ca623ce2264690c88d",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:2988512b2efd081f1ce4a25846588d466f07489039b5bbe8113edc668a77e212",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:64b803c42ca676ef169f13b3c25d24bd157d4cf1c3ffcc162ede800d21a4737b",
+      "누적28상세:f489270703ca9f5fc13fbe4374b23f0f38e1365d0aa9ca3bf6afb9de7305d50c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.21628420900379,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.943,
+      "inference_seconds": 11.616,
+      "peak_memory_bytes": 10944967982,
+      "peak_rss_bytes": 7078248448,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4005,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-2-0-1",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.49007499999425,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.784,
+      "inference_seconds": 3.273,
+      "peak_memory_bytes": 10734124628,
+      "peak_rss_bytes": 8033173504,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1116,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-2-0-1",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:952eac2c0805630f45c796c7cc25f1f5c6e7798c721521ca623ce2264690c88d",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:f489270703ca9f5fc13fbe4374b23f0f38e1365d0aa9ca3bf6afb9de7305d50c",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 30.621091583001544,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.776,
+      "inference_seconds": 6.207,
+      "peak_memory_bytes": 10835691234,
+      "peak_rss_bytes": 6820347904,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2068,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-3-0-0",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.49106554199534,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.836,
+      "inference_seconds": 3.34,
+      "peak_memory_bytes": 10723278420,
+      "peak_rss_bytes": 6769803264,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1100,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-3-0-0",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:a546b214bc0b67650f4977af29ef5a2ebca7de32dbc965810d44dd0f21723f5a",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:431e062504a242b5d6becff2a9e7801fe42f53077211daa30df90d40742ec797",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 29.99785954199615,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.675,
+      "inference_seconds": 5.944,
+      "peak_memory_bytes": 10901407324,
+      "peak_rss_bytes": 7266992128,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2041,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-3-0-0",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:cb9a6d265aedf9c01d43306f2e27895f3514aab7c2f0dbb41dd51bc14f649c78",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568",
+      "누적28상세:431e062504a242b5d6becff2a9e7801fe42f53077211daa30df90d40742ec797",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:a546b214bc0b67650f4977af29ef5a2ebca7de32dbc965810d44dd0f21723f5a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:31fb5abd6103463c3533bd3d67901fe2f100d0b09fe86bc32d5e11cc2a335cf8",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:70f8be69b132c3871ec1697b463e893cba46c52f2c1d8b671525f86907c9887f",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:eb7020eb95c75376260c390f2ce0aba61653a1263f221befb1ec2b8c60d8c226",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:01e3c6d37333bacd87811b7392df350d3aeb3c5630abb9db94d7d960f6cfdbb5",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.293997417000355,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.995,
+      "inference_seconds": 11.727,
+      "peak_memory_bytes": 10979963982,
+      "peak_rss_bytes": 6126796800,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 3951,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-3-0-1",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:431e062504a242b5d6becff2a9e7801fe42f53077211daa30df90d40742ec797",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:a546b214bc0b67650f4977af29ef5a2ebca7de32dbc965810d44dd0f21723f5a",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.12066237500403,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.968,
+      "inference_seconds": 6.699,
+      "peak_memory_bytes": 10901685918,
+      "peak_rss_bytes": 7264419840,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2042,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-3-0-1",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:cb9a6d265aedf9c01d43306f2e27895f3514aab7c2f0dbb41dd51bc14f649c78",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:431e062504a242b5d6becff2a9e7801fe42f53077211daa30df90d40742ec797",
+      "누적28상세:31fb5abd6103463c3533bd3d67901fe2f100d0b09fe86bc32d5e11cc2a335cf8",
+      "누적28상세:a546b214bc0b67650f4977af29ef5a2ebca7de32dbc965810d44dd0f21723f5a",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:01e3c6d37333bacd87811b7392df350d3aeb3c5630abb9db94d7d960f6cfdbb5",
+      "누적28상세:eb7020eb95c75376260c390f2ce0aba61653a1263f221befb1ec2b8c60d8c226",
+      "누적28상세:70f8be69b132c3871ec1697b463e893cba46c52f2c1d8b671525f86907c9887f",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 36.39139000000432,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.291,
+      "inference_seconds": 11.424,
+      "peak_memory_bytes": 10980078674,
+      "peak_rss_bytes": 7080542208,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 3952,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-3-0-1",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.324643125000875,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.602,
+      "inference_seconds": 3.364,
+      "peak_memory_bytes": 10724294228,
+      "peak_rss_bytes": 7464288256,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1101,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-4-0-0",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:27eefbe90947b7481c32c1485a2c36d017a1472eb5037a69959adc870dd04423",
+      "누적28상세:007de69a55fefbe3f992a5be26b7236abf09bf931889bf4a3cd6964a45230fcf",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d44dd2f364ecafe1996c2c97e0266ae60c001348c97d4516707784af04219fcd",
+      "누적28상세:9078db3450fee414fd0735b1fc62123babd9d25f3b7ce6b2eb96fccca3799be6",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:e328f015057000d9e08157f131b0de12442f531bd053b6e65e32c0c3f74c17b4",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:32d60a20839f814699156c499eb38155f98e3006dfc375303e1fd7dc6177fe40",
+      "누적28상세:da26bc9c5d60f0487626ca224bcb1d9fde9d0d69c36d76db63f78497b7837aa3"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 66.294501167009,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.767,
+      "inference_seconds": 11.603,
+      "peak_memory_bytes": 10944623914,
+      "peak_rss_bytes": 7040090112,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4004,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-4-0-0",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.620286999997916,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.737,
+      "inference_seconds": 3.343,
+      "peak_memory_bytes": 10720558676,
+      "peak_rss_bytes": 7578140672,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1096,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-4-0-0",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:27eefbe90947b7481c32c1485a2c36d017a1472eb5037a69959adc870dd04423",
+      "누적28상세:007de69a55fefbe3f992a5be26b7236abf09bf931889bf4a3cd6964a45230fcf",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 33.33391495801334,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 24.617,
+      "inference_seconds": 6.439,
+      "peak_memory_bytes": 10829334178,
+      "peak_rss_bytes": 7014612992,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2052,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-4-0-1",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.417445708997548,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.774,
+      "inference_seconds": 3.353,
+      "peak_memory_bytes": 10715037268,
+      "peak_rss_bytes": 7542882304,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1088,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-4-0-1",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 30.761621750003542,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.729,
+      "inference_seconds": 6.301,
+      "peak_memory_bytes": 10867033758,
+      "peak_rss_bytes": 7113768960,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2040,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-4-0-1",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:d44dd2f364ecafe1996c2c97e0266ae60c001348c97d4516707784af04219fcd",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:32d60a20839f814699156c499eb38155f98e3006dfc375303e1fd7dc6177fe40",
+      "누적28상세:301fd61d97de18a8fa4b8117bc3247e393edb1377f5faa63684dcda18f6d7f0c",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:da26bc9c5d60f0487626ca224bcb1d9fde9d0d69c36d76db63f78497b7837aa3",
+      "누적28상세:9078db3450fee414fd0735b1fc62123babd9d25f3b7ce6b2eb96fccca3799be6",
+      "누적28상세:d9e02e226eb2e3a06d82e8f09c3a7ed08f7b83fe9c8e3be9d7b4fffb73333270",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 35.69424983400677,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.736,
+      "inference_seconds": 11.5,
+      "peak_memory_bytes": 10942739722,
+      "peak_rss_bytes": 7881277440,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 3996,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-5-0-0",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f",
+      "누적28상세:dfc144ba3289f2a46c9b38fe80d4073f0a594b1ae08de31b3dc25d48399974a4",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:b7391ad9b73a3c83ea3d6dbdd8d6c91523d6a9e420610b1a7dd327453959030d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.26249850000022,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.902,
+      "inference_seconds": 6.44,
+      "peak_memory_bytes": 10836313830,
+      "peak_rss_bytes": 7142293504,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2069,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-5-0-0",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:2391975e5e373a7e2eb6d485e86e12ed56e9ec39a33585199f9d65a3b395768b",
+      "누적28상세:b221369d607b538123d853d890e72ccb6d54a69dd7d8d0145eca4c146d0e85cb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:aeb2ceee13dbb7c341798fc95d46bbf9948b80a804e11896706a4e8db4cc0063",
+      "누적28상세:655a02977882705c49889ac68c048fd589181492b182e638dcd65eede8b62e85",
+      "누적28상세:d21abf645816b37ca6e8792b93529bcac4b5beb33b8d29eb31c8b4a9b1273f26",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:dfc144ba3289f2a46c9b38fe80d4073f0a594b1ae08de31b3dc25d48399974a4",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:b7391ad9b73a3c83ea3d6dbdd8d6c91523d6a9e420610b1a7dd327453959030d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 35.859523457998876,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.069,
+      "inference_seconds": 11.183,
+      "peak_memory_bytes": 10948736366,
+      "peak_rss_bytes": 7650525184,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4021,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-5-0-0",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 28.898145415994804,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.903,
+      "inference_seconds": 4.121,
+      "peak_memory_bytes": 10728324692,
+      "peak_rss_bytes": 7671840768,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1107,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-5-0-1",
+    "slice": "prior_v3_regression",
+    "K": 20,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:b7391ad9b73a3c83ea3d6dbdd8d6c91523d6a9e420610b1a7dd327453959030d",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f",
+      "누적28상세:aeb2ceee13dbb7c341798fc95d46bbf9948b80a804e11896706a4e8db4cc0063",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:2391975e5e373a7e2eb6d485e86e12ed56e9ec39a33585199f9d65a3b395768b",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d21abf645816b37ca6e8792b93529bcac4b5beb33b8d29eb31c8b4a9b1273f26",
+      "누적28상세:b221369d607b538123d853d890e72ccb6d54a69dd7d8d0145eca4c146d0e85cb",
+      "누적28상세:dfc144ba3289f2a46c9b38fe80d4073f0a594b1ae08de31b3dc25d48399974a4",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 35.994965584002784,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.093,
+      "inference_seconds": 11.436,
+      "peak_memory_bytes": 10946852174,
+      "peak_rss_bytes": 7278690304,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 4013,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-5-0-1",
+    "slice": "prior_v3_regression",
+    "K": 5,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 27.233084583000164,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 22.733,
+      "inference_seconds": 3.21,
+      "peak_memory_bytes": 10728685140,
+      "peak_rss_bytes": 7250329600,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 1108,
+        "output_tokens": 0
+      }
+    }
+  },
+  {
+    "query_id": "A-5-0-1",
+    "slice": "prior_v3_regression",
+    "K": 10,
+    "status": "ok",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:dfc144ba3289f2a46c9b38fe80d4073f0a594b1ae08de31b3dc25d48399974a4",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e"
+    ],
+    "metrics": {
+      "hit3": true,
+      "hitK": true,
+      "top1": true
+    },
+    "wall_seconds": 31.532361042001867,
+    "execution": {
+      "backend": "mlx",
+      "device": "gpu",
+      "load_seconds": 23.341,
+      "inference_seconds": 6.435,
+      "peak_memory_bytes": 10833888974,
+      "peak_rss_bytes": 7626686464,
+      "state_truncated": false,
+      "usage": {
+        "input_tokens": 2063,
+        "output_tokens": 0
+      }
+    }
+  }
+]

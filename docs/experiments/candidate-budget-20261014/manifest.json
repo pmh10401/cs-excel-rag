@@ -1,0 +1,70 @@
+{
+  ".gitattributes": {
+    "bytes": 14,
+    "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9"
+  },
+  "README.md": {
+    "bytes": 3834,
+    "sha256": "21ec7d63802de8ea50a55ddb0352159fe005d29d258e857e4e7a9a0063e66b88"
+  },
+  "answer-outcomes.json": {
+    "bytes": 35566,
+    "sha256": "727e63702ed1617e6ef91bfd3d0b0cb3bf23daf7c7a9e8f6154d85b00b4e62cc"
+  },
+  "answer-summary.csv": {
+    "bytes": 818,
+    "sha256": "b842a27bc47b20518af9d9914a311ab6c5d3e345e77820782da1be528e796ab8"
+  },
+  "audit.json": {
+    "bytes": 590,
+    "sha256": "a62b3a8c7abd7a27cbb83da99befbc011e0a1e02e919a2d73dac309e5de70555"
+  },
+  "candidate-pools.json": {
+    "bytes": 44031,
+    "sha256": "eb39f38f96bb6b42f88c3377b27aced8dc1e3da085c60fffda48f5a963ce9e40"
+  },
+  "cases.md": {
+    "bytes": 23588,
+    "sha256": "73aa8ddb909797a4d80cfb0205527dbf250b0e7475cd89dc32321e872b8922bd"
+  },
+  "changes.csv": {
+    "bytes": 2864,
+    "sha256": "d8648958f854ee3be7966c46038230e684a02617265e7affe980c91998604a48"
+  },
+  "cost-summary.json": {
+    "bytes": 932,
+    "sha256": "b5a6818d2bd4056189c84d438f93ca2037e440443ef59731ea65c177a9a3e4cb"
+  },
+  "dataset-public.json": {
+    "bytes": 21441,
+    "sha256": "374a03f5bd436e767c6a0a0d49e7e4d5cc0c9e81a8b45e574a93830e118781d7"
+  },
+  "matched-answer-summary.csv": {
+    "bytes": 135,
+    "sha256": "b30c3e957e8f86f7e24a3b38f7ce602b5f9ca807ca47fbc27946b63b5b5fad92"
+  },
+  "protocol-public.json": {
+    "bytes": 5440,
+    "sha256": "8b1fb112310446e832286a24d15f28ccf10221c93b4a42dff6710f73a75aef5b"
+  },
+  "ranking-results.json": {
+    "bytes": 116293,
+    "sha256": "a5850476712e96433e394543dee19d494515f4d187e07a217cb5f99e695615d4"
+  },
+  "ranking-summary.csv": {
+    "bytes": 1059,
+    "sha256": "4eac1dea5d45c41463933b2c6247a6f1c5f7f5b22e9bab94a82728e448c5d018"
+  },
+  "report.md": {
+    "bytes": 8462,
+    "sha256": "12c76552586781433bf78ebb0f1090e8b7aec56d110b50a70bd004a659ab7cf1"
+  },
+  "synthetic-source-subset.json": {
+    "bytes": 250669,
+    "sha256": "79a5c80d6436d07ce7e1ec586a9b212dd8985779c18e98fccb589f7185e129c4"
+  },
+  "verify_results.py": {
+    "bytes": 7105,
+    "sha256": "5a4737797c369010d21f9d1edc98fa85e680016d6dcfada133182da5270c2529"
+  }
+}

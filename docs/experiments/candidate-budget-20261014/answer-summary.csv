@@ -1,0 +1,4 @@
+﻿K,completed,planned,reached_answer_model,pre_answer_failure,cleanup_failure,delivered,machine_fact_complete,unknown,machine_fact_incomplete,http_calls,additional_calls,length_finish_calls,prompt_tokens,completion_tokens,reasoning_tokens,full_wall_median,reached_answer_wall_median,wall_min,wall_max,actual_output_cap_min,actual_output_cap_max,fresh_answer_top3_compared,fresh_answer_top3_differs_from_initial_ranking
+5,6,6,4,2,2,0,0,0,6,8,4,7,24288,30015,29640,252.28650935449696,280.65880824999476,1.0911803749913815,329.0066721250041,3854,3894,4,0
+10,6,6,5,1,2,3,2,1,3,9,4,5,27263,32857,31245,274.738674770997,275.0935332499939,1.1815295419946779,306.444714000012,3829,3931,5,0
+20,6,6,4,2,2,1,0,1,5,7,3,6,21184,26598,26054,210.48260037449654,276.51205241649586,1.0442652920028195,308.60724504200334,3819,3937,4,0

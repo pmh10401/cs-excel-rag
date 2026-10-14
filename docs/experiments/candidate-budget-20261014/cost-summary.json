@@ -1,0 +1,36 @@
+{
+  "offline_embedding_and_candidate_preparation": {
+    "load_seconds": 2.609809540997958,
+    "build_and_queries_seconds": 27.09933229199669,
+    "index": {
+      "rows": 2038,
+      "indexed": 2038,
+      "previously_indexed": 0,
+      "generated": 1038,
+      "attempted": 1038,
+      "failures": [],
+      "dimensions": 768,
+      "model": "cs-candidate-budget-embedding-20261014",
+      "index": "FAISS FlatIP"
+    }
+  },
+  "standalone_ranking_wall_sum": 2394.8134774179925,
+  "answer_calls": 24,
+  "answer_flow_wall_sum": 3474.7009384169796,
+  "answer_attempts": 18,
+  "answer_model_reached_flows": 13,
+  "matched_answer_queries": [
+    "CB-N-0-0",
+    "CB-N-1-1",
+    "CB-N-2-0",
+    "CB-N-3-1"
+  ],
+  "first_and_repair_finish_reasons": {
+    "length": 18,
+    "stop": 6
+  },
+  "nested_clef_not_added_twice": true,
+  "answer_model_gpu_peak": null,
+  "system_memory_and_swap_peak": null,
+  "memory_scopes_not_summed": true
+}

@@ -1,0 +1,471 @@
+{
+  "total_corpus_records": 2038,
+  "queries": [
+    {
+      "id": "CB-N-0-0",
+      "slice": "new_synthetic",
+      "group_id": "new-part-0",
+      "question": "식각장비의 회전베어링에서 떨림이 나타났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:cce394b1b1147954753f8f7ff2b5211d2d397ebd25cae25eec6337e9d0502073",
+        "누적28상세:bf479232a65f95f095f243aaf788a0f3f71ac61b8fefe043aa4dcf31b5c8d4b4"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 회전베어링 진동 발생",
+      "required_column": "현상",
+      "required_action": "연결부 조정 후 정상화",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-0-1",
+      "slice": "new_synthetic",
+      "group_id": "new-part-0",
+      "question": "식각장비의 회전베어링에서 평소와 다른 소리가 났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:0cc30b2acaa6492e691ccd1a1a636f9b66012abd44d22b0d3edb6b3a73340452",
+        "누적28상세:b9e46ca19e414f13fd6a977e090be209cc63e20bf2e2d4bdbeaf3ce80b32dac2"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 회전베어링 소음 발생",
+      "required_column": "현상",
+      "required_action": "부품 교체 후에도 재발",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-1-0",
+      "slice": "new_synthetic",
+      "group_id": "new-part-1",
+      "question": "이송장비의 진공게이지에서 평소와 다른 소리가 났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:ddf20fdc13687149d9545f02f12bbb7f85faf88f496a7fc3e78cc481ed4bdd43",
+        "누적28상세:28ddfaa16295df851e5067743b9e47a787b3f784fa3a1761290fd7b1de96e0a2"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 진공게이지 소음 발생",
+      "required_column": "현상",
+      "required_action": "부품 교체 후에도 재발",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-1-1",
+      "slice": "new_synthetic",
+      "group_id": "new-part-1",
+      "question": "이송장비의 진공게이지에서 물이 새었던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:b513ebf7b29e3a91573f27689daf0c33d04f7d4bef91ee49a118e5b9a49b71af",
+        "누적28상세:689ede2c3b3eeca04dffbdb82b2edb1e2deae60820723847f822ce934e89c52c"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 진공게이지 누수 발생",
+      "required_column": "현상",
+      "required_action": "부품 교체 예정",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-2-0",
+      "slice": "new_synthetic",
+      "group_id": "new-part-2",
+      "question": "세정장비의 냉각호스에서 물이 새었던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:99d101b7ee0b8eb136f5931a0ab1cedf46d95856e33204743d4436934740b706",
+        "누적28상세:dabdb05aba7a186047bc3ff113595d8c1e03cc442b835b46f9688215b312461d"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 냉각호스 누수 발생",
+      "required_column": "현상",
+      "required_action": "부품 교체 예정",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-2-1",
+      "slice": "new_synthetic",
+      "group_id": "new-part-2",
+      "question": "세정장비의 냉각호스에서 기준 위치를 벗어났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:b3f6a22f83155aad055505de327eaf62bc7bd6bbc20c55e4c977e926dbf89959",
+        "누적28상세:74fd8067ffb1e6c5611b5825e1dbfeea6690edd6e27d7d15c7662f68561db511"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 냉각호스 위치 이탈 발생",
+      "required_column": "현상",
+      "required_action": "설치 상태 점검, 결과 미기재",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-3-0",
+      "slice": "new_synthetic",
+      "group_id": "new-part-3",
+      "question": "증착장비의 분사노즐에서 기준 위치를 벗어났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:d050ff6c7f1234f442063f45cf6ecb9702e90e9b4efb9afeaa09f7b062bda32c",
+        "누적28상세:96445c140f9e16decb09f2048bc402bca4afd7762a5d2d8736c420bae93a4ed8"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 분사노즐 위치 이탈 발생",
+      "required_column": "현상",
+      "required_action": "설치 상태 점검, 결과 미기재",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-3-1",
+      "slice": "new_synthetic",
+      "group_id": "new-part-3",
+      "question": "증착장비의 분사노즐에서 움직임이 늦어졌던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:acc96136fd5253983cab10a9ca4bef7f6b9a28f82666042db70f6f93cd184b01",
+        "누적28상세:71c208727a1b165a7ecbe027db39707b66ab6c4744f6e49f8cd65a26d08bf2b7"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 분사노즐 동작 지연 발생",
+      "required_column": "현상",
+      "required_action": "연결부 재조립 후 일부 개선",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-4-0",
+      "slice": "new_synthetic",
+      "group_id": "new-part-4",
+      "question": "검사장비의 온도센서에서 움직임이 늦어졌던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:3249cfc5a61eff2157bbcd257c5e483da251ee03533aa373a691844548d49228",
+        "누적28상세:cec1c961e5f1f0b97d02168b3f11159a82104916d75adba61e59ca6654964ea5"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 온도센서 동작 지연 발생",
+      "required_column": "현상",
+      "required_action": "연결부 재조립 후 일부 개선",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-4-1",
+      "slice": "new_synthetic",
+      "group_id": "new-part-4",
+      "question": "검사장비의 온도센서에서 떨림이 나타났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:e051acd25b3cce88e4f0272e7e23fe42d2ef4970e9f3b861d1981e4a15fc59be",
+        "누적28상세:b3cca90f8e53b76df75e113bb8cff0a9a8987ebb91ccced5f509b616d2900d28"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 온도센서 진동 발생",
+      "required_column": "현상",
+      "required_action": "연결부 조정 후 정상화",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-5-0",
+      "slice": "new_synthetic",
+      "group_id": "new-part-5",
+      "question": "노광장비의 배기밸브에서 떨림이 나타났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:cb15bdaa3b8f9d1c7fb9e81a77ae6d2b804d63d1c4b8ac6d300def08f15f6537",
+        "누적28상세:0e0b96f29d53f8a69acb3341d54c654000db0b442bcf7d941d50f283b3c54636"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 배기밸브 진동 발생",
+      "required_column": "현상",
+      "required_action": "연결부 조정 후 정상화",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "CB-N-5-1",
+      "slice": "new_synthetic",
+      "group_id": "new-part-5",
+      "question": "노광장비의 배기밸브에서 평소와 다른 소리가 났던 과거 이력과 당시 기록된 조치·결과를 알려줘.",
+      "expected_ids": [
+        "누적28상세:e50b996946a2d2c02408344eca919606fefc6bda30b4a79ebb4e12f3997f87c8",
+        "누적28상세:d275b587105cf34a49665eb278f4a92f59cefd4b4001ccff1999c62dcd265e3d"
+      ],
+      "contradicting_ids": [],
+      "required_quote": "운전 중 배기밸브 소음 발생",
+      "required_column": "현상",
+      "required_action": "부품 교체 후에도 재발",
+      "label_source": "deterministic synthetic equipment+part+symptom facts; not field labels"
+    },
+    {
+      "id": "A-0-0-0",
+      "category": "condition",
+      "pair_id": "pair-0-0",
+      "group_id": "family-0",
+      "question": "냉각 순환계 초도장치의 환수관에서 물이 적게 흐르면서 환수가 뜨거웠던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+      ],
+      "contradicting_ids": [
+        "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37"
+      ],
+      "reference_ids": [
+        "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+      ],
+      "required_quote": "실제 유량이 낮고 환수 온도가 높았다.",
+      "required_column": "현상",
+      "required_action": "스트레이너를 세척했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-0-0-1",
+      "category": "condition",
+      "pair_id": "pair-0-0",
+      "group_id": "family-0",
+      "question": "냉각 순환계 초도장치의 환수관에서 물이 충분히 흐르는데 환수만 뜨거웠던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37"
+      ],
+      "contradicting_ids": [
+        "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+      ],
+      "reference_ids": [
+        "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+      ],
+      "required_quote": "실제 유량은 정상이지만 환수 온도가 높았다.",
+      "required_column": "현상",
+      "required_action": "냉각 배관을 점검했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-1-0-0",
+      "category": "condition",
+      "pair_id": "pair-1-0",
+      "group_id": "family-1",
+      "question": "진공 조절계 초도장치의 벤트밸브에서 공기를 뺄 때만 느렸던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c"
+      ],
+      "contradicting_ids": [
+        "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c"
+      ],
+      "reference_ids": [
+        "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+      ],
+      "required_quote": "진공을 만드는 과정만 늦고 대기압 복귀는 정상이었다.",
+      "required_column": "현상",
+      "required_action": "배기 배관을 청소했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-1-0-1",
+      "category": "condition",
+      "pair_id": "pair-1-0",
+      "group_id": "family-1",
+      "question": "진공 조절계 초도장치의 벤트밸브에서 공기를 넣어 압력을 되돌릴 때만 느렸던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c"
+      ],
+      "contradicting_ids": [
+        "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c"
+      ],
+      "reference_ids": [
+        "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+      ],
+      "required_quote": "진공 형성은 정상이고 대기압으로 돌아오는 과정만 늦었다.",
+      "required_column": "현상",
+      "required_action": "벤트 밸브를 점검했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-2-0-0",
+      "category": "condition",
+      "pair_id": "pair-2-0",
+      "group_id": "family-2",
+      "question": "수직 반송계 초도장치의 승강축에서 움직이는 동안 높이가 틀어졌던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563"
+      ],
+      "contradicting_ids": [
+        "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874"
+      ],
+      "reference_ids": [
+        "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+      ],
+      "required_quote": "전원이 켜진 구동 중 높이가 틀어졌다.",
+      "required_column": "현상",
+      "required_action": "위치 센서를 점검했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-2-0-1",
+      "category": "condition",
+      "pair_id": "pair-2-0",
+      "group_id": "family-2",
+      "question": "수직 반송계 초도장치의 승강축에서 움직일 때 정상인데 전원을 끄고 처졌던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874"
+      ],
+      "contradicting_ids": [
+        "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563"
+      ],
+      "reference_ids": [
+        "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+      ],
+      "required_quote": "구동 중 높이는 정상이고 전원을 끈 뒤 팔이 내려갔다.",
+      "required_column": "현상",
+      "required_action": "브레이크 체결부를 점검했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-3-0-0",
+      "category": "condition",
+      "pair_id": "pair-3-0",
+      "group_id": "family-3",
+      "question": "유량 교정계 초도장치의 유량계에서 먼저 진행한 정비에서 영점이 틀어졌던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053"
+      ],
+      "contradicting_ids": [
+        "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8"
+      ],
+      "reference_ids": [
+        "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+      ],
+      "required_quote": "첫 번째 정비 작업에서 영점 오차를 확인했다.",
+      "required_column": "현상",
+      "required_action": "영점 설정을 조정했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-3-0-1",
+      "category": "condition",
+      "pair_id": "pair-3-0",
+      "group_id": "family-3",
+      "question": "유량 교정계 초도장치의 유량계에서 이어서 진행한 정비에서 영점이 틀어졌던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8"
+      ],
+      "contradicting_ids": [
+        "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053"
+      ],
+      "reference_ids": [
+        "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+      ],
+      "required_quote": "두 번째 정비 작업에서 영점 오차를 확인했다.",
+      "required_column": "현상",
+      "required_action": "유량계를 교체했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-4-0-0",
+      "category": "condition",
+      "pair_id": "pair-4-0",
+      "group_id": "family-4",
+      "question": "토출 제어계 초도장치의 공급필터에서 필터를 실제로 갈아 끼웠던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b"
+      ],
+      "contradicting_ids": [
+        "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8"
+      ],
+      "reference_ids": [
+        "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+      ],
+      "required_quote": "공급 필터 교체를 실제로 실시했다.",
+      "required_column": "현상",
+      "required_action": "공급 필터를 교체했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-4-0-1",
+      "category": "condition",
+      "pair_id": "pair-4-0",
+      "group_id": "family-4",
+      "question": "토출 제어계 초도장치의 공급필터에서 필터를 아직 바꾸지 않고 예정한 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8"
+      ],
+      "contradicting_ids": [
+        "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b"
+      ],
+      "reference_ids": [
+        "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+      ],
+      "required_quote": "공급 필터 교체는 예정이며 실시하지 않았다.",
+      "required_column": "현상",
+      "required_action": "필터 교체를 예정했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-5-0-0",
+      "category": "condition",
+      "pair_id": "pair-5-0",
+      "group_id": "family-5",
+      "question": "압력 진단계 초도장치의 압력계에서 별도 측정에서도 실제 압력이 낮았던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195"
+      ],
+      "contradicting_ids": [
+        "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af"
+      ],
+      "reference_ids": [
+        "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+      ],
+      "required_quote": "독립 기준 계기로 실제 압력 저하를 확인했다.",
+      "required_column": "현상",
+      "required_action": "공급 경로를 점검했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    },
+    {
+      "id": "A-5-0-1",
+      "category": "condition",
+      "pair_id": "pair-5-0",
+      "group_id": "family-5",
+      "question": "압력 진단계 초도장치의 압력계에서 별도 측정은 맞고 표시만 낮았던 과거 사례와 당시 기록된 조치를 알려줘.",
+      "expected_ids": [
+        "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af"
+      ],
+      "contradicting_ids": [
+        "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195"
+      ],
+      "reference_ids": [
+        "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+      ],
+      "required_quote": "독립 기준 압력은 정상이며 표시계만 낮았다.",
+      "required_column": "현상",
+      "required_action": "표시계 영점을 조정했다.",
+      "scope_ids": null,
+      "exact": false,
+      "label_source": "authored facts / programmatic silver",
+      "slice": "prior_v3_regression"
+    }
+  ],
+  "answer_ids": [
+    "CB-N-0-0",
+    "CB-N-1-1",
+    "CB-N-2-0",
+    "CB-N-3-1",
+    "CB-N-4-0",
+    "CB-N-5-1"
+  ],
+  "source": "newly authored query12 / prior v3 regression12; deterministic existing synthetic corpus2000+38",
+  "original_dataset_sha256": "3946fdc4cd0bf3910e77ec132bcfed10bedb1660d706e8ec2ea2c526a8eaf0cf"
+}

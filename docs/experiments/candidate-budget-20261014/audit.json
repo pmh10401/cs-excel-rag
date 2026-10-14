@@ -1,0 +1,14 @@
+{
+  "frozen_protocol_inputs_code_and_helpers": true,
+  "personal_config_unchanged": true,
+  "candidate_original_cells_match_synthetic_sources": true,
+  "clef_requests_exactly_query_and_original_sections": 85,
+  "MLX_GPU_nontruncated_calls": 85,
+  "answer_source_sections_match_selected_candidates": 13,
+  "ranking_requests": 72,
+  "answer_attempts": 18,
+  "answer_http_calls": 24,
+  "answer_model_reached_flows": 13,
+  "post_cleanup_owned_models": 0,
+  "scope": "72 valid rankings;18 answer attempts with execution failures. Input/integrity audit, not semantic or field-label validation"
+}

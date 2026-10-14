@@ -1,0 +1,104 @@
+{
+  "run_id": "candidate-budget-20261014-151500",
+  "head": "221909e870019f6a3606574b5c545d0abfab9f83",
+  "model_stop_at": 1791991043.9161758,
+  "delivery_deadline": 1792027043.9161758,
+  "deadline_note": "Earlier24h deadline retained, no reset",
+  "K": [
+    5,
+    10,
+    20
+  ],
+  "retrieval_pool": 20,
+  "first_stage": "keyword20 and vector20, same RRF pool20 frozen once, prefix5/10/20 only",
+  "answer_references": 3,
+  "ranking_requests": 72,
+  "answer_ids": [
+    "CB-N-0-0",
+    "CB-N-1-1",
+    "CB-N-2-0",
+    "CB-N-3-1",
+    "CB-N-4-0",
+    "CB-N-5-1"
+  ],
+  "answer_flows": 18,
+  "maximum_answer_http_calls": 36,
+  "answer_timing": "fresh embedding/retrieval/reranking/model switch/generation/validation/repair/cleanup per flow",
+  "order": "K arms rotate by query index; answer subset fixed before retrieval; no result-based selection",
+  "new_queries": 12,
+  "regression_queries": 12,
+  "input_policy": "original source cells only; no label input; no truncation; failure uses original prefix, not quality retry",
+  "source_files": {
+    "ragkit/embedding_runtime.py": "3b185fd122a3844acc0f29ac692ef859120ea38ed42a441bea33bd21fd02be19",
+    "ragkit/vectors.py": "923d7a196731d87083a74c463b302c4d6fb1a34b330c5df4cda5c4d95db0127c",
+    "ragkit/llm_trace.py": "e672300e23f4d1cf5cf000f97a8aac0ec23c18d70b2fa92840e32a5de0a909f2",
+    "ragkit/web.py": "cbb21d16da93973f62af581412dbc97181b02732fdba40fe785f70a50c65dca5",
+    "ragkit/claim_verification.py": "97634bb798d1ec44496bc33e6064f3c080286729fdca6e4d80bd34fc02389537",
+    "ragkit/semantic.py": "77313d40f1631ada689df3f572604c448c31d9ec41d5ad1eee7b6cd6912086b5",
+    "ragkit/cslist.py": "4bac8efa97c95d65afa2898333cea496c4a71299ef033bc714a1b3c9fc9ad1ce",
+    "ragkit/input_formats.py": "7f2f5048053a5dca8bf45cbba6e0f29d3733536d41efab669058fe90d2be6724",
+    "ragkit/evaluation.py": "61232758d39617e241c94261bf7be307ac0a9187be4e5f29fe0ba954f10289df",
+    "ragkit/records.py": "bf99acde7ec1564ae8ac5fb3da521370cf39a46585a6d0a2ffd20712843ce839",
+    "ragkit/relations.py": "e07cb77292855b53ff9f9ff179c7965f0dc50acdf2705197fff7b7f93ededdce",
+    "ragkit/excel_app.py": "3b39595442f564a26d93eaf116ce8c692d319ad34f356c4c8ac0b10898e42f7d",
+    "ragkit/__init__.py": "1ebc58937abe0f7b779f9a105c946c3d1588c7920762c0033ff75f7693498318",
+    "ragkit/llm.py": "672e27b634cbdc2c6cb46861bcf596e77921c24a4a59a3a9112f4f53da240e8f",
+    "ragkit/local_report.py": "f5164ee97312c24883debf533b59da08f1f5905e72bf83d96a673138262d15f1",
+    "ragkit/workload.py": "b89b0e2d425a89589c7887599efd0bb592673df6698974e266690c5a3b8368c2",
+    "ragkit/clef.py": "87dae271f0569d588e8bd90c3e5161fae606bd10623ae680d2eb0e147afaf7db",
+    "ragkit/local_cli.py": "5e1883357b7e10f4e5045bdc3f3ed4a9e962e3457950d2827d226c42fede9be2",
+    "ragkit/jobs.py": "d9eb663e61a2e8ff6eb47204450531629b80836e993f7008b379a3b045fa08db",
+    "ragkit/menu.py": "1b35c0680244408efe12d1785aeb74bc36a9ef9cf9b9aa40ab48cbb5fc283407",
+    "ragkit/retrieval_evaluation.py": "a27d208b9f4d505317a6294feaa53a6fb937fb30ada33af316ce847c2ee43b2a",
+    "ragkit/cli.py": "e5cba2ca7d251c65fea64a4f90c75961ed794ba33be46f2dadf9e7d169564bfc",
+    "ragkit/english.py": "59f7b80a54ea59452c357655d8db3ff1329af7dd431e274aa4746c907f0cd324",
+    "ragkit/storage.py": "24cf40600340ef521e8ed4af3625b22362868d35c8f0817a91f08283116a19f3",
+    "ragkit/nli.py": "bb4bc458e9ff7966ec1be244c8382bd179b69040333dee35b0f433f83966211e",
+    "ragkit/search.py": "812f156a57d489a12d8a0b28461542cd9790131b43003c5ff82a14caf36044b3",
+    "ragkit/source_cache.py": "8b91d5d43e5bb7c863f0b906f00f1376235b98ab9097ae016d6354caf7a73b4e",
+    "ragkit/report.py": "095f13aea36f7aed7be0bd6b4f8061f8b12c100da4f0ef365df0f8f8af392661",
+    "ragkit/overnight.py": "22be830d7f1b241990e753e35e457487c181d7746f4acec43c104c4e9fedabd9",
+    "experiments/clef_mlx_server.py": "1c85009f7ba3674c15288bee74fa970b0d90ac1e462853baf92461dff762ace0",
+    "experiments/search_rerank.py": "73ccfa434b72333418fbd4646c3f5e00251f01869e247ab35ef9c704c765f994"
+  },
+  "original_protocol_sha256": "cab9eca2429c874565282f738f11424edadcf6e30bcc7fc2b4c0b862f097f6c1",
+  "candidate_snapshot_sha256": "0a666c4eecfec5517bf2214b295ebe89435b06320e6d5c1c698e3b051627a1d0",
+  "models": {
+    "embedding": {
+      "model": "EmbeddingGemma2-Q8_0",
+      "dimensions": 768
+    },
+    "HC": {
+      "model": "Clef-flash-8bit",
+      "backend": "MLX",
+      "device": "GPU",
+      "revision": "5a195dc147926b63b1d139691ed4480ca9f92c0e"
+    },
+    "answer": {
+      "model": "GPT-OSS20B-MXFP4",
+      "backend": "LM Studio Metal",
+      "context": 16384,
+      "reasoning": "high",
+      "output_cap": 4096
+    }
+  },
+  "hardware": "Apple M2 Max,32GiB unified memory",
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+    "packages": {
+      "torch": "2.13.0",
+      "mlx": "0.32.3",
+      "transformers": "5.19.0",
+      "openai": "3.10.0",
+      "numpy": "2.3.5",
+      "openpyxl": "3.1.5",
+      "psutil": "7.2.2"
+    }
+  },
+  "human_participation": false,
+  "production_changed": false,
+  "transport": "Clef unchanged serialization/validation via isolated MLX child; embedding/answer via actual local LM Studio HTTP; not browser/service-queue timing",
+  "public_verification_scope": "Offline recount only; original local GPU harness/requests/responses are not uploaded"
+}
