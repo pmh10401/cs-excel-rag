@@ -1,0 +1,5 @@
+﻿split,K,planned,checkpointed,model_reached,provided,insufficient,direct_sql,clarification,error,literal_complete,unknown,calls,median_cli_flow_seconds
+DEV,5,40,0,0,0,0,0,0,0,0,0,0,
+TEST,5,80,0,0,0,0,0,0,0,0,0,0,
+TEST,10,80,0,0,0,0,0,0,0,0,0,0,
+TEST,20,80,0,0,0,0,0,0,0,0,0,0,

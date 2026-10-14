@@ -1,0 +1,22 @@
+[
+  {
+    "K": 10,
+    "paired_delta": 0.014285714285714285,
+    "low": 0.0,
+    "high": 0.03571428571428571,
+    "clusters": 20,
+    "questions": 140,
+    "bootstrap_draws": 2000,
+    "seed": 20261014
+  },
+  {
+    "K": 20,
+    "paired_delta": 0.014285714285714285,
+    "low": -0.014285714285714285,
+    "high": 0.04285714285714286,
+    "clusters": 20,
+    "questions": 140,
+    "bootstrap_draws": 2000,
+    "seed": 20261014
+  }
+]

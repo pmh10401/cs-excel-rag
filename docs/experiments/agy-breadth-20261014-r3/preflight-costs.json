@@ -1,0 +1,167 @@
+[
+  {
+    "probe_key": "dev-followup-check-02-0",
+    "model": null,
+    "wall_seconds": 105.40293604199542,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "TimeoutError",
+    "exit": null
+  },
+  {
+    "probe_key": "dev-followup-envelope-03-0",
+    "model": null,
+    "wall_seconds": 93.26817833300447,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "ValueError",
+    "exit": 0
+  },
+  {
+    "probe_key": "dev-health-after-timeout-01-0",
+    "model": "gemini-3.8-flash-high",
+    "wall_seconds": 17.21438212499197,
+    "provider_seconds": 12.872231,
+    "usage": {
+      "input_tokens": 27727,
+      "output_tokens": 1248,
+      "thinking_tokens": 1214,
+      "cache_read_tokens": 0,
+      "total_tokens": 28975
+    },
+    "error_type": "",
+    "exit": 0
+  },
+  {
+    "probe_key": "dev-long-budget-rag-05-0",
+    "model": "gemini-3.8-flash-high",
+    "wall_seconds": 310.55103195799165,
+    "provider_seconds": 305.690975,
+    "usage": {
+      "input_tokens": 16390,
+      "output_tokens": 48140,
+      "thinking_tokens": 47013,
+      "cache_read_tokens": 0,
+      "total_tokens": 64530
+    },
+    "error_type": "",
+    "exit": 0
+  },
+  {
+    "probe_key": "dev-long-budget-scope-05-0",
+    "model": null,
+    "wall_seconds": 65.2745692919998,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "RuntimeError",
+    "exit": 1
+  },
+  {
+    "probe_key": "dev-rag-after-failure-04-0",
+    "model": null,
+    "wall_seconds": 185.1593288330041,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "ValueError",
+    "exit": 0
+  },
+  {
+    "probe_key": "dev-rag-flat-schema-0",
+    "model": null,
+    "wall_seconds": 169.12933937499474,
+    "provider_seconds": 158.56925,
+    "usage": {
+      "input_tokens": 15786,
+      "output_tokens": 24994,
+      "thinking_tokens": 24670,
+      "cache_read_tokens": 0,
+      "total_tokens": 40780
+    },
+    "error_type": "",
+    "exit": 0
+  },
+  {
+    "probe_key": "dev-rag-probe-0",
+    "model": null,
+    "wall_seconds": 0.2865409579972038,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "RuntimeError",
+    "exit": 1
+  },
+  {
+    "probe_key": "dev-rag-probe-v2-0",
+    "model": null,
+    "wall_seconds": 17.318403249999392,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "RuntimeError",
+    "exit": 1
+  },
+  {
+    "probe_key": "dev-rag-probe-v3-0",
+    "model": null,
+    "wall_seconds": 14.738820792001206,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "RuntimeError",
+    "exit": 1
+  },
+  {
+    "probe_key": "dev-scope-probe-0",
+    "model": null,
+    "wall_seconds": 124.72941516700666,
+    "provider_seconds": null,
+    "usage": null,
+    "error_type": "ValueError",
+    "exit": 0
+  },
+  {
+    "probe_key": "probe.stdout.json",
+    "wall_seconds": null,
+    "provider_seconds": 13.131595,
+    "usage": {
+      "input_tokens": 13181,
+      "output_tokens": 1129,
+      "thinking_tokens": 1088,
+      "cache_read_tokens": 0,
+      "total_tokens": 14310
+    },
+    "status": "SUCCESS",
+    "scope": "standalone preflight; exact CLI wall unavailable in saved metadata"
+  },
+  {
+    "probe_key": "structured-probe.stdout.jsonl",
+    "wall_seconds": null,
+    "provider_seconds": 32.309146,
+    "usage": {
+      "input_tokens": 13286,
+      "output_tokens": 4022,
+      "thinking_tokens": 3925,
+      "cache_read_tokens": 0,
+      "total_tokens": 17308
+    },
+    "status": "SUCCESS",
+    "scope": "standalone preflight; exact CLI wall unavailable in saved metadata"
+  },
+  {
+    "probe_key": "gpu-probe.stdout.log",
+    "load_seconds": 22.4983400409983,
+    "compute_seconds": 3.089062125000055,
+    "device_peak_bytes": 10743397972,
+    "peak_rss_bytes": 3893297152,
+    "backend": "mlx",
+    "device": "gpu",
+    "scope": "GPU preflight outside cohort; not a question in TEST"
+  },
+  {
+    "probe_key": "gpu-wrapper-probe.stdout.log",
+    "load_seconds": 21.756624916000874,
+    "compute_seconds": 3.287200249993475,
+    "device_peak_bytes": 10743397972,
+    "peak_rss_bytes": 2997698560,
+    "backend": "mlx",
+    "device": "gpu",
+    "scope": "GPU preflight outside cohort; not a question in TEST"
+  }
+]

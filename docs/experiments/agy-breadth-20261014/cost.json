@@ -1,0 +1,52 @@
+{
+  "gpu_execution_attempts": [
+    {
+      "wall_seconds": 1017.2350775000086,
+      "parent_sampled_child_peak_rss": 3889889280,
+      "exit": -15,
+      "results": 125,
+      "prototype_resident": true
+    },
+    {
+      "wall_seconds": 3604.333475708001,
+      "parent_sampled_child_peak_rss": 7485620224,
+      "exit": 0,
+      "results": 451,
+      "prototype_resident": true
+    }
+  ],
+  "answer_and_scope_cli_attempts": 1,
+  "attempts_without_completed_flow_row": 1,
+  "linked_calls_without_metadata": 0,
+  "request_without_final_metadata": 0,
+  "cli_wall_sum": 185.7333630840003,
+  "cli_wall_is_not_parallel_elapsed": true,
+  "provider_seconds_sum": null,
+  "provider_measured_calls": 0,
+  "provider_unmeasured_calls": 1,
+  "input_tokens": null,
+  "thinking_tokens": null,
+  "output_tokens": null,
+  "token_measured_calls": {
+    "input_tokens": 0,
+    "thinking_tokens": 0,
+    "output_tokens": 0
+  },
+  "embedding_preparation": {
+    "seconds": 40.43157850000716,
+    "index": {
+      "rows": 2998,
+      "indexed": 2998,
+      "previously_indexed": 0,
+      "generated": 1782,
+      "attempted": 1782,
+      "failures": [],
+      "dimensions": 768,
+      "model": "cs-agy-breadth-embedding-20261014",
+      "index": "FAISS FlatIP"
+    }
+  },
+  "remote_gpu_memory": null,
+  "user_browser_end_to_end_latency": null,
+  "resident_prototype": true
+}

@@ -1,0 +1,5 @@
+﻿split,K,planned,checkpointed,cli_attempted_flows,provided,insufficient,direct_sql,clarification,error,literal_complete,unknown,calls,median_answer_stage_seconds_all_paths,cli_attempted_answer_stage_samples,median_cli_attempted_answer_stage_seconds,p95_cli_attempted_answer_stage_seconds
+DEV,5,40,40,36,30,4,2,2,2,0,38,36,175.49393983349728,36,189.9597168955006,292.5979038749938
+TEST,5,80,80,71,61,9,4,4,2,0,78,71,159.2860137500029,71,165.41843025000708,333.0815187079861
+TEST,10,80,80,71,57,8,4,4,7,0,73,71,142.03667529200175,71,154.2883332909987,432.83374041700154
+TEST,20,80,80,71,60,8,4,4,4,0,76,71,144.34664608300227,71,150.11488104100863,382.52248595899437

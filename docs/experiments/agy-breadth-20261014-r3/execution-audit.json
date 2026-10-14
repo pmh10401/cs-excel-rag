@@ -1,0 +1,16 @@
+{
+  "ranking_rows": 792,
+  "unique_gpu_results": 576,
+  "gpu_status_counts": {
+    "bypass": 216,
+    "ok": 576
+  },
+  "same_candidate_multisets": true,
+  "all_actual_inputs_hash_matched": true,
+  "metal_gpu_confirmed": true,
+  "no_truncation_reported": true,
+  "frozen_source_and_personal_config_hashes_match": true,
+  "quality_metrics_not_evaluated": true,
+  "time": 1791973758.4939451,
+  "scope": "Execution-only audit after GPU, before quality analysis"
+}

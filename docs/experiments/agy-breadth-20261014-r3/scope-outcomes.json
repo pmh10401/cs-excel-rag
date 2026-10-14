@@ -1,0 +1,286 @@
+[
+  {
+    "query_id": "DEV-followup-03",
+    "split": "DEV",
+    "actual_source_ids": [
+      "누적28상세:c6bbfe7a6486e780e6ebc7809650312eecb1412230cfc396af7dc51c2fb3cf70"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 167.7304957909946
+  },
+  {
+    "query_id": "DEV-followup-01",
+    "split": "DEV",
+    "actual_source_ids": [
+      "누적28상세:c862343b350824fa65222df31d459fe2bc46d72fdd5066195b7e8b8943c8666c"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 183.5814667079976
+  },
+  {
+    "query_id": "DEV-followup-02",
+    "split": "DEV",
+    "actual_source_ids": [
+      "누적28상세:6193b44e0149b46dcb937607eedde032c2e895572a912877580672245e2b2b13"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 203.3542254169879
+  },
+  {
+    "query_id": "DEV-followup-00",
+    "split": "DEV",
+    "actual_source_ids": [
+      "누적28상세:b75a1b068f88fdf6628943befce27e3c14c0cdd1318eabec392cac79cbc43f6b"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 299.47362279199297
+  },
+  {
+    "query_id": "TEST-followup-00",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:bad73407f173d1c6b1631f722de9d74e13ff4aa7c3799f4deefc1e5528eab43e"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 124.25378699999419
+  },
+  {
+    "query_id": "TEST-followup-01",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:fbdbee3434888d0efd5a9ffa327260adb140645934f45eb9fd346fcc7c41a644"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 124.62828016700223
+  },
+  {
+    "query_id": "TEST-followup-05",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:7db8cdfee76cd431c1bce0ba3a7949413362ce6453aaeeafd599df341c622cb3"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 134.20573358300317
+  },
+  {
+    "query_id": "TEST-followup-04",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:a32b14f99501f66668993d9ac93bb969c2996bf795a84e18e8b3184b0c24c1b7"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 168.05485141600366
+  },
+  {
+    "query_id": "TEST-followup-03",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:cd311ae9f7daf564b596ab22bdc6de08325a393bff8c7608b42a4f049db31f02"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 174.05758241600415
+  },
+  {
+    "query_id": "TEST-followup-02",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:4cf79b6b5ecc971973a36e0e551c135aa48ac49f7134c7273f74a128a72b2c27"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 195.42750700000033
+  },
+  {
+    "query_id": "TEST-followup-09",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:4a2bd24c65656cc9651fb03233e563e3e82dcaa44cde145b72116a87de795727"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 39.55021116700664
+  },
+  {
+    "query_id": "TEST-followup-06",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:2d2585b0baef01e2429d3cea6521da5b10b04267506a8d29d1e9266a5f05a6f3"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 111.47237625000707
+  },
+  {
+    "query_id": "TEST-followup-08",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:8601a69d88cb7bcf6ad976bee84f9a5ed38928d136a579d24f99770d01d80394"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 117.4282813329919
+  },
+  {
+    "query_id": "TEST-followup-11",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:60680d8026b4d5227bb1ea1557f27d2e88cb28643cea7dd233528b4a9fec0369"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 124.3847176249983
+  },
+  {
+    "query_id": "TEST-followup-07",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:5a9d73cbeb439707b6becd12d0eb9156aa1c06f6f1d934677cc24a7beb19b2e9"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 140.676506333999
+  },
+  {
+    "query_id": "TEST-followup-10",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:e6fb953f84ad2e2d7e01b53488b2b546bda6661921eca8bbab67b1604315c8fd"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 196.12359262499376
+  },
+  {
+    "query_id": "TEST-followup-12",
+    "split": "TEST",
+    "actual_source_ids": [],
+    "matches_expected_scope": false,
+    "clarification": false,
+    "error": true,
+    "calls": 1,
+    "cli_wall_seconds": 63.557411125002545
+  },
+  {
+    "query_id": "TEST-followup-13",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:ca5473d024db643cb3604a2a3d1f2033670c13001bbbdce19713b5016300f109"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 117.59488308300206
+  },
+  {
+    "query_id": "TEST-followup-15",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:a3de2c8fc1a7b87b90a96bf6779424f68a5fb10048f6241b3fea72c396a3b66c"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 146.08214191699517
+  },
+  {
+    "query_id": "TEST-followup-17",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:1e8a86e705a0ce2d0ac0e9aae4f74b1abc082cbda65e2d0f8ea89912fed54a26"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 160.02350924999337
+  },
+  {
+    "query_id": "TEST-followup-16",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:44069827d0aeeb88e2a99145a6675576021fe24edce95cb80d582c0bc6a643fa"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 220.57232249999652
+  },
+  {
+    "query_id": "TEST-followup-14",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:7ad194c90099e4e713b0707d8029d2f318da5246967e23a0ed9ba4fa698518ee"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 223.05767645798915
+  },
+  {
+    "query_id": "TEST-followup-18",
+    "split": "TEST",
+    "actual_source_ids": [],
+    "matches_expected_scope": false,
+    "clarification": false,
+    "error": true,
+    "calls": 1,
+    "cli_wall_seconds": 62.16892954100331
+  },
+  {
+    "query_id": "TEST-followup-19",
+    "split": "TEST",
+    "actual_source_ids": [
+      "누적28상세:284434800d538515feea43980bb55aa2e9de0df96eeeff35b8a8fbfd30852935"
+    ],
+    "matches_expected_scope": true,
+    "clarification": false,
+    "error": false,
+    "calls": 1,
+    "cli_wall_seconds": 97.63319329200021
+  }
+]

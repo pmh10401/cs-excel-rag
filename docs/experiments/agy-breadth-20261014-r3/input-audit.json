@@ -1,0 +1,6 @@
+{
+  "requests": 576,
+  "no_label_keys_in_model_payload": true,
+  "same_dataset_and_candidate_bytes_as_initial_run": true,
+  "same_rank_request_digest_as_initial_run": true
+}
