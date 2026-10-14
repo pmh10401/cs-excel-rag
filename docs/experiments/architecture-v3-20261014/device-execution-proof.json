@@ -1,0 +1,16 @@
+{
+  "G_actual_devices": {
+    "mps": 30
+  },
+  "G_dtype": {
+    "float16": 30
+  },
+  "Clef_actual_devices": {
+    "gpu": 50
+  },
+  "Clef_actual_backends": {
+    "mlx": 50
+  },
+  "answer": "Actual LM Studio HTTP31 calls; configured Metal GPU max; no sampled answer GPU peak",
+  "no_new_install_download": true
+}

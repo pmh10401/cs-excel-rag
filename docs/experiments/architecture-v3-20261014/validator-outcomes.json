@@ -1,0 +1,122 @@
+[
+  {
+    "kind": "id_cell",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "id_cell",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "id_cell",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "id_cell",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "id_cell",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "id_cell",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "quantity_date",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "quantity_date",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "quantity_date",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "quantity_date",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "quantity_date",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "quantity_date",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "other_work_copy",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "other_work_copy",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "other_work_copy",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "other_work_copy",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "other_work_copy",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "other_work_copy",
+    "variant": "injected",
+    "ON_accept": false
+  },
+  {
+    "kind": "state",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "state",
+    "variant": "injected",
+    "ON_accept": true
+  },
+  {
+    "kind": "state",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "state",
+    "variant": "injected",
+    "ON_accept": true
+  },
+  {
+    "kind": "state",
+    "variant": "normal",
+    "ON_accept": true
+  },
+  {
+    "kind": "state",
+    "variant": "injected",
+    "ON_accept": true
+  }
+]

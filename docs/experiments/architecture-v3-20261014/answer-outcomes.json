@@ -1,0 +1,606 @@
+[
+  {
+    "query_id": "A-0-1-0",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 28.97284829200362,
+      "answer_with_validation_repair": 61.438583541996195,
+      "embedding_load": 2.0354809160053264,
+      "query_prepare": 0.06693270799587481,
+      "retrieval": 0.010049916003481485,
+      "total_wall": 94.98082429099304
+    }
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 28.90465866700106,
+      "answer_with_validation_repair": 51.34831258299528,
+      "embedding_load": 1.9003770420094952,
+      "query_prepare": 0.053964249993441626,
+      "retrieval": 0.006802916992455721,
+      "selection_including_load_cleanup": 27.755041333992267,
+      "total_wall": 112.51221133299987
+    }
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "H5",
+    "status": "ok",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 4.325777458012453,
+      "answer_with_validation_repair": 104.84517562499968,
+      "embedding_load": 1.9263941249955678,
+      "query_prepare": 0.06126491700706538,
+      "retrieval": 0.006840750007540919,
+      "total_wall": 114.45746170899656
+    }
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 28.4051343750034,
+      "answer_with_validation_repair": 50.91059441599646,
+      "embedding_load": 1.8978202909929678,
+      "query_prepare": 0.04576216700661462,
+      "retrieval": 0.029224541009170935,
+      "selection_including_load_cleanup": 27.855123458997696,
+      "total_wall": 112.64524675000575
+    }
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "H5",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 4.577842166007031,
+      "answer_with_validation_repair": 29.687760290995357,
+      "embedding_load": 2.226725582993822,
+      "query_prepare": 0.07506966700020712,
+      "retrieval": 0.01526970899431035,
+      "total_wall": 39.16186774999369
+    }
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 4.549557374994038,
+      "answer_with_validation_repair": 60.9921913750004,
+      "embedding_load": 1.893941457994515,
+      "query_prepare": 0.049931540997931734,
+      "retrieval": 0.006912374999956228,
+      "total_wall": 69.79144124999584
+    }
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "H5",
+    "status": "ok",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 4.06250287500734,
+      "answer_with_validation_repair": 111.86903779099521,
+      "embedding_load": 1.8308908330072882,
+      "query_prepare": 0.048609582998324186,
+      "retrieval": 0.006103459003497846,
+      "total_wall": 120.34578720800346
+    }
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 4.310126833006507,
+      "answer_with_validation_repair": 42.296762291996856,
+      "embedding_load": 1.8014405419962713,
+      "query_prepare": 0.042497917005675845,
+      "retrieval": 0.005892000001040287,
+      "total_wall": 50.807034042009036
+    }
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 47.88334204100829,
+      "answer_with_validation_repair": 45.47517741599586,
+      "embedding_load": 1.970267791999504,
+      "query_prepare": 0.09094208299939055,
+      "retrieval": 0.007893832997069694,
+      "selection_including_load_cleanup": 41.15754437498981,
+      "total_wall": 141.56669229100225
+    }
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 5.550471166992793,
+      "answer_with_validation_repair": 46.75610533400322,
+      "embedding_load": 2.3778564169915626,
+      "query_prepare": 0.084484250008245,
+      "retrieval": 0.02011441699869465,
+      "total_wall": 58.5424963330006
+    }
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 39.11383112501062,
+      "answer_with_validation_repair": 78.94048991700402,
+      "embedding_load": 2.3769091249996563,
+      "query_prepare": 0.060591500005102716,
+      "retrieval": 0.007288875000085682,
+      "selection_including_load_cleanup": 33.36036058299942,
+      "total_wall": 157.93400725000538
+    }
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "H5",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 6.078274542000145,
+      "answer_with_validation_repair": 42.5276996659959,
+      "embedding_load": 2.439016582997283,
+      "query_prepare": 0.06677620799746364,
+      "retrieval": 0.008292957994854078,
+      "total_wall": 54.828390415990725
+    }
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 52.19240608299151,
+      "answer_with_validation_repair": 67.54893987499236,
+      "embedding_load": 2.177961833003792,
+      "query_prepare": 0.057528542005456984,
+      "retrieval": 0.007971750004799105,
+      "selection_including_load_cleanup": 31.746037582997815,
+      "total_wall": 157.44623258301
+    }
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "H5",
+    "status": "error",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 5.234651833001408,
+      "embedding_load": 2.3058305839949753,
+      "query_prepare": 0.08508279200759716,
+      "retrieval": 0.011715167012880556,
+      "total_wall": 130.30675270801294
+    }
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 13.824606750000385,
+      "answer_with_validation_repair": 50.118452208000235,
+      "embedding_load": 2.4396043329907116,
+      "query_prepare": 0.05488879099721089,
+      "retrieval": 0.013498166998033412,
+      "total_wall": 70.62094337500457
+    }
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "H5",
+    "status": "error",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 5.531675541991717,
+      "embedding_load": 2.4633154999901308,
+      "query_prepare": 0.07943570800125599,
+      "retrieval": 0.012721416002023034,
+      "total_wall": 205.56911066599423
+    }
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 6.427523209000356,
+      "answer_with_validation_repair": 111.27905695799564,
+      "embedding_load": 2.2906532089982647,
+      "query_prepare": 0.05299762499635108,
+      "retrieval": 0.014125832996796817,
+      "total_wall": 126.15711491700495
+    }
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "HC3",
+    "status": "error",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 30.241586124990135,
+      "embedding_load": 2.2962026659952244,
+      "query_prepare": 0.061931749994982965,
+      "retrieval": 0.012762957994709723,
+      "selection_including_load_cleanup": 31.826925665998715,
+      "total_wall": 274.04620375001105
+    }
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "H3",
+    "status": "error",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": false,
+      "direct_cited_source": false,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": false,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 42.81315183400875,
+      "embedding_load": 2.323743959001149,
+      "query_prepare": 0.0587471250037197,
+      "retrieval": 0.014029333993676119,
+      "total_wall": 299.10724825000216
+    }
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 29.981956582996645,
+      "answer_with_validation_repair": 96.30041029099084,
+      "embedding_load": 2.342914583001402,
+      "query_prepare": 0.04974599998968188,
+      "retrieval": 0.011342541998601519,
+      "selection_including_load_cleanup": 31.58359524999105,
+      "total_wall": 163.99658370800898
+    }
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "H5",
+    "status": "ok",
+    "actual_answer_calls": 2,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 4.179703125002561,
+      "answer_with_validation_repair": 162.0743252090033,
+      "embedding_load": 2.134701375005534,
+      "query_prepare": 0.056938207999337465,
+      "retrieval": 0.013573624994023703,
+      "total_wall": 172.37386462499853
+    }
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "HC3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 39.93583508300071,
+      "answer_with_validation_repair": 92.16197179199662,
+      "embedding_load": 2.298614750005072,
+      "query_prepare": 0.041093207997619174,
+      "retrieval": 0.006656124998698942,
+      "selection_including_load_cleanup": 31.62876099999994,
+      "total_wall": 170.58295433298917
+    }
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "H5",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": true,
+      "machine_checkable_complete": true,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 5.741716249991441,
+      "answer_with_validation_repair": 69.23326454201015,
+      "embedding_load": 2.3079729580058483,
+      "query_prepare": 0.06361812500108499,
+      "retrieval": 0.007296000010683201,
+      "total_wall": 80.7336153340002
+    }
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "H3",
+    "status": "ok",
+    "actual_answer_calls": 1,
+    "independent_fact_diagnostic": {
+      "contradicting_cited_source": false,
+      "delivered": true,
+      "direct_cited_source": true,
+      "explicit_state_errors": [],
+      "literal_required_action_present": false,
+      "machine_checkable_complete": null,
+      "numeric_flags": [],
+      "semantic_scope": "limited literal/explicit patterns only; unrecognized paraphrase=unknown; no human or broad semantic quality claim",
+      "structural_errors": []
+    },
+    "timings": {
+      "answer_load": 5.1932314169971505,
+      "answer_with_validation_repair": 112.37088570799096,
+      "embedding_load": 2.167205000005197,
+      "query_prepare": 0.04170233299373649,
+      "retrieval": 0.00623583399283234,
+      "total_wall": 124.50043612500303
+    }
+  }
+]

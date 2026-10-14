@@ -1,0 +1,110 @@
+{
+  "B_summary.csv": {
+    "bytes": 157,
+    "sha256": "38ffe9bb7d19b12e53a6f0125b18fb007ff9ce7e5e01af0fa0db2fff7a1fed67"
+  },
+  "C-repeat-result.json": {
+    "bytes": 332,
+    "sha256": "9f050211aedee109aefb5fc62a3bed23f276a8495ab096314227232ebb88e8a6"
+  },
+  "CS-RAG-구조검증-별첨8장-20261014-142527.pdf": {
+    "bytes": 511081,
+    "sha256": "1f117bf6e71ae1522b461080b845ce4cc6890df30a5ca7459f1b71b6a6e5adea"
+  },
+  "CS-RAG-구조검증-별첨8장-20261014-142527.pptx": {
+    "bytes": 46290,
+    "sha256": "fffa1b7d92c12559b8fe8d7e5917a9b31718411efdc6b8c86f81b46ae5c85142"
+  },
+  "CS-RAG-구조검증-본문10장-20261014-142527.pdf": {
+    "bytes": 617280,
+    "sha256": "449c95d4a0245e3f55a815757edda3ff7b33aab5fde3dbd43c0bec9d12377861"
+  },
+  "CS-RAG-구조검증-본문10장-20261014-142527.pptx": {
+    "bytes": 57449,
+    "sha256": "9fdef00eb1d1b9aa323e15905a3766ac837c16660a76aa2433181faa9619710a"
+  },
+  "README.md": {
+    "bytes": 5450,
+    "sha256": "c5a63d710f3c2f90537fe86be57b4ab855934871c72d794268c664c5e6f8531f"
+  },
+  "answer-outcomes.json": {
+    "bytes": 20965,
+    "sha256": "11bfd5fc71ca88bd979fca3c07a2a7f4c555cff0cd9f6db6661a580b69215da2"
+  },
+  "answer_summary.csv": {
+    "bytes": 790,
+    "sha256": "e68cda5a64140b34ead18496c570e8be869c877c632c8e26cce6c0353e45fc05"
+  },
+  "artifact-checks.json": {
+    "bytes": 1050,
+    "sha256": "f1b3b8a380dd6b5deb698591c9883b9412ba3db34a3a498ec32e83a4070020f1"
+  },
+  "claims_matrix.md": {
+    "bytes": 891,
+    "sha256": "277e151fa6b4560d9dfee2475c127108200425ec1cf11f3d9be37c8f65859253"
+  },
+  "cost-summary.json": {
+    "bytes": 1079,
+    "sha256": "83d28bc36067718ce61856d84fa5262161e5126e402e1ec798a60b37b19d8072"
+  },
+  "device-execution-proof.json": {
+    "bytes": 310,
+    "sha256": "f1d8988cbe99f75e3ff9733c85fac29c6c3b719e171aef3ba5fb4eec0c7d4cb6"
+  },
+  "existing_evidence.md": {
+    "bytes": 1244,
+    "sha256": "3c2deb2ac57476c2c2500f0ce923e88cd6ebca90a15a7bfb41855fb7bad26d9f"
+  },
+  "memory_cost.json": {
+    "bytes": 617,
+    "sha256": "4295b061cd8ed0aa105410c0dc5246707ca236ab09db692908fb338e6463c6f9"
+  },
+  "order_sensitivity.csv": {
+    "bytes": 636,
+    "sha256": "f35567b350789d64ff61dfbefdd50be7c43451fd2cd329f4f58d3d83f8a02be2"
+  },
+  "paired_conditions.csv": {
+    "bytes": 103,
+    "sha256": "98d87a6588ca05230ba5e6701d323f1d60c931c7b89ad9a2c7814ff58efa739f"
+  },
+  "protocol-public.json": {
+    "bytes": 6298,
+    "sha256": "0b2187befef4f004663e1bc76644b3db129d1f00a12875f3b2b748c8cd0d99ea"
+  },
+  "ranking-results.json": {
+    "bytes": 95987,
+    "sha256": "90e28326e5bd759a5a14c5b01c95cdae330a4f21a8fbf284cc477231feb732c3"
+  },
+  "report.md": {
+    "bytes": 9522,
+    "sha256": "b370f51d59c32c3901e8440cabf003c4a71a890b14dd3d93b4acd7734dce937b"
+  },
+  "schema-outcomes.json": {
+    "bytes": 1101,
+    "sha256": "8cb083a52c774f0e92c601f3436aca4231dd94055273ea681088df8c4290b657"
+  },
+  "selection_changes.csv": {
+    "bytes": 2170,
+    "sha256": "d458053ff58c8e07cd863c817ee5a2051bfb7759842da5c2ce8937384a46ba2e"
+  },
+  "summary.csv": {
+    "bytes": 1139,
+    "sha256": "26cca6143d160cffddcf16af8e96e0e1d841810fd012335aba058dbde0b405d7"
+  },
+  "synthetic-data.json": {
+    "bytes": 68428,
+    "sha256": "e36fcefbf5e1f4089cd05858d641e6d71f39bacd2c451a836e615425640d3db7"
+  },
+  "validator-outcomes.json": {
+    "bytes": 2004,
+    "sha256": "bcabc70f3ba813667e9fee844f2c9380a5619492b8a9f20ee0bb3d2de9122685"
+  },
+  "verify_results.py": {
+    "bytes": 4801,
+    "sha256": "2c74703eacda3480cd7016f201e528132f0dd0e9b60d33ea9d0c60c05038da75"
+  },
+  "발표원고-9분배정-20261014-142527.md": {
+    "bytes": 6159,
+    "sha256": "2185d673f4ca01991609c25516aa15c2c58d7d3d9299903aeaf4211081e0d974"
+  }
+}

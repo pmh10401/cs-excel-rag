@@ -1,0 +1,35 @@
+{
+  "answer_flow_wall_sum_seconds": 3103.014520997036,
+  "answer_http_calls": 31,
+  "finish_reasons": {
+    "stop": 22,
+    "length": 9
+  },
+  "http_errors": 0,
+  "v3_execution_span_seconds": 4412.169868469238,
+  "execution_span_scope": "This v3 execution only, excluding preparation, previous v2, report and slide creation. Filesystem creation anchor approximates first lock acquisition, not an instrumented monotonic timer.",
+  "generic_resident_block_seconds": 102.14204541700019,
+  "clef_main_and_rotations_wall_seconds": 1194.1668897060008,
+  "nested_answer_clef_calls": 8,
+  "do_not_double_count_nested": true,
+  "token_totals_reported_by_server": {
+    "prompt_tokens": 97817,
+    "completion_tokens": 78972,
+    "reasoning_tokens": 74954
+  },
+  "answer_output_cap_by_arm": {
+    "H3": {
+      "min": 3949,
+      "max": 4024
+    },
+    "HC3": {
+      "min": 3949,
+      "max": 4024
+    },
+    "H5": {
+      "min": 2583,
+      "max": 2666
+    }
+  },
+  "memory_note": "RSS, MPS driver end and MLX inference peak have different scopes; not summed; answer GPU peak unknown"
+}

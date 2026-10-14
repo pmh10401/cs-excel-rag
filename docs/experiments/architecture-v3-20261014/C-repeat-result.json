@@ -1,0 +1,15 @@
+{
+  "complete": true,
+  "cycles": 3,
+  "status": "ok",
+  "same_db": true,
+  "materialized_snapshot_preserved_after_later_import": true,
+  "stopped_copy_integrity": "ok",
+  "not_tested": [
+    "concurrent long-write throughput",
+    "exactly-once model calls",
+    "human handover",
+    "Windows DRM"
+  ],
+  "actual_model_calls": 0
+}

@@ -1,0 +1,16 @@
+{
+  "G": {
+    "measured_requests": 30,
+    "peak_process_rss_bytes": 8455258112,
+    "maximum_driver_allocated_at_request_end_bytes": 9402580992,
+    "scope": "resident MPS block; driver allocated end is not true GPU peak"
+  },
+  "HC": {
+    "measured_requests": 50,
+    "peak_process_rss_bytes": 8009465856,
+    "inference_peak_mlx_bytes": 10741038676,
+    "scope": "all recorded choice calls: main, rotations and answer selection; per-request child load; MLX inference peak and RSS have different measurement scopes"
+  },
+  "answer_model_gpu_peak_bytes": null,
+  "rss_and_unified_and_driver_are_not_summed": true
+}

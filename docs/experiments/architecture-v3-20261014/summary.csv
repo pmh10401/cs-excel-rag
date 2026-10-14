@@ -1,0 +1,16 @@
+﻿arm,category,completed,planned,direct_gold_completed,top1_direct,hit_at_5,top1_condition_contradiction,fallback,empty_returns,actual_model_calls_selection_only,V_exact_diagnostic,label_source
+N,condition,24,24,24,10,24,6,0,0,0,False,authored synthetic / silver
+N,none,6,6,0,0,0,0,0,0,0,False,authored synthetic / silver
+N,exact,6,6,5,5,5,0,0,1,0,False,authored synthetic / silver
+V,condition,24,24,24,12,24,8,0,0,0,False,authored synthetic / silver
+V,none,6,6,0,0,0,0,0,0,0,False,authored synthetic / silver
+V,exact,6,6,5,2,4,0,0,0,0,True,authored synthetic / silver
+H,condition,24,24,24,17,24,5,0,0,0,False,authored synthetic / silver
+H,none,6,6,0,0,0,0,0,0,0,False,authored synthetic / silver
+H,exact,6,6,5,5,5,0,0,1,0,False,authored synthetic / silver
+G,condition,24,24,24,23,24,0,0,0,24,False,authored synthetic / silver
+G,none,6,6,0,0,0,0,0,0,6,False,authored synthetic / silver
+G,exact,6,6,5,5,5,0,0,1,0,False,authored synthetic / silver
+HC,condition,24,24,24,23,24,1,0,0,24,False,authored synthetic / silver
+HC,none,6,6,0,0,0,0,0,0,6,False,authored synthetic / silver
+HC,exact,6,6,5,5,5,0,0,1,0,False,authored synthetic / silver

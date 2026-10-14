@@ -1,0 +1,27 @@
+{
+  "scope": "Original evaluated final files copied byte-for-byte; no slide edits or re-rendering during publication",
+  "files": [
+    {
+      "pptx": "CS-RAG-구조검증-본문10장-20261014-142527.pptx",
+      "sha256": "9fdef00eb1d1b9aa323e15905a3766ac837c16660a76aa2433181faa9619710a",
+      "slides": 10,
+      "font_runs_checked": 537,
+      "pdf_pages": 10,
+      "pdf_method": "raster_from_final_previews",
+      "pdf_sha256": "449c95d4a0245e3f55a815757edda3ff7b33aab5fde3dbd43c0bec9d12377861"
+    },
+    {
+      "pptx": "CS-RAG-구조검증-별첨8장-20261014-142527.pptx",
+      "sha256": "fffa1b7d92c12559b8fe8d7e5917a9b31718411efdc6b8c86f81b46ae5c85142",
+      "slides": 8,
+      "font_runs_checked": 413,
+      "pdf_pages": 8,
+      "pdf_method": "raster_from_final_previews",
+      "pdf_sha256": "1f117bf6e71ae1522b461080b845ce4cc6890df30a5ca7459f1b71b6a6e5adea"
+    }
+  ],
+  "original_final18_slides_individually_inspected": true,
+  "speech_seconds_allocated": 540,
+  "timed_reading": false,
+  "Windows_PowerPoint_checked": false
+}

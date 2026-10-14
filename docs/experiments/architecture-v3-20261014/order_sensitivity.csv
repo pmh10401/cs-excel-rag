@@ -1,0 +1,13 @@
+﻿query_id,group_id,variant,same_top1_id,original_direct,rotated_direct,status
+A-0-0-0,family-0,rotation-1,True,True,True,ok
+A-0-0-0,family-0,rotation-2,True,True,True,ok
+A-1-0-0,family-1,rotation-1,False,False,True,ok
+A-1-0-0,family-1,rotation-2,False,False,True,ok
+A-2-0-0,family-2,rotation-1,True,True,True,ok
+A-2-0-0,family-2,rotation-2,True,True,True,ok
+A-3-0-0,family-3,rotation-1,True,True,True,ok
+A-3-0-0,family-3,rotation-2,True,True,True,ok
+A-4-0-0,family-4,rotation-1,True,True,True,ok
+A-4-0-0,family-4,rotation-2,True,True,True,ok
+A-5-0-0,family-5,rotation-1,True,True,True,ok
+A-5-0-0,family-5,rotation-2,True,True,True,ok

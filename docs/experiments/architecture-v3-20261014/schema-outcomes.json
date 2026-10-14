@@ -1,0 +1,56 @@
+[
+  {
+    "id": "C0",
+    "status": "ok",
+    "rows": 20,
+    "work_sections": 20,
+    "source_and_types_preserved": true,
+    "gpu_search_status": "ok",
+    "schema": "history28"
+  },
+  {
+    "id": "C1",
+    "status": "ok",
+    "rows": 20,
+    "work_sections": 20,
+    "source_and_types_preserved": true,
+    "gpu_search_status": "ok",
+    "schema": "history28"
+  },
+  {
+    "id": "C2",
+    "status": "ok",
+    "rows": 20,
+    "work_sections": 20,
+    "source_and_types_preserved": true,
+    "gpu_search_status": "ok",
+    "schema": "history28"
+  },
+  {
+    "id": "C3",
+    "status": "ok",
+    "rows": 10,
+    "work_sections": 20,
+    "source_and_types_preserved": true,
+    "gpu_search_status": "ok",
+    "schema": "CSList128"
+  },
+  {
+    "id": "C4",
+    "status": "ok",
+    "rows": 10,
+    "work_sections": 20,
+    "source_and_types_preserved": true,
+    "gpu_search_status": "ok",
+    "schema": "CSList128"
+  },
+  {
+    "id": "C5",
+    "status": "ok",
+    "rows": 10,
+    "work_sections": 20,
+    "source_and_types_preserved": true,
+    "gpu_search_status": "ok",
+    "schema": "CSList128"
+  }
+]

@@ -1,0 +1,4 @@
+﻿arm,completed,planned,machine_fact_complete,machine_fact_incomplete_or_error,unknown,delivery_ok,answer_http_calls,repairs,full_wall_median,full_wall_min,full_wall_max,actual_wire_output_cap_min,actual_wire_output_cap_max,quality_scope
+H3,8,8,2,1,5,7,9,1,82.8008838329988,50.807034042009036,299.10724825000216,3949,4024,machine-checkable explicit facts/source/literal-action diagnostic; not broad semantic correctness
+HC3,8,8,3,1,4,7,9,1,157.69011991650768,112.51221133299987,274.04620375001105,3949,4024,machine-checkable explicit facts/source/literal-action diagnostic; not broad semantic correctness
+H5,8,8,3,2,3,6,13,5,117.40162445850001,39.16186774999369,205.56911066599423,2583,2666,machine-checkable explicit facts/source/literal-action diagnostic; not broad semantic correctness

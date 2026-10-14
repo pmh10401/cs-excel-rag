@@ -1,0 +1,2350 @@
+[
+  {
+    "query_id": "A-0-0-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4e8a8224093c9e23756434756ea9375748f20e9e624792dd9d2e815185495665",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4e8a8224093c9e23756434756ea9375748f20e9e624792dd9d2e815185495665",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-2",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-2",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-2",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-3",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-3",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-3",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-4",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-4",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-4",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-5",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-5",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-5",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-0",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-0",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-0",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-1",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:703684b5bcece3be9aa8852337189cbb6700c4c98970f7f2f5c6c1d89bae7590"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-1",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:703684b5bcece3be9aa8852337189cbb6700c4c98970f7f2f5c6c1d89bae7590",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-1",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:703684b5bcece3be9aa8852337189cbb6700c4c98970f7f2f5c6c1d89bae7590"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-2",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-2",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:703684b5bcece3be9aa8852337189cbb6700c4c98970f7f2f5c6c1d89bae7590",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-2",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-3",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-3",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2",
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-3",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-4",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-4",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-4",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-5",
+    "arm": "N",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-5",
+    "arm": "V",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-5",
+    "arm": "H",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-2",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-3",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-4",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-5",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-0",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "skipped_exact_or_single"
+  },
+  {
+    "query_id": "A-exact-1",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:703684b5bcece3be9aa8852337189cbb6700c4c98970f7f2f5c6c1d89bae7590"
+    ],
+    "status": "skipped_exact_or_single"
+  },
+  {
+    "query_id": "A-exact-2",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "status": "skipped_exact_or_single"
+  },
+  {
+    "query_id": "A-exact-3",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "skipped_exact_or_single"
+  },
+  {
+    "query_id": "A-exact-4",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [],
+    "status": "skipped_exact_or_single"
+  },
+  {
+    "query_id": "A-exact-5",
+    "arm": "G",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "skipped_exact_or_single"
+  },
+  {
+    "query_id": "A-0-0-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-0",
+    "arm": "HC",
+    "variant": "rotation-1",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-0",
+    "arm": "HC",
+    "variant": "rotation-2",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-0-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-0-1-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:f6807d79ac9bcf4de4d140d86ba9a122765f6e0fb9a8b5e4e04dbd0d6d0742e2"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "HC",
+    "variant": "rotation-1",
+    "ranked_ids": [
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-0",
+    "arm": "HC",
+    "variant": "rotation-2",
+    "ranked_ids": [
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-0-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-1-1-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "HC",
+    "variant": "rotation-1",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-0",
+    "arm": "HC",
+    "variant": "rotation-2",
+    "ranked_ids": [
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-0-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:2fa276cf4c88852833cf80fbfb144736f2405ce24dbdd0de365e5c61b5a1f76d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-2-1-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "HC",
+    "variant": "rotation-1",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-0",
+    "arm": "HC",
+    "variant": "rotation-2",
+    "ranked_ids": [
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-0-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-3-1-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:d08c397e18020d2cf37ded4a4cea63f74573d8d7a0107901c3e53969c601f568"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "HC",
+    "variant": "rotation-1",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-0",
+    "arm": "HC",
+    "variant": "rotation-2",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-0-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:7b600a2b715c84f3ce5e0c1cd3dcef57e48077a25f65315e2b1c5915f14ad2a8"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-4-1-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "HC",
+    "variant": "rotation-1",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-0",
+    "arm": "HC",
+    "variant": "rotation-2",
+    "ranked_ids": [
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-0-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-5-1-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e",
+      "누적28상세:b0d82fa872d11202089b937e2229d8b566bbfa53e2d048f7800f942ca42c836f",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:d1bcb9df967feae11e1fb8cc271807ebee22986b362327624ed9930200591cea",
+      "누적28상세:4777283f8c19f1babe5f546af50d4611300ec23082533f5476f336cc7c9ca4c6",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:80de24b4dd8f9ead87f2edf7e6bae84083aea4f93522a9e14c84412c4accab6c",
+      "누적28상세:7c57d20176eabe2d414bb11c276b4425e7d320c6d55b989ff34b504db583fe7c",
+      "누적28상세:d89c48bd89520c754872ada66dad801d50fe6258ab2e6d3dd011c4108fb96709",
+      "누적28상세:94dce21946343c910face5f71be8de14f24d2697b1c5dca7036b356a3b308c4d",
+      "누적28상세:330e7dc208bc0b37bb18dc3938a3592d209155176043ebfab9da4c04701ed3ce"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-2",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:891eaa48301ae72d75d2644806070ec616bf490f40857ffcae5427189eb42874",
+      "누적28상세:14b5ea00daae652606951c60f85e13441926a05bd5f19005fece81a3f69d9563",
+      "누적28상세:ea6a9c676ab186cc1d67c36ec5fb7770860c5f23fe094ea67f4b4f7d401d65e3",
+      "누적28상세:d679a400d5d89200655be20f64e3de886a92858bc4b20c1e3f3391da1285527b",
+      "누적28상세:6fd5ee215e6890d51aef16e6ccd9a701d038ad6ffdef09b7ecacc54ffbb0eb08"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-3",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:4817e15e1fd479efd34b9f208d92c496b6af455e770c74162ca1adf03777d0e8",
+      "누적28상세:77a05d3e449ae417dfe5a846c14749521fcd45dcec8f5d1935d70736261d7053",
+      "누적28상세:1fe530dbc11edd0936f7a9a3b6472d92de0246529c712ebb5bba3fc79b51c122",
+      "누적28상세:31cc69ba0bf9ca142f4deb429be3167f28abc075ded1e1a3eca838c2944f60db",
+      "누적28상세:ef1c8098a64e844157ca9a7e9d88a3798b43dcb6927bf23c107c16217437c3ec"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-4",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:db3af6ab35fefeca0c9adfac0fc2b64e87fc908e1504bed1db7a3ee32c5dbd2b",
+      "누적28상세:a0e58f8739155f3181bd4aeac90921b010f8242693720b2d3fbc828ecb3fb5fb",
+      "누적28상세:d4ae64f7324f0dc6ec0273a4bc0cd3a9414de2aaefc77549c676b573946060f8",
+      "누적28상세:5d52595569bb8e593625f1057bc2dbc1966fdf803daa50a7787745442c36809d",
+      "누적28상세:2a10cce3e76ecb0a9873527b5a682154396fb070bb39f7d6a0769cfd62fca5f4"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-none-5",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:39dcd4a72e70a6d08bdec90f201843c2efb9d3953d064a9923ab395c219465af",
+      "누적28상세:e2fa6ac520a2fe82e5928d77c487479e0c6ea1fd22a1b37081b0bc4cc8f44195",
+      "누적28상세:2829bbbd4c9b833773a132ef56d91249457556f4f1ec8a1ae8f8545da143de4d",
+      "누적28상세:65aed312d8443d5c0595880162e5882945d26afa84ecccbadefeb47c51f118b0",
+      "누적28상세:5f659b7ac9cc7fd8b61f42cc2789974de148a3871919515a5286dd79d455c41e"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-0",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a",
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-1",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:703684b5bcece3be9aa8852337189cbb6700c4c98970f7f2f5c6c1d89bae7590"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-2",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:7feb9d230c6d974d412ad8784fa43bdcf49b16b2205183273329a04453d9564c"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-3",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:bcc2725f9ae96753f09dc30d0a5032f0c37219628fdedc379c6b8d705c9adcde",
+      "누적28상세:1d81604fb2dfff2df9afde30fbdac60d61a773cdef85d1bdc649f9e48d2fde37",
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-4",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [],
+    "status": "ok"
+  },
+  {
+    "query_id": "A-exact-5",
+    "arm": "HC",
+    "variant": "main",
+    "ranked_ids": [
+      "누적28상세:28fe7120bc40bc7fbd4e1444c22a88402e358cea2c627cc10678169e810be90a"
+    ],
+    "status": "ok"
+  }
+]
