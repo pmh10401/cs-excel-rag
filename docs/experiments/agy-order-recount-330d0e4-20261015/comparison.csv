@@ -1,0 +1,12 @@
+﻿category,label,n,before_top1,after_top1,before_hit3,after_hit3,candidate_missing_k5,top1_improved,top1_worsened,top1_same,hit3_improved,hit3_worsened,hit3_same
+ALL,주 비교 합계,120,72,113,113,113,7,41,0,79,0,0,120
+condition,운전 조건,20,13,20,20,20,0,7,0,13,0,0,20
+detail,상세·작업,20,4,18,18,18,2,14,0,6,0,0,20
+language,다국어·표현,20,5,15,15,15,5,10,0,10,0,0,20
+numeric,숫자·단위,20,20,20,20,20,0,0,0,20,0,0,20
+state,조치 상태,20,16,20,20,20,0,4,0,16,0,0,20
+symptom,현상·조치,20,14,20,20,20,0,6,0,14,0,0,20
+exact,정확 조회·우회,20,,,,,,,,,,,
+aggregate,집계·우회,20,,,,,,,,,,,
+followup,후속 질문·우회,20,,,,,,,,,,,
+absent,기대ID 없음·실제 재정렬,20,,,,,,,,,,,

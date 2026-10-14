@@ -1,0 +1,26 @@
+{
+  "source_commit": "330d0e4d1d4ffb08bd958eef9f115b472933c751",
+  "source_directory": "docs/experiments/agy-breadth-20261014-r3/",
+  "K": 5,
+  "analysis": "저장 결과의 사후 재집계",
+  "inference_calls": 0,
+  "new_evaluation_data": 0,
+  "source_manifest_sha256": "796b3b4afab4422d5592f445366d42ebd0351ba128ceac66333d3ab05db97a0c",
+  "verified_manifest_files": 25,
+  "code_hashes": {
+    "experiments/agy_breadth.py": "ae394be142bd98b62e324c4a95018ffcf464d432cf1a96f2dfedeb94bb14dfce",
+    "ragkit/semantic.py": "77313d40f1631ada689df3f572604c448c31d9ec41d5ad1eee7b6cd6912086b5",
+    "ragkit/clef.py": "87dae271f0569d588e8bd90c3e5161fae606bd10623ae680d2eb0e147afaf7db",
+    "experiments/agy_publish.py": "03ade64103b086741d5221cb7d634e74978b400ad1812610923bf6fc71ea93eb"
+  },
+  "primary_questions": 120,
+  "test_questions_preserved": 200,
+  "generation_groups": 20,
+  "candidate_multiset_matches": 200,
+  "primary_order_identical": 30,
+  "primary_first_id_unchanged": 79,
+  "missing_k5_but_in_full_pool": 5,
+  "missing_even_in_full_pool": 2,
+  "raw_candidates_or_gpu_requests_in_fixed_commit": false,
+  "retrieval_order_basis": "Frozen retrieval/runner code, direct ordered export, and saved input/execution audits; not a fresh retrieval replay"
+}
