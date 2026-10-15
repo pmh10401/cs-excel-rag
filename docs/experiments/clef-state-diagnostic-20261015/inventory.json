@@ -1,0 +1,20 @@
+{
+  "phase": "post-run read-only inventory; not a pre-run baseline",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "python": "3.14.6",
+  "packages": {
+    "mlx": "0.32.3",
+    "mlx-lm": "0.32.0",
+    "openai": "3.10.0",
+    "psutil": "7.2.2",
+    "numpy": "2.3.5"
+  },
+  "checkpoint_revision": "5a195dc147926b63b1d139691ed4480ca9f92c0e",
+  "backend": "MLX GPU",
+  "quantization_bits": 8,
+  "head_dtype": "float32",
+  "context_limit": 16384,
+  "truncation": false,
+  "sequential": true,
+  "maximum_model_calls": 57
+}

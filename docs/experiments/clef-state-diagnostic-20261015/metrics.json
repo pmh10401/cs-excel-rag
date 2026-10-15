@@ -1,0 +1,308 @@
+[
+  {
+    "split": "DEV",
+    "arm": "rules",
+    "n": 12,
+    "supported_n": 4,
+    "contradicted_n": 4,
+    "insufficient_n": 4,
+    "contradiction_held": 0,
+    "baseline_missed_contradictions": 4,
+    "additional_contradiction_detection": 0,
+    "additional_insufficient_hold": 0,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 4,
+    "check_failure": 0,
+    "semantic_unclassified": 12,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      }
+    }
+  },
+  {
+    "split": "DEV",
+    "arm": "state_rules",
+    "n": 12,
+    "supported_n": 4,
+    "contradicted_n": 4,
+    "insufficient_n": 4,
+    "contradiction_held": 3,
+    "baseline_missed_contradictions": 4,
+    "additional_contradiction_detection": 3,
+    "additional_insufficient_hold": 1,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 3,
+    "check_failure": 0,
+    "semantic_unclassified": 8,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 3,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 1
+      }
+    }
+  },
+  {
+    "split": "DEV",
+    "arm": "clef",
+    "n": 12,
+    "supported_n": 4,
+    "contradicted_n": 4,
+    "insufficient_n": 4,
+    "contradiction_held": 4,
+    "baseline_missed_contradictions": 4,
+    "additional_contradiction_detection": 4,
+    "additional_insufficient_hold": 4,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 0,
+    "check_failure": 0,
+    "semantic_unclassified": 0,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 4,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 3,
+        "insufficient": 1
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 4
+      }
+    }
+  },
+  {
+    "split": "TEST",
+    "arm": "rules",
+    "n": 36,
+    "supported_n": 12,
+    "contradicted_n": 12,
+    "insufficient_n": 12,
+    "contradiction_held": 0,
+    "baseline_missed_contradictions": 12,
+    "additional_contradiction_detection": 0,
+    "additional_insufficient_hold": 0,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 10,
+    "check_failure": 0,
+    "semantic_unclassified": 36,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      }
+    }
+  },
+  {
+    "split": "TEST",
+    "arm": "state_rules",
+    "n": 36,
+    "supported_n": 12,
+    "contradicted_n": 12,
+    "insufficient_n": 12,
+    "contradiction_held": 5,
+    "baseline_missed_contradictions": 12,
+    "additional_contradiction_detection": 5,
+    "additional_insufficient_hold": 4,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 6,
+    "check_failure": 0,
+    "semantic_unclassified": 27,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 5,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 4
+      }
+    }
+  },
+  {
+    "split": "TEST",
+    "arm": "clef",
+    "n": 36,
+    "supported_n": 12,
+    "contradicted_n": 12,
+    "insufficient_n": 12,
+    "contradiction_held": 11,
+    "baseline_missed_contradictions": 12,
+    "additional_contradiction_detection": 11,
+    "additional_insufficient_hold": 10,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 0,
+    "check_failure": 0,
+    "semantic_unclassified": 2,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 12,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 1,
+        "contradicted": 10,
+        "insufficient": 1
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 2,
+        "insufficient": 8
+      }
+    }
+  },
+  {
+    "split": "REGRESSION",
+    "arm": "rules",
+    "n": 3,
+    "supported_n": 0,
+    "contradicted_n": 1,
+    "insufficient_n": 2,
+    "contradiction_held": 0,
+    "baseline_missed_contradictions": 1,
+    "additional_contradiction_detection": 0,
+    "additional_insufficient_hold": 0,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 2,
+    "check_failure": 0,
+    "semantic_unclassified": 3,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      }
+    }
+  },
+  {
+    "split": "REGRESSION",
+    "arm": "state_rules",
+    "n": 3,
+    "supported_n": 0,
+    "contradicted_n": 1,
+    "insufficient_n": 2,
+    "contradiction_held": 1,
+    "baseline_missed_contradictions": 1,
+    "additional_contradiction_detection": 1,
+    "additional_insufficient_hold": 1,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 1,
+    "check_failure": 0,
+    "semantic_unclassified": 1,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 1,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 1
+      }
+    }
+  },
+  {
+    "split": "REGRESSION",
+    "arm": "clef",
+    "n": 3,
+    "supported_n": 0,
+    "contradicted_n": 1,
+    "insufficient_n": 2,
+    "contradiction_held": 1,
+    "baseline_missed_contradictions": 1,
+    "additional_contradiction_detection": 1,
+    "additional_insufficient_hold": 2,
+    "normal_false_hold": 0,
+    "normal_hold_including_check_failure": 0,
+    "insufficient_wrong_pass": 0,
+    "check_failure": 0,
+    "semantic_unclassified": 0,
+    "semantic_confusion": {
+      "supported": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 0
+      },
+      "contradicted": {
+        "supported": 0,
+        "contradicted": 1,
+        "insufficient": 0
+      },
+      "insufficient": {
+        "supported": 0,
+        "contradicted": 0,
+        "insufficient": 2
+      }
+    }
+  }
+]

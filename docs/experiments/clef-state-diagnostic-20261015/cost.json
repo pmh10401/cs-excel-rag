@@ -1,0 +1,126 @@
+{
+  "resident": {
+    "key": "resident",
+    "wall_seconds": 73.97283729098854,
+    "peak_child_rss": 4590223360,
+    "error": null,
+    "planned": 49,
+    "results": 49,
+    "exit": 0
+  },
+  "worker_attempts": [
+    {
+      "key": "resident",
+      "wall_seconds": 73.97283729098854,
+      "peak_child_rss": 4590223360,
+      "error": null,
+      "planned": 49,
+      "results": 49,
+      "exit": 0
+    },
+    {
+      "key": "cold-0",
+      "wall_seconds": 24.622874916996807,
+      "peak_child_rss": 9419456512,
+      "error": null,
+      "planned": 1,
+      "results": 1,
+      "exit": 0
+    },
+    {
+      "key": "cold-1",
+      "wall_seconds": 24.62479424997582,
+      "peak_child_rss": 9481781248,
+      "error": null,
+      "planned": 1,
+      "results": 1,
+      "exit": 0
+    },
+    {
+      "key": "cold-2",
+      "wall_seconds": 24.32523599997512,
+      "peak_child_rss": 9682550784,
+      "error": null,
+      "planned": 1,
+      "results": 1,
+      "exit": 0
+    }
+  ],
+  "inference_by_split": {
+    "DEV": {
+      "samples": 12,
+      "median": 1.003073937506997,
+      "p95": 1.020959874993423
+    },
+    "TEST": {
+      "samples": 34,
+      "median": 1.0062754789978499,
+      "p95": 1.0870764999999665
+    },
+    "REGRESSION": {
+      "samples": 3,
+      "median": 0.9153080830001272,
+      "p95": 0.9153080830001272
+    }
+  },
+  "resident_load_seconds": 22.504213375010295,
+  "resident_compute_sum": 50.27118170511676,
+  "resident_model_calls": 49,
+  "handoff": [
+    {
+      "case_id": "DEV-source-00-0",
+      "setup_load": 29.487643874977948,
+      "answer_release": 1.4730618330067955,
+      "answer_restore": 28.29266937499051,
+      "cleanup_unload": 0.5129450419917703,
+      "error": null,
+      "clef_load_compute_cleanup_wall": 24.622874916996807,
+      "classification": "supported",
+      "classification_failed": false,
+      "incremental_switch_seconds": 54.38860612499411,
+      "inspection_ready_seconds": 26.095936750003602,
+      "same_decision_as_resident": true
+    },
+    {
+      "case_id": "DEV-source-00-1",
+      "setup_load": 2.489185667014681,
+      "answer_release": 0.5244429579761345,
+      "answer_restore": 28.154631709010573,
+      "cleanup_unload": 1.5541717080050148,
+      "error": null,
+      "clef_load_compute_cleanup_wall": 24.62479424997582,
+      "classification": "insufficient",
+      "classification_failed": false,
+      "incremental_switch_seconds": 53.30386891696253,
+      "inspection_ready_seconds": 25.149237207951955,
+      "same_decision_as_resident": true
+    },
+    {
+      "case_id": "DEV-source-00-2",
+      "setup_load": 2.7727026249922346,
+      "answer_release": 0.4964290829957463,
+      "answer_restore": 27.94041179100168,
+      "cleanup_unload": 0.5046457090065815,
+      "error": null,
+      "clef_load_compute_cleanup_wall": 24.32523599997512,
+      "classification": "insufficient",
+      "classification_failed": false,
+      "incremental_switch_seconds": 52.762076873972546,
+      "inspection_ready_seconds": 24.821665082970867,
+      "same_decision_as_resident": true
+    }
+  ],
+  "all_measured_worker_wall": 147.54574245793629,
+  "all_measured_lms_control_wall": 124.19839204102755,
+  "gpu_allocated_peak_bytes": 10463190300,
+  "process_rss_peak_bytes": 4627709952,
+  "capability_probe": {
+    "wall_seconds": 29.752090207999572,
+    "peak_child_rss": 2379694080,
+    "exit": 0
+  },
+  "run_wall_seconds": 271.8332746250089,
+  "actual_answer_generation_calls": 0,
+  "early_cli_discovery_delay": null,
+  "production_browser_latency": null
+}
